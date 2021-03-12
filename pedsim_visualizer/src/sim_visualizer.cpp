@@ -226,8 +226,8 @@ void SimVisualizer::publishObstacleVisuals() {
   walls_marker.color.r = 0.647059;
   walls_marker.color.g = 0.164706;
   walls_marker.color.b = 0.164706;
-  walls_marker.scale.x = 1.0;
-  walls_marker.scale.y = 1.0;
+  walls_marker.scale.x = 0.25;
+  walls_marker.scale.y = 0.25;
   walls_marker.scale.z = 2.0;
   walls_marker.pose.position.z = walls_marker.scale.z / 2.0;
   walls_marker.pose.orientation.w = 1.0;
