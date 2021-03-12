@@ -44,6 +44,7 @@ AgentCluster::AgentCluster(double xIn, double yIn, int countIn) {
   distribution = QSizeF(0, 0);
   agentType = Ped::Tagent::ADULT;
   shallCreateGroups = true;
+  isRandom = 0;
 };
 
 AgentCluster::~AgentCluster() {}
@@ -193,4 +194,12 @@ void AgentCluster::setVisiblePosition(const QPointF& positionIn) {
 
 QString AgentCluster::toString() const {
   return tr("AgentCluster (@%1,%2)").arg(position.x).arg(position.y);
+}
+
+void AgentCluster::setRandom(bool randomIn) {
+  isRandom = randomIn;
+
+  // inform users
+  // TODO: check this changing logs and define one for random if needed and if possible
+  //emit typeChanged(isRandom);
 }

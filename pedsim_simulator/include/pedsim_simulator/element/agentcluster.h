@@ -76,6 +76,7 @@ class AgentCluster : public ScenarioElement {
   void setDistribution(double xIn, double yIn);
   void setDistributionWidth(double xIn);
   void setDistributionHeight(double yIn);
+  void setRandom(bool typeIn);
 
   // → ScenarioElement Overrides/Overloads
  public:
@@ -92,6 +93,7 @@ class AgentCluster : public ScenarioElement {
   Ped::Tagent::AgentType agentType;
   bool shallCreateGroups;
   QList<Waypoint*> waypoints;
+  bool isRandom;
 };
 
 #endif
