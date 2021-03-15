@@ -50,6 +50,9 @@ Agent::Agent() {
   stateMachine = new AgentStateMachine(this);
   // group
   group = nullptr;
+
+  //random option
+  isRandom = 0;
 }
 
 Agent::~Agent() {
@@ -132,9 +135,15 @@ Ped::Twaypoint* Agent::updateDestination() {
   // assign new destination
   if (!destinations.isEmpty()) {
     if (currentDestination != nullptr) {
-      // cycle through destinations
+      if(isRandom == 0){// cycle through destinations
       Waypoint* previousDestination = destinations.takeFirst();
       destinations.append(previousDestination);
+      }else{
+        int iRandomWaypoint = (rand() % static_cast<int>(destinations.size() + 1));
+        Waypoint* previousDestination = destinations.takeAt(iRandomWaypoint);
+        destinations.append(previousDestination);
+      }
+      
     }
     currentDestination = destinations.first();
   }
@@ -302,6 +311,11 @@ void Agent::setType(Ped::Tagent::AgentType typeIn) {
 
   // inform users
   emit typeChanged(typeIn);
+}
+
+//random method for random waypoints
+void Agent::setRandom(bool randomIn){
+  isRandom = randomIn;
 }
 
 Ped::Tvector Agent::getDesiredDirection() const { return desiredforce; }
