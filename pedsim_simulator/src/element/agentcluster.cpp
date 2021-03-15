@@ -68,6 +68,7 @@ QList<Agent*> AgentCluster::dissolve() {
     if (distribution.height() != 0) randomizedY += randomY(RNG());
     a->setPosition(randomizedX, randomizedY);
     a->setType(agentType);
+    a->setRandom(isRandom);
 
     // add waypoints to the agent
     foreach (Waypoint* waypoint, waypoints)

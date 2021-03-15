@@ -76,7 +76,7 @@ class AgentCluster : public ScenarioElement {
   void setDistribution(double xIn, double yIn);
   void setDistributionWidth(double xIn);
   void setDistributionHeight(double yIn);
-  void setRandom(bool typeIn);
+  void setRandom(bool randomIn);
 
   // → ScenarioElement Overrides/Overloads
  public:

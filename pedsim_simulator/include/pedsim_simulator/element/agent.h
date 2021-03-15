@@ -122,6 +122,7 @@ class Agent : public ScenarioElement, public Ped::Tagent {
   void setX(double xIn);
   void setY(double yIn);
   void setType(Ped::Tagent::AgentType typeIn);
+  void setRandom(bool randomIn);
 
   // → VisibleScenarioElement Overrides/Overloads
  public:
@@ -147,6 +148,9 @@ class Agent : public ScenarioElement, public Ped::Tagent {
 
   // → waypoint planner
   WaypointPlanner* waypointplanner;
+
+  // → random waypoints
+  bool isRandom;
 };
 
 #endif
