@@ -135,12 +135,20 @@ Ped::Twaypoint* Agent::updateDestination() {
   // assign new destination
   if (!destinations.isEmpty()) {
     if (currentDestination != nullptr) {
-      if(isRandom == 0){// cycle through destinations
+      // cycle through destinations
+      if(isRandom == 0){
+      ROS_INFO_STREAM("Not random agent [" << isRandom << "] simulation");
       Waypoint* previousDestination = destinations.takeFirst();
       destinations.append(previousDestination);
+      // int iRandomWaypoint = (rand() % static_cast<int>(destinations.size() + 1));
+      // ROS_INFO_STREAM("Random agent [" << isRandom << "] simulation");
+      // ROS_INFO_STREAM("Random number selected [" << iRandomWaypoint << "] simulation");
       }else{
-        int iRandomWaypoint = (rand() % static_cast<int>(destinations.size() + 1));
+        int iRandomWaypoint = (rand() % static_cast<int>(destinations.size()));
+        ROS_INFO_STREAM("Random agent [" << isRandom << "] simulation");
+        ROS_INFO_STREAM("Random number selected [" << iRandomWaypoint << "] simulation");
         Waypoint* previousDestination = destinations.takeAt(iRandomWaypoint);
+        //Waypoint* previousDestination = destinations.takeFirst();
         destinations.append(previousDestination);
       }
       
