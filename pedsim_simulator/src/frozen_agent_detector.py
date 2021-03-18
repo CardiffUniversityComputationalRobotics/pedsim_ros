@@ -3,65 +3,75 @@
 import rospy
 from pedsim_msgs.msg import AgentStates
 
-
-# def resultant_force(forces):
-# print("Forces are: ", forces)
-# print(type(forces))
-# print()
-# resultant_force_x = (
-#     forces.desired_force.x
-#     + forces.obstacle_force.x
-#     + forces.social_force.x
-#     + forces.group_coherence_force.x
-#     + forces.group_gaze_force.x
-#     + forces.group_repulsion_force.x
-#     + forces.random_force.x
-# )
-# resultant_force_y = (
-#     forces.desired_force.y
-#     + forces.obstacle_force.y
-#     + forces.social_force.y
-#     + forces.group_coherence_force.y
-#     + forces.group_gaze_force.y
-#     + forces.group_repulsion_force.y
-#     + forces.random_force.y
-# )
-# resultant_force_z = (
-#     forces.desired_force.z
-#     + forces.obstacle_force.z
-#     + forces.social_force.z
-#     + forces.group_coherence_force.z
-#     + forces.group_gaze_force.z
-#     + forces.group_repulsion_force.z
-#     + forces.random_force.z
-# )
-# print("Resultant X force:", resultant_force_x)
-# print("Resultant Y force:", resultant_force_y)
-# print("Resultant Z force:", resultant_force_z)
-# print("Time of agent:", rospy.get_rostime().secs)
+agents_register_dict = {}
 
 
-class AgentsRegister(object):
-    def __init__(self):
-        print("hola")
+def is_frozen(id, actual_position):
+    last_position = agents_register_dict[id][0]
+    delta_position_x = abs(actual_position.x - last_position.x)
+    delta_position_y = abs(actual_position.y - last_position.y)
+    delta_position_z = abs(actual_position.z - last_position.z)
 
-    def include_agent(self):
-        # TODO: agent adding should be included here.
-        pass
+    if delta_position_x <= 1 and delta_position_y <= 1 and delta_position_z <= 1:
+        return True
+    else:
+        return False
+
+
+def delta_time(id):
+    last_time = agents_register_dict[str(id)][1]
+    if (rospy.get_rostime().secs - last_time) > 60:
+        return True
+    else:
+        return False
+
+
+def process_agents(agents_data):
+    for agent in agents_data:
+        if str(agent.id) in agents_register_dict:
+            if is_frozen(agent.id, agent.position):
+                if agents_register_dict[str(agent.id)][2] == "moving":
+                    agent_last_info = agents_register_dict[str(agent.id)]
+                    agent_last_info[1] = rospy.get_rostime().secs
+                    agent_last_info[2] = "possibly_stuck"
+                    agents_register_dict[str(agent.id)] = agent_last_info
+                else:
+                    if agents_register_dict[str(agent.id)][2] == "possibly_stuck":
+                        if delta_time(agent.id):
+                            agent_last_info = agents_register_dict[str(agent.id)]
+                            agent_last_info[2] = "stuck"
+                            agents_register_dict = agent_last_info
+
+            else:
+                agents_register_dict[str(agent.id)] = [
+                    agent.position,
+                    rospy.get_rostime().secs,
+                    "moving",
+                ]
+        else:
+            agents_register_dict[str(agent.id)] = [
+                agent.pose.position,
+                rospy.get_rostime().secs,
+                "moving",
+            ]
+
+
+# class AgentsRegister(object):
+#     def __init__(self):
+#         print("hola")
+
+#     def include_agent(self):
+#         # TODO: agent adding should be included here.
+#         pass
 
 
 def agent_freezing_callback(data):
     input_msg = data.agent_states
-
-    for i in input_msg:
-        print("##############################")
-        # print("Agent ID:", i.id)
-        # print("Agent pose:", i.pose)
-        # resultant_force(i.id, i.pose)
+    process_agents(input_msg)
 
 
-def listener():
-    rospy.init_node("listener", anonymous=True)
+def frozen_agent_detector():
+    rospy.init_node("frozen_agent_detector_node", anonymous=True)
     rospy.Subscriber(
         "/pedsim_simulator/simulated_agents", AgentStates, agent_freezing_callback
     )
@@ -69,4 +79,4 @@ def listener():
 
 
 if __name__ == "__main__":
-    listener()
+    frozen_agent_detector()
