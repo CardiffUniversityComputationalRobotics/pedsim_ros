@@ -33,6 +33,8 @@ add_message_files( DIRECTORY msg
   SocialActivities.msg
   Waypoint.msg
   Waypoints.msg
+  FrozenAgent.msg
+  FrozenAgents.msg
 )
 
 # generate the messages
