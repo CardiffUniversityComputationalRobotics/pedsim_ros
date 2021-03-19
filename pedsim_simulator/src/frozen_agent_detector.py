@@ -1,82 +1,122 @@
 #!/usr/bin/env python3
 
 import rospy
-from pedsim_msgs.msg import AgentStates
-
-agents_register_dict = {}
+from pedsim_msgs.msg import AgentStates, FrozenAgent, FrozenAgents
 
 
-def is_frozen(id, actual_position):
-    last_position = agents_register_dict[id][0]
-    delta_position_x = abs(actual_position.x - last_position.x)
-    delta_position_y = abs(actual_position.y - last_position.y)
-    delta_position_z = abs(actual_position.z - last_position.z)
+class FrozenAgentDetector:
+    """This class manages the state of the agents based on it position and time"""
 
-    if delta_position_x <= 1 and delta_position_y <= 1 and delta_position_z <= 1:
-        return True
-    else:
-        return False
+    def __init__(self):
 
+        # Specific parameters that could be tuned
+        self.callback_delay = rospy.get_param("callback_delay", 2)
+        self.distance_threshold = rospy.get_param("distance_threshold", 0.5)
+        self.time_threshold = rospy.get_param("time_threshold", 10)
+        self.publish_frequency = rospy.get_param("publish_frequency", 1)
 
-def delta_time(id):
-    last_time = agents_register_dict[str(id)][1]
-    if (rospy.get_rostime().secs - last_time) > 60:
-        return True
-    else:
-        return False
+        rospy.init_node("frozen_agent_detector_node", anonymous=True)
 
+        # subcribers
+        self._agents_status_sub = rospy.Subscriber(
+            "/pedsim_simulator/simulated_agents",
+            AgentStates,
+            self.agent_freezing_callback,
+            queue_size=1,
+        )
 
-def process_agents(agents_data):
-    for agent in agents_data:
-        if str(agent.id) in agents_register_dict:
-            if is_frozen(agent.id, agent.position):
-                if agents_register_dict[str(agent.id)][2] == "moving":
-                    agent_last_info = agents_register_dict[str(agent.id)]
-                    agent_last_info[1] = rospy.get_rostime().secs
-                    agent_last_info[2] = "possibly_stuck"
-                    agents_register_dict[str(agent.id)] = agent_last_info
+        # publishers
+        self._frozen_agents_pub = rospy.Publisher(
+            "/frozen_agents", FrozenAgents, queue_size=10
+        )
+
+        # variables
+        self.agents_register_dict = {}
+        self.frozen_agents_list = []
+        self.frozen_agents_msg = FrozenAgents()
+
+        self.last_callback_time = rospy.get_rostime().secs
+
+        self.rate = rospy.Rate(self.publish_frequency)
+
+    def agent_freezing_callback(self, data):
+        """AgentStates subscribe to get agents position"""
+        if rospy.get_rostime().secs - self.last_callback_time > self.callback_delay:
+            self.last_callback_time = rospy.get_rostime().secs
+            input_msg = data.agent_states
+            self.process_agents(input_msg)
+
+    def process_agents(self, agents_data):
+        """Processes the agents data and carries frozen detection procedure."""
+        for agent in agents_data:
+            if str(agent.id) in self.agents_register_dict:
+                if self.is_frozen(agent.id, agent.pose.position):
+                    if self.agents_register_dict[str(agent.id)][2] == "moving":
+                        agent_last_info = self.agents_register_dict[str(agent.id)]
+                        agent_last_info[1] = rospy.get_rostime().secs
+                        agent_last_info[2] = "possibly_stuck"
+                        self.agents_register_dict[str(agent.id)] = agent_last_info
+                    else:
+                        if (
+                            self.agents_register_dict[str(agent.id)][2]
+                            == "possibly_stuck"
+                        ):
+                            if self.delta_time(agent.id):
+                                agent_last_info = self.agents_register_dict[
+                                    str(agent.id)
+                                ]
+                                agent_last_info[2] = "stuck"
+                                self.agents_register_dict[
+                                    str(agent.id)
+                                ] = agent_last_info
+
                 else:
-                    if agents_register_dict[str(agent.id)][2] == "possibly_stuck":
-                        if delta_time(agent.id):
-                            agent_last_info = agents_register_dict[str(agent.id)]
-                            agent_last_info[2] = "stuck"
-                            agents_register_dict = agent_last_info
-
+                    self.agents_register_dict[str(agent.id)] = [
+                        agent.pose.position,
+                        rospy.get_rostime().secs,
+                        "moving",
+                    ]
             else:
-                agents_register_dict[str(agent.id)] = [
-                    agent.position,
+                self.agents_register_dict[str(agent.id)] = [
+                    agent.pose.position,
                     rospy.get_rostime().secs,
                     "moving",
                 ]
-        else:
-            agents_register_dict[str(agent.id)] = [
-                agent.pose.position,
-                rospy.get_rostime().secs,
-                "moving",
-            ]
 
+    def is_frozen(self, agent_id, actual_position):
+        """return if agent is frozen based on its change of position,
+        only X and Y position is considered"""
+        last_position = self.agents_register_dict[str(agent_id)][0]
+        delta_position_x = abs(actual_position.x - last_position.x)
+        delta_position_y = abs(actual_position.y - last_position.y)
 
-# class AgentsRegister(object):
-#     def __init__(self):
-#         print("hola")
+        if (
+            delta_position_x <= self.distance_threshold
+            and delta_position_y <= self.distance_threshold
+        ):
+            return True
+        return False
 
-#     def include_agent(self):
-#         # TODO: agent adding should be included here.
-#         pass
+    def delta_time(self, agent_id):
+        """Outputs whether 60secs have passed considering the agent possibly stuck"""
+        last_time = self.agents_register_dict[str(agent_id)][1]
 
+        if (rospy.get_rostime().secs - last_time) > self.distance_threshold:
+            return True
+        return False
 
-def agent_freezing_callback(data):
-    input_msg = data.agent_states
-    process_agents(input_msg)
+    def start_detector(self):
+        """Publishes the frozen status of the agents continously"""
+        while not rospy.is_shutdown():
+            self.frozen_agents_list = []
+            for key, value in self.agents_register_dict.items():
+                self.frozen_agents_list.append(FrozenAgent(int(key), value[2]))
+            self.frozen_agents_msg.frozen_agents = self.frozen_agents_list
 
-
-def frozen_agent_detector():
-    rospy.init_node("frozen_agent_detector_node", anonymous=True)
-    rospy.Subscriber(
-        "/pedsim_simulator/simulated_agents", AgentStates, agent_freezing_callback
-    )
-    rospy.spin()
+            self._frozen_agents_pub.publish(self.frozen_agents_msg)
+            self.rate.sleep()
 
 
 if __name__ == "__main__":
-    frozen_agent_detector()
+    frozen_agent_detector = FrozenAgentDetector()
+    frozen_agent_detector.start_detector()
