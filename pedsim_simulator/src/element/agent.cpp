@@ -37,7 +37,8 @@
 #include <pedsim_simulator/scene.h>
 #include <pedsim_simulator/waypointplanner/waypointplanner.h>
 
-Agent::Agent() {
+Agent::Agent()
+{
   // initialize
   Ped::Tagent::setType(Ped::Tagent::ADULT);
   Ped::Tagent::setForceFactorObstacle(CONFIG.forceObstacle);
@@ -55,16 +56,22 @@ Agent::Agent() {
   isRandom = 0;
 }
 
-Agent::~Agent() {
+Agent::~Agent()
+{
   // clean up
-  foreach (Force* currentForce, forces) { delete currentForce; }
+  foreach (Force *currentForce, forces)
+  {
+    delete currentForce;
+  }
 }
 
 /// Calculates the desired force. Same as in lib, but adds graphical
 /// representation
-Ped::Tvector Agent::desiredForce() {
+Ped::Tvector Agent::desiredForce()
+{
   Ped::Tvector force;
-  if (!disabledForces.contains("Desired")) force = Tagent::desiredForce();
+  if (!disabledForces.contains("Desired"))
+    force = Tagent::desiredForce();
 
   // inform users
   emit desiredForceChanged(force.x, force.y);
@@ -74,9 +81,11 @@ Ped::Tvector Agent::desiredForce() {
 
 /// Calculates the social force. Same as in lib, but adds graphical
 /// representation
-Ped::Tvector Agent::socialForce() const {
+Ped::Tvector Agent::socialForce() const
+{
   Ped::Tvector force;
-  if (!disabledForces.contains("Social")) force = Tagent::socialForce();
+  if (!disabledForces.contains("Social"))
+    force = Tagent::socialForce();
 
   // inform users
   emit socialForceChanged(force.x, force.y);
@@ -86,9 +95,11 @@ Ped::Tvector Agent::socialForce() const {
 
 /// Calculates the obstacle force. Same as in lib, but adds graphical
 /// representation
-Ped::Tvector Agent::obstacleForce() const {
+Ped::Tvector Agent::obstacleForce() const
+{
   Ped::Tvector force;
-  if (!disabledForces.contains("Obstacle")) force = Tagent::obstacleForce();
+  if (!disabledForces.contains("Obstacle"))
+    force = Tagent::obstacleForce();
 
   // inform users
   emit obstacleForceChanged(force.x, force.y);
@@ -96,12 +107,15 @@ Ped::Tvector Agent::obstacleForce() const {
   return force;
 }
 
-Ped::Tvector Agent::myForce(Ped::Tvector desired) const {
+Ped::Tvector Agent::myForce(Ped::Tvector desired) const
+{
   // run additional forces
   Ped::Tvector forceValue;
-  foreach (Force* force, forces) {
+  foreach (Force *force, forces)
+  {
     // skip disabled forces
-    if (disabledForces.contains(force->getName())) {
+    if (disabledForces.contains(force->getName()))
+    {
       // update graphical representation
       emit additionalForceChanged(force->getName(), 0, 0);
       continue;
@@ -110,7 +124,8 @@ Ped::Tvector Agent::myForce(Ped::Tvector desired) const {
     // add force to the total force
     Ped::Tvector currentForce = force->getForce(desired);
     // → sanity checks
-    if (!currentForce.isValid()) {
+    if (!currentForce.isValid())
+    {
       ROS_DEBUG("Invalid Force: %s", force->getName().toStdString().c_str());
       currentForce = Ped::Tvector();
     }
@@ -127,22 +142,29 @@ Ped::Tvector Agent::myForce(Ped::Tvector desired) const {
   return forceValue;
 }
 
-Ped::Twaypoint* Agent::getCurrentDestination() const {
+Ped::Twaypoint *Agent::getCurrentDestination() const
+{
   return currentDestination;
 }
 
-Ped::Twaypoint* Agent::updateDestination() {
+Ped::Twaypoint *Agent::updateDestination()
+{
   // assign new destination
-  if (!destinations.isEmpty()) {
-    if (currentDestination != nullptr) {
+  if (!destinations.isEmpty())
+  {
+    if (currentDestination != nullptr)
+    {
       // cycle through destinations
-      Waypoint* previousDestination = destinations.takeFirst();
+      Waypoint *previousDestination = destinations.takeFirst();
       destinations.append(previousDestination);
     }
 
-    if(isRandom == 0 ){
+    if (isRandom == 0)
+    {
       currentDestination = destinations.first();
-    } else {
+    }
+    else
+    {
       int iRandomWaypoint = (rand() % static_cast<int>(destinations.size()));
       ROS_INFO_STREAM("Random destination agent reached destination.");
       ROS_INFO_STREAM("Random destination number selected [" << iRandomWaypoint << "] for agent.");
@@ -153,14 +175,18 @@ Ped::Twaypoint* Agent::updateDestination() {
   return currentDestination;
 }
 
-void Agent::updateState() {
+void Agent::updateState()
+{
   // check state
   stateMachine->doStateTransition();
 }
 
-void Agent::move(double h) {
-  if (getType() == Ped::Tagent::ROBOT) {
-    if (CONFIG.robot_mode == RobotMode::TELEOPERATION) {
+void Agent::move(double h)
+{
+  if (getType() == Ped::Tagent::ROBOT)
+  {
+    if (CONFIG.robot_mode == RobotMode::TELEOPERATION)
+    {
       // NOTE: Moving is now done by setting x, y position directly in
       // simulator.cpp
       // Robot's vx, vy will still be set for the social force model to work
@@ -176,11 +202,16 @@ void Agent::move(double h) {
       Ped::Tagent::move(h);
       setvx(vx);
       setvy(vy);
-    } else if (CONFIG.robot_mode == RobotMode::CONTROLLED) {
-      if (SCENE.getTime() >= CONFIG.robot_wait_time) {
+    }
+    else if (CONFIG.robot_mode == RobotMode::CONTROLLED)
+    {
+      if (SCENE.getTime() >= CONFIG.robot_wait_time)
+      {
         Ped::Tagent::move(h);
       }
-    } else if (CONFIG.robot_mode == RobotMode::SOCIAL_DRIVE) {
+    }
+    else if (CONFIG.robot_mode == RobotMode::SOCIAL_DRIVE)
+    {
       Ped::Tagent::setForceFactorSocial(CONFIG.forceSocial * 0.7);
       Ped::Tagent::setForceFactorObstacle(35);
       Ped::Tagent::setForceFactorDesired(4.2);
@@ -189,11 +220,14 @@ void Agent::move(double h) {
       Ped::Tagent::SetRadius(0.4);
       Ped::Tagent::move(h);
     }
-  } else {
+  }
+  else
+  {
     Ped::Tagent::move(h);
   }
 
-  if (getType() == Ped::Tagent::ELDER) {
+  if (getType() == Ped::Tagent::ELDER)
+  {
     // Old people slow!
     Ped::Tagent::setVmax(0.9);
     Ped::Tagent::setForceFactorDesired(0.5);
@@ -205,36 +239,43 @@ void Agent::move(double h) {
   emit accelerationChanged(getax(), getay());
 }
 
-const QList<Waypoint*>& Agent::getWaypoints() const { return destinations; }
+const QList<Waypoint *> &Agent::getWaypoints() const { return destinations; }
 
-bool Agent::setWaypoints(const QList<Waypoint*>& waypointsIn) {
+bool Agent::setWaypoints(const QList<Waypoint *> &waypointsIn)
+{
   destinations = waypointsIn;
   return true;
 }
 
-bool Agent::addWaypoint(Waypoint* waypointIn) {
+bool Agent::addWaypoint(Waypoint *waypointIn)
+{
   destinations.append(waypointIn);
   return true;
 }
 
-bool Agent::removeWaypoint(Waypoint* waypointIn) {
+bool Agent::removeWaypoint(Waypoint *waypointIn)
+{
   const int removeCount = destinations.removeAll(waypointIn);
 
   return (removeCount > 0);
 }
 
-bool Agent::needNewDestination() const {
+bool Agent::needNewDestination() const
+{
   if (waypointplanner == nullptr)
     return (!destinations.isEmpty());
-  else {
+  else
+  {
     // ask waypoint planner
     return waypointplanner->hasCompletedDestination();
   }
 }
 
-Ped::Twaypoint* Agent::getCurrentWaypoint() const {
+Ped::Twaypoint *Agent::getCurrentWaypoint() const
+{
   // sanity checks
-  if (waypointplanner == nullptr) return nullptr;
+  if (waypointplanner == nullptr)
+    return nullptr;
 
   // ask waypoint planner
   return waypointplanner->getCurrentWaypoint();
@@ -242,11 +283,12 @@ Ped::Twaypoint* Agent::getCurrentWaypoint() const {
 
 bool Agent::isInGroup() const { return (group != nullptr); }
 
-AgentGroup* Agent::getGroup() const { return group; }
+AgentGroup *Agent::getGroup() const { return group; }
 
-void Agent::setGroup(AgentGroup* groupIn) { group = groupIn; }
+void Agent::setGroup(AgentGroup *groupIn) { group = groupIn; }
 
-bool Agent::addForce(Force* forceIn) {
+bool Agent::addForce(Force *forceIn)
+{
   forces.append(forceIn);
 
   // inform users
@@ -256,7 +298,8 @@ bool Agent::addForce(Force* forceIn) {
   return true;
 }
 
-bool Agent::removeForce(Force* forceIn) {
+bool Agent::removeForce(Force *forceIn)
+{
   int removeCount = forces.removeAll(forceIn);
 
   // inform users
@@ -266,36 +309,43 @@ bool Agent::removeForce(Force* forceIn) {
   return (removeCount >= 1);
 }
 
-AgentStateMachine* Agent::getStateMachine() const { return stateMachine; }
+AgentStateMachine *Agent::getStateMachine() const { return stateMachine; }
 
-WaypointPlanner* Agent::getWaypointPlanner() const { return waypointplanner; }
+WaypointPlanner *Agent::getWaypointPlanner() const { return waypointplanner; }
 
-void Agent::setWaypointPlanner(WaypointPlanner* plannerIn) {
+void Agent::setWaypointPlanner(WaypointPlanner *plannerIn)
+{
   waypointplanner = plannerIn;
 }
 
-QList<const Agent*> Agent::getNeighbors() const {
+QList<const Agent *> Agent::getNeighbors() const
+{
   // upcast neighbors
-  QList<const Agent*> output;
-  for (const Ped::Tagent* neighbor : neighbors) {
-    const Agent* upNeighbor = dynamic_cast<const Agent*>(neighbor);
-    if (upNeighbor != nullptr) output.append(upNeighbor);
+  QList<const Agent *> output;
+  for (const Ped::Tagent *neighbor : neighbors)
+  {
+    const Agent *upNeighbor = dynamic_cast<const Agent *>(neighbor);
+    if (upNeighbor != nullptr)
+      output.append(upNeighbor);
   }
 
   return output;
 }
 
-void Agent::disableForce(const QString& forceNameIn) {
+void Agent::disableForce(const QString &forceNameIn)
+{
   // disable force by adding it to the list of disabled forces
   disabledForces.append(forceNameIn);
 }
 
-void Agent::enableAllForces() {
+void Agent::enableAllForces()
+{
   // remove all forces from disabled list
   disabledForces.clear();
 }
 
-void Agent::setPosition(double xIn, double yIn) {
+void Agent::setPosition(double xIn, double yIn)
+{
   // call super class' method
   Ped::Tagent::setPosition(xIn, yIn);
 
@@ -307,7 +357,8 @@ void Agent::setX(double xIn) { setPosition(xIn, gety()); }
 
 void Agent::setY(double yIn) { setPosition(getx(), yIn); }
 
-void Agent::setType(Ped::Tagent::AgentType typeIn) {
+void Agent::setType(Ped::Tagent::AgentType typeIn)
+{
   // call super class' method
   Ped::Tagent::setType(typeIn);
 
@@ -316,7 +367,8 @@ void Agent::setType(Ped::Tagent::AgentType typeIn) {
 }
 
 //random method for random waypoints
-void Agent::setRandom(bool randomIn){
+void Agent::setRandom(bool randomIn)
+{
   isRandom = randomIn;
 }
 
@@ -332,12 +384,14 @@ Ped::Tvector Agent::getMyForce() const { return myforce; }
 
 QPointF Agent::getVisiblePosition() const { return QPointF(getx(), gety()); }
 
-void Agent::setVisiblePosition(const QPointF& positionIn) {
+void Agent::setVisiblePosition(const QPointF &positionIn)
+{
   // check and apply new position
   if (positionIn != getVisiblePosition())
     setPosition(positionIn.x(), positionIn.y());
 }
 
-QString Agent::toString() const {
+QString Agent::toString() const
+{
   return tr("Agent %1 (@%2,%3)").arg(getId()).arg(getx()).arg(gety());
 }
