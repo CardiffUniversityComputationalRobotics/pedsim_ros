@@ -44,7 +44,8 @@
 
 #include <ros/ros.h>
 
-AgentStateMachine::AgentStateMachine(Agent* agentIn) {
+AgentStateMachine::AgentStateMachine(Agent *agentIn)
+{
   // initialize values
   agent = agentIn;
   individualPlanner = nullptr;
@@ -58,7 +59,8 @@ AgentStateMachine::AgentStateMachine(Agent* agentIn) {
   state = StateNone;
 }
 
-AgentStateMachine::~AgentStateMachine() {
+AgentStateMachine::~AgentStateMachine()
+{
   // clean up
   delete individualPlanner;
   delete queueingPlanner;
@@ -66,30 +68,37 @@ AgentStateMachine::~AgentStateMachine() {
   delete shoppingPlanner;
 }
 
-void AgentStateMachine::loseAttraction() {
+void AgentStateMachine::loseAttraction()
+{
   // set mark to lose attraction
   shallLoseAttraction = true;
 }
 
-void AgentStateMachine::doStateTransition() {
+void AgentStateMachine::doStateTransition()
+{
   // determine new state
   // → randomly get attracted by attractions
-  if ((state != StateShopping) && (state != StateQueueing)) {
+  if ((state != StateShopping) && (state != StateQueueing))
+  {
     double distance = INFINITY;
-    AttractionArea* attraction = nullptr;
+    AttractionArea *attraction = nullptr;
     bool hasGroupAttraction = checkGroupForAttractions(&attraction);
-    if (hasGroupAttraction) {
+    if (hasGroupAttraction)
+    {
       // inherit groups' attraction
       groupAttraction = attraction;
 
       normalState = state;
       activateState(StateShopping);
       return;
-    } else {
+    }
+    else
+    {
       // TODO: attraction must be visible!
       attraction = SCENE.getClosestAttraction(agent->getPosition(), &distance);
 
-      if (attraction != nullptr) {
+      if (attraction != nullptr)
+      {
         // check whether agent is attracted
         // NOTE: The Cumulative Geometric Distribution determines the
         //       number of Bernoulli trials needed to get one success.
@@ -105,7 +114,8 @@ void AgentStateMachine::doStateTransition() {
                              CONFIG.getTimeStepSize();
         std::bernoulli_distribution isAttracted(probability);
 
-        if (isAttracted(RNG())) {
+        if (isAttracted(RNG()))
+        {
           normalState = state;
           activateState(StateShopping);
           return;
@@ -114,14 +124,16 @@ void AgentStateMachine::doStateTransition() {
     }
   }
   // → randomly lose attraction
-  if (state == StateShopping) {
+  if (state == StateShopping)
+  {
     // check whether agent loses attraction
     // TODO: make this dependent from the distance to CoM
     double probability = 0.03;
     std::bernoulli_distribution isAttracted(probability *
                                             CONFIG.getTimeStepSize());
 
-    if (shallLoseAttraction || isAttracted(RNG())) {
+    if (shallLoseAttraction || isAttracted(RNG()))
+    {
       // reactivate previous state
       activateState(normalState);
 
@@ -131,17 +143,19 @@ void AgentStateMachine::doStateTransition() {
   }
 
   // → operate on waypoints/destinations
-  if ((state == StateNone) || agent->needNewDestination()) {
-    Ped::Twaypoint* destination = agent->updateDestination();
-    Waypoint* waypoint = dynamic_cast<Waypoint*>(destination);
+  if ((state == StateNone) || agent->needNewDestination())
+  {
+    Ped::Twaypoint *destination = agent->updateDestination();
+    Waypoint *waypoint = dynamic_cast<Waypoint *>(destination);
     // TODO: move this to the agent
-    WaitingQueue* waitingQueue = dynamic_cast<WaitingQueue*>(waypoint);
+    WaitingQueue *waitingQueue = dynamic_cast<WaitingQueue *>(waypoint);
 
     if (destination == nullptr)
       activateState(StateWaiting);
     else if (waitingQueue != nullptr)
       activateState(StateQueueing);
-    else {
+    else
+    {
       if (agent->isInGroup())
         activateState(StateGroupWalking);
       else
@@ -150,7 +164,8 @@ void AgentStateMachine::doStateTransition() {
   }
 }
 
-void AgentStateMachine::activateState(AgentState stateIn) {
+void AgentStateMachine::activateState(AgentState stateIn)
+{
   ROS_DEBUG("Agent %d activating state '%s' (time: %f)", agent->getId(),
             stateToName(stateIn).toStdString().c_str(), SCENE.getTime());
 
@@ -163,126 +178,143 @@ void AgentStateMachine::activateState(AgentState stateIn) {
   // set state
   state = stateIn;
 
-  Waypoint* destination =
-      dynamic_cast<Waypoint*>(agent->getCurrentDestination());
+  Waypoint *destination =
+      dynamic_cast<Waypoint *>(agent->getCurrentDestination());
 
-  switch (state) {
-    case StateNone:
-      agent->setWaypointPlanner(nullptr);
-      break;
-    case StateWaiting:
-      agent->setWaypointPlanner(nullptr);
-      break;
-    case StateWalking:
-      if (individualPlanner == nullptr)
-        individualPlanner = new IndividualWaypointPlanner();
-      individualPlanner->setAgent(agent);
-      individualPlanner->setDestination(destination);
-      agent->setWaypointPlanner(individualPlanner);
-      break;
-    case StateQueueing:
-      if (queueingPlanner == nullptr)
-        queueingPlanner = new QueueingWaypointPlanner();
-      queueingPlanner->setAgent(agent);
-      queueingPlanner->setDestination(destination);
-      agent->setWaypointPlanner(queueingPlanner);
-      break;
-    case StateGroupWalking:
-      if (groupWaypointPlanner == nullptr)
-        groupWaypointPlanner = new GroupWaypointPlanner();
-      groupWaypointPlanner->setDestination(destination);
-      groupWaypointPlanner->setGroup(agent->getGroup());
-      agent->setWaypointPlanner(groupWaypointPlanner);
-      break;
-    case StateShopping:
-      shallLoseAttraction = false;
-      if (shoppingPlanner == nullptr) shoppingPlanner = new ShoppingPlanner();
-      AttractionArea* attraction =
-          SCENE.getClosestAttraction(agent->getPosition());
-      shoppingPlanner->setAgent(agent);
-      shoppingPlanner->setAttraction(attraction);
-      agent->setWaypointPlanner(shoppingPlanner);
-      agent->disableForce("GroupCoherence");
-      agent->disableForce("GroupGaze");
+  switch (state)
+  {
+  case StateNone:
+    agent->setWaypointPlanner(nullptr);
+    break;
+  case StateWaiting:
+    agent->setWaypointPlanner(nullptr);
+    break;
+  case StateWalking:
+    if (individualPlanner == nullptr)
+      individualPlanner = new IndividualWaypointPlanner();
+    individualPlanner->setAgent(agent);
+    individualPlanner->setDestination(destination);
+    agent->setWaypointPlanner(individualPlanner);
+    break;
+  case StateQueueing:
+    if (queueingPlanner == nullptr)
+      queueingPlanner = new QueueingWaypointPlanner();
+    queueingPlanner->setAgent(agent);
+    queueingPlanner->setDestination(destination);
+    agent->setWaypointPlanner(queueingPlanner);
+    break;
+  case StateGroupWalking:
+    if (groupWaypointPlanner == nullptr)
+      groupWaypointPlanner = new GroupWaypointPlanner();
+    groupWaypointPlanner->setDestination(destination);
+    groupWaypointPlanner->setGroup(agent->getGroup());
+    agent->setWaypointPlanner(groupWaypointPlanner);
+    break;
+  case StateShopping:
+    shallLoseAttraction = false;
+    if (shoppingPlanner == nullptr)
+      shoppingPlanner = new ShoppingPlanner();
+    AttractionArea *attraction =
+        SCENE.getClosestAttraction(agent->getPosition());
+    shoppingPlanner->setAgent(agent);
+    shoppingPlanner->setAttraction(attraction);
+    agent->setWaypointPlanner(shoppingPlanner);
+    agent->disableForce("GroupCoherence");
+    agent->disableForce("GroupGaze");
 
-      // keep other agents informed about the attraction
-      AgentGroup* group = agent->getGroup();
-      if (group != nullptr) {
-        foreach (Agent* member, group->getMembers()) {
-          if (member == agent) continue;
+    // keep other agents informed about the attraction
+    AgentGroup *group = agent->getGroup();
+    if (group != nullptr)
+    {
+      foreach (Agent *member, group->getMembers())
+      {
+        if (member == agent)
+          continue;
 
-          AgentStateMachine* memberStateMachine = member->getStateMachine();
-          connect(shoppingPlanner, SIGNAL(lostAttraction()), memberStateMachine,
-                  SLOT(loseAttraction()));
-        }
+        AgentStateMachine *memberStateMachine = member->getStateMachine();
+        connect(shoppingPlanner, SIGNAL(lostAttraction()), memberStateMachine,
+                SLOT(loseAttraction()));
       }
+    }
 
-      break;
+    break;
   }
 
   // inform users
   emit stateChanged(state);
 }
 
-void AgentStateMachine::deactivateState(AgentState state) {
-  switch (state) {
-    case StateNone:
-      // nothing to do
-      break;
-    case StateWaiting:
-      // nothing to do
-      break;
-    case StateWalking:
-      // nothing to do
-      break;
-    case StateQueueing:
-      // nothing to do
-      break;
-    case StateGroupWalking:
-      // nothing to do
-      break;
-    case StateShopping:
-      // inform other group members
-      shoppingPlanner->loseAttraction();
+void AgentStateMachine::deactivateState(AgentState state)
+{
+  switch (state)
+  {
+  case StateNone:
+    // nothing to do
+    break;
+  case StateWaiting:
+    // nothing to do
+    break;
+  case StateWalking:
+    // nothing to do
+    break;
+  case StateQueueing:
+    // nothing to do
+    break;
+  case StateGroupWalking:
+    // nothing to do
+    break;
+  case StateShopping:
+    // inform other group members
+    shoppingPlanner->loseAttraction();
 
-      // don't worry about other group members
-      AgentGroup* group = agent->getGroup();
-      if (group != nullptr) {
-        foreach (Agent* member, group->getMembers()) {
-          if (member == agent) continue;
+    // don't worry about other group members
+    AgentGroup *group = agent->getGroup();
+    if (group != nullptr)
+    {
+      foreach (Agent *member, group->getMembers())
+      {
+        if (member == agent)
+          continue;
 
-          AgentStateMachine* memberStateMachine = member->getStateMachine();
-          disconnect(shoppingPlanner, SIGNAL(lostAttraction()),
-                     memberStateMachine, SLOT(loseAttraction()));
-        }
+        AgentStateMachine *memberStateMachine = member->getStateMachine();
+        disconnect(shoppingPlanner, SIGNAL(lostAttraction()),
+                   memberStateMachine, SLOT(loseAttraction()));
       }
+    }
 
-      break;
+    break;
   }
 }
 
 bool AgentStateMachine::checkGroupForAttractions(
-    AttractionArea** attractionOut) const {
-  AgentGroup* group = agent->getGroup();
+    AttractionArea **attractionOut) const
+{
+  AgentGroup *group = agent->getGroup();
 
   // check whether the agent is even in a group
-  if (group == nullptr) {
-    if (attractionOut != nullptr) *attractionOut = nullptr;
+  if (group == nullptr)
+  {
+    if (attractionOut != nullptr)
+      *attractionOut = nullptr;
     return false;
   }
 
   // check all group members
-  foreach (Agent* member, group->getMembers()) {
+  foreach (Agent *member, group->getMembers())
+  {
     // ignore agent himself
-    if (member == agent) continue;
+    if (member == agent)
+      continue;
 
     // check whether the group member uses ShoppingPlanner
-    WaypointPlanner* planner = member->getWaypointPlanner();
-    ShoppingPlanner* typedPlanner = dynamic_cast<ShoppingPlanner*>(planner);
-    if (typedPlanner != nullptr) {
-      AttractionArea* attraction = typedPlanner->getAttraction();
+    WaypointPlanner *planner = member->getWaypointPlanner();
+    ShoppingPlanner *typedPlanner = dynamic_cast<ShoppingPlanner *>(planner);
+    if (typedPlanner != nullptr)
+    {
+      AttractionArea *attraction = typedPlanner->getAttraction();
 
-      if (attraction != nullptr) {
+      if (attraction != nullptr)
+      {
         attractionOut = &attraction;
         return true;
       }
@@ -290,29 +322,33 @@ bool AgentStateMachine::checkGroupForAttractions(
   }
 
   // no group member is attracted to something
-  if (attractionOut != nullptr) *attractionOut = nullptr;
+  if (attractionOut != nullptr)
+    *attractionOut = nullptr;
   return false;
 }
 
-QString AgentStateMachine::stateToName(AgentState stateIn) const {
-  switch (stateIn) {
-    case StateNone:
-      return "StateNone";
-    case StateWaiting:
-      return "StateWaiting";
-    case StateWalking:
-      return "StateWalking";
-    case StateQueueing:
-      return "StateQueueing";
-    case StateGroupWalking:
-      return "StateGroupWalking";
-    case StateShopping:
-      return "StateShopping";
-    default:
-      return "UnknownState";
+QString AgentStateMachine::stateToName(AgentState stateIn) const
+{
+  switch (stateIn)
+  {
+  case StateNone:
+    return "StateNone";
+  case StateWaiting:
+    return "StateWaiting";
+  case StateWalking:
+    return "StateWalking";
+  case StateQueueing:
+    return "StateQueueing";
+  case StateGroupWalking:
+    return "StateGroupWalking";
+  case StateShopping:
+    return "StateShopping";
+  default:
+    return "UnknownState";
   }
 }
 
-AgentStateMachine::AgentState AgentStateMachine::getCurrentState() {
+AgentStateMachine::AgentState AgentStateMachine::getCurrentState()
+{
   return state;
 }
