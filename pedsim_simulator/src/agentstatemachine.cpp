@@ -361,4 +361,5 @@ AgentStateMachine::AgentState AgentStateMachine::getCurrentState()
 
 bool AgentStateMachine::checkIfFrozen()
 {
+  ros::Time::now().toSec();
 }

@@ -52,6 +52,9 @@ Agent::Agent()
   // group
   group = nullptr;
 
+  // last status
+  lastStatus = nullptr;
+
   //random option
   isRandom = 0;
 }

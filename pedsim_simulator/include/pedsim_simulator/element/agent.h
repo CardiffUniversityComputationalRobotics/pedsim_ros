@@ -34,10 +34,11 @@
 
 #include <pedsim/ped_agent.h>
 #include <pedsim_simulator/element/scenarioelement.h>
+#include <pedsim_msgs/AgentState.h>
 
 #ifndef Q_MOC_RUN
 #include <ros/ros.h>
-#include <QGraphicsRectItem>  // TODO -remove qgraphics dependencies
+#include <QGraphicsRectItem> // TODO -remove qgraphics dependencies
 #endif
 
 // Forward Declarations
@@ -47,16 +48,17 @@ class Force;
 class Waypoint;
 class WaypointPlanner;
 
-class Agent : public ScenarioElement, public Ped::Tagent {
+class Agent : public ScenarioElement, public Ped::Tagent
+{
   Q_OBJECT
 
   // Constructor and Destructor
- public:
+public:
   Agent();
   virtual ~Agent();
 
   // Signals
- signals:
+signals:
   void positionChanged(double x, double y) const;
   void velocityChanged(double x, double y) const;
   void accelerationChanged(double x, double y) const;
@@ -71,53 +73,53 @@ class Agent : public ScenarioElement, public Ped::Tagent {
   void forceRemoved(QString name);
 
   // Methods
- public:
+public:
   // → waypoints
-  const QList<Waypoint*>& getWaypoints() const;
-  bool setWaypoints(const QList<Waypoint*>& waypointsIn);
-  bool addWaypoint(Waypoint* waypointIn);
-  bool removeWaypoint(Waypoint* waypointIn);
+  const QList<Waypoint *> &getWaypoints() const;
+  bool setWaypoints(const QList<Waypoint *> &waypointsIn);
+  bool addWaypoint(Waypoint *waypointIn);
+  bool removeWaypoint(Waypoint *waypointIn);
 
-  Ped::Twaypoint* getCurrentDestination() const;
+  Ped::Twaypoint *getCurrentDestination() const;
   bool needNewDestination() const;
 
   // → group
   bool isInGroup() const;
-  AgentGroup* getGroup() const;
-  void setGroup(AgentGroup* groupIn);
+  AgentGroup *getGroup() const;
+  void setGroup(AgentGroup *groupIn);
 
   // → forces
-  bool addForce(Force* forceIn);
-  bool removeForce(Force* forceIn);
+  bool addForce(Force *forceIn);
+  bool removeForce(Force *forceIn);
 
   // → waypoint planner
-  AgentStateMachine* getStateMachine() const;
+  AgentStateMachine *getStateMachine() const;
 
   // → waypoint planner
-  WaypointPlanner* getWaypointPlanner() const;
-  void setWaypointPlanner(WaypointPlanner* plannerIn);
+  WaypointPlanner *getWaypointPlanner() const;
+  void setWaypointPlanner(WaypointPlanner *plannerIn);
 
   // → direction, forces, neighbors
- public:
+public:
   Ped::Tvector getDesiredDirection() const;
   Ped::Tvector getWalkingDirection() const;
   Ped::Tvector getSocialForce() const;
   Ped::Tvector getObstacleForce() const;
   Ped::Tvector getMyForce() const;
-  QList<const Agent*> getNeighbors() const;
-  void disableForce(const QString& forceNameIn);
+  QList<const Agent *> getNeighbors() const;
+  void disableForce(const QString &forceNameIn);
   void enableAllForces();
 
   // → Ped::Tagent Overrides/Overloads
- public:
+public:
   void updateState();
   void move(double h);
   Ped::Tvector desiredForce();
   Ped::Tvector socialForce() const;
   Ped::Tvector obstacleForce() const;
   Ped::Tvector myForce(Ped::Tvector desired) const;
-  Ped::Twaypoint* getCurrentWaypoint() const;
-  Ped::Twaypoint* updateDestination();
+  Ped::Twaypoint *getCurrentWaypoint() const;
+  Ped::Twaypoint *updateDestination();
   void setPosition(double xIn, double yIn);
   void setX(double xIn);
   void setY(double yIn);
@@ -125,32 +127,35 @@ class Agent : public ScenarioElement, public Ped::Tagent {
   void setRandom(bool randomIn);
 
   // → VisibleScenarioElement Overrides/Overloads
- public:
+public:
   virtual QPointF getVisiblePosition() const;
-  virtual void setVisiblePosition(const QPointF& positionIn);
+  virtual void setVisiblePosition(const QPointF &positionIn);
   QString toString() const;
 
   // Attributes
- protected:
+protected:
   // → state machine
-  AgentStateMachine* stateMachine;
+  AgentStateMachine *stateMachine;
 
   // → waypoints
-  QList<Waypoint*> destinations;
-  Waypoint* currentDestination;
+  QList<Waypoint *> destinations;
+  Waypoint *currentDestination;
 
   // → group
-  AgentGroup* group;
+  AgentGroup *group;
 
   // → force
-  QList<Force*> forces;
+  QList<Force *> forces;
   QStringList disabledForces;
 
   // → waypoint planner
-  WaypointPlanner* waypointplanner;
+  WaypointPlanner *waypointplanner;
 
   // → random waypoints
   bool isRandom;
+
+  // → lastStatus for frozen checking
+  pedsim_msgs::AgentState lastStatus;
 };
 
 #endif
