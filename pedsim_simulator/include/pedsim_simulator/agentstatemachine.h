@@ -42,60 +42,64 @@ class QueueingWaypointPlanner;
 class GroupWaypointPlanner;
 class ShoppingPlanner;
 
-class AgentStateMachine : public QObject {
+class AgentStateMachine : public QObject
+{
   Q_OBJECT
 
   // Enums
   // TODO - switch to enum classes
- public:
-  typedef enum {
+public:
+  typedef enum
+  {
     StateNone = 0,
     StateWaiting = 1,
     StateQueueing = 2,
     StateWalking = 3,
     StateGroupWalking = 4,
-    StateShopping = 5
+    StateShopping = 5,
+    StateFrozen = 6
   } AgentState;
 
   // Constructor and Destructor
- public:
-  AgentStateMachine(Agent* agentIn);
+public:
+  AgentStateMachine(Agent *agentIn);
   virtual ~AgentStateMachine();
 
   // Signals
- signals:
+signals:
   void stateChanged(AgentState newState);
 
- public slots:
+public slots:
   void loseAttraction();
 
   // Methods
- public:
+public:
   void doStateTransition();
   AgentState getCurrentState();
 
- protected:
+protected:
   void activateState(AgentState stateIn);
   void deactivateState(AgentState stateIn);
-  bool checkGroupForAttractions(AttractionArea** attractionOut = nullptr) const;
+  bool checkGroupForAttractions(AttractionArea **attractionOut = nullptr) const;
   QString stateToName(AgentState stateIn) const;
+  bool checkIfFrozen();
 
   // Attributes
- protected:
-  Agent* agent;
+protected:
+  Agent *agent;
 
   // → State Machine
   AgentState state;
   AgentState normalState;
 
   // → Waypoint Planner
-  IndividualWaypointPlanner* individualPlanner;
-  QueueingWaypointPlanner* queueingPlanner;
-  GroupWaypointPlanner* groupWaypointPlanner;
-  ShoppingPlanner* shoppingPlanner;
+  IndividualWaypointPlanner *individualPlanner;
+  QueueingWaypointPlanner *queueingPlanner;
+  GroupWaypointPlanner *groupWaypointPlanner;
+  ShoppingPlanner *shoppingPlanner;
 
   // → Attraction
-  AttractionArea* groupAttraction;
+  AttractionArea *groupAttraction;
   bool shallLoseAttraction;
 };
 

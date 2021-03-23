@@ -76,6 +76,12 @@ void AgentStateMachine::loseAttraction()
 
 void AgentStateMachine::doStateTransition()
 {
+
+  if (checkIfFrozen())
+  {
+    activateState(StateFrozen);
+  }
+  // ROS_INFO_STREAM("agent state machine running.");
   // determine new state
   // → randomly get attracted by attractions
   if ((state != StateShopping) && (state != StateQueueing))
@@ -351,4 +357,8 @@ QString AgentStateMachine::stateToName(AgentState stateIn) const
 AgentStateMachine::AgentState AgentStateMachine::getCurrentState()
 {
   return state;
+}
+
+bool AgentStateMachine::checkIfFrozen()
+{
 }
