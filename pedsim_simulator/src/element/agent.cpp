@@ -51,12 +51,11 @@ Agent::Agent()
   stateMachine = new AgentStateMachine(this);
   // group
   group = nullptr;
-
-  // last status
-  lastStatus = nullptr;
-
   //random option
   isRandom = 0;
+
+  // frozenStatus to know if agent is frozen
+  frozenStatus = "moving";
 }
 
 Agent::~Agent()
@@ -397,4 +396,46 @@ void Agent::setVisiblePosition(const QPointF &positionIn)
 QString Agent::toString() const
 {
   return tr("Agent %1 (@%2,%3)").arg(getId()).arg(getx()).arg(gety());
+}
+
+bool Agent::hasMovement()
+{
+  double deltaPositionX = abs(Ped::Tagent::getPosition().x - lastPosition.x);
+  double deltaPositionY = abs(Ped::Tagent::getPosition().y - lastPosition.y);
+
+  if (deltaPositionX <= 0.5 and deltaPositionY <= 0.5)
+  {
+    return false;
+  }
+  return true;
+}
+
+bool Agent::checkIfFrozen()
+{
+  if (hasMovement())
+  {
+    frozenStatus = "moving";
+  }
+  else
+  {
+    if (frozenStatus == "moving")
+    {
+      frozenStatus == "possibly_frozen";
+      lastTimePosition == ros::Time::now().sec;
+    }
+    else
+    {
+      if (frozenStatus == "possibly_frozen")
+      {
+        return false;
+      }
+      else
+      {
+        if ((ros::Time::now().sec - lastTimePosition) > 10)
+        {
+          frozenStatus = "frozen";
+        }
+      }
+    }
+  }
 }

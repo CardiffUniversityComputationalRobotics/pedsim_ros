@@ -34,7 +34,7 @@
 
 #include <pedsim/ped_agent.h>
 #include <pedsim_simulator/element/scenarioelement.h>
-#include <pedsim_msgs/AgentState.h>
+#include <geometry_msgs/Point.h>
 
 #ifndef Q_MOC_RUN
 #include <ros/ros.h>
@@ -125,6 +125,8 @@ public:
   void setY(double yIn);
   void setType(Ped::Tagent::AgentType typeIn);
   void setRandom(bool randomIn);
+  bool checkIfFrozen();
+  bool hasMovement();
 
   // → VisibleScenarioElement Overrides/Overloads
 public:
@@ -154,8 +156,17 @@ protected:
   // → random waypoints
   bool isRandom;
 
-  // → lastStatus for frozen checking
-  pedsim_msgs::AgentState lastStatus;
+  // → lastPosition for frozen checking
+  geometry_msgs::Point lastPosition;
+
+  // → lastTimePosition is the time of last recorded position
+  uint64_t lastTimePosition;
+
+  // → lastTimeIteration is the time to control iterations
+  uint64_t lastTimeIteration;
+
+  // → frozenStatus string moving|possibly_frozen|frozen
+  string frozenStatus;
 };
 
 #endif

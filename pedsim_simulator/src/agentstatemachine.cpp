@@ -77,9 +77,10 @@ void AgentStateMachine::loseAttraction()
 void AgentStateMachine::doStateTransition()
 {
 
-  if (checkIfFrozen())
+  if (agent->checkIfFrozen())
   {
     activateState(StateFrozen);
+    return;
   }
   // ROS_INFO_STREAM("agent state machine running.");
   // determine new state
@@ -359,7 +360,8 @@ AgentStateMachine::AgentState AgentStateMachine::getCurrentState()
   return state;
 }
 
-bool AgentStateMachine::checkIfFrozen()
-{
-  ros::Time::now().toSec();
-}
+// bool AgentStateMachine::checkIfFrozen()
+// {
+
+//ros::Time::now().toSec();
+// }
