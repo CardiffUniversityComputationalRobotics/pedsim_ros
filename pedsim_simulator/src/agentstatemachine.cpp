@@ -81,19 +81,13 @@ void AgentStateMachine::doStateTransition()
   {
     if (agent->checkIfFrozen())
     {
-      ROS_INFO_STREAM("agent [" << agent->getId() << "] is frozen");
+      ROS_INFO_STREAM("###################");
+      ROS_INFO_STREAM("Agent [" << agent->getId() << "] is frozen");
       activateState(StateFrozen);
       return;
     }
   }
 
-  // if (agent->checkIfFrozen())
-  // {
-  //   activateState(StateFrozen);
-  //   return;
-  // }
-  // ROS_INFO_STREAM("Random destination number selected [" << iRandomWaypoint << "] for agent.");
-  // determine new state
   // → randomly get attracted by attractions
   if ((state != StateShopping) && (state != StateQueueing))
   {
@@ -228,7 +222,15 @@ void AgentStateMachine::activateState(AgentState stateIn)
     agent->setWaypointPlanner(groupWaypointPlanner);
     break;
   case StateFrozen:
-    agent->setWaypointPlanner(nullptr);
+    destination = dynamic_cast<Waypoint *>(agent->updateDestination());
+    if (individualPlanner == nullptr)
+    {
+      individualPlanner = new IndividualWaypointPlanner();
+    }
+    individualPlanner->setAgent(agent);
+    individualPlanner->setDestination(destination);
+    agent->setWaypointPlanner(individualPlanner);
+    ROS_INFO_STREAM("New destination [" << destination->getName().toStdString() << "] for frozen agent");
     break;
   case StateShopping:
     shallLoseAttraction = false;
@@ -372,9 +374,3 @@ AgentStateMachine::AgentState AgentStateMachine::getCurrentState()
 {
   return state;
 }
-
-// bool AgentStateMachine::checkIfFrozen()
-// {
-
-//ros::Time::now().toSec();
-// }

@@ -166,11 +166,12 @@ Ped::Twaypoint *Agent::updateDestination()
     if (isRandom == 0)
     {
       currentDestination = destinations.first();
+      ROS_INFO_STREAM("Destination [" << currentDestination->getName().toStdString() << "] for agent [" << id << "]");
     }
     else
     {
       int iRandomWaypoint = (rand() % static_cast<int>(destinations.size()));
-      ROS_INFO_STREAM("Random destination agent reached destination.");
+      ROS_INFO_STREAM("Random destination agent [" << id << "] reached destination.");
       ROS_INFO_STREAM("Random destination number selected [" << iRandomWaypoint << "] for agent.");
       currentDestination = destinations.takeAt(iRandomWaypoint);
     }
@@ -410,8 +411,6 @@ bool Agent::hasMovement()
   double deltaPositionX = abs(Ped::Tagent::getPosition().x - lastPosition.x);
   double deltaPositionY = abs(Ped::Tagent::getPosition().y - lastPosition.y);
 
-  //ROS_INFO_STREAM("agent diff " << deltaPositionY << " " << deltaPositionX << "");
-
   if (deltaPositionX <= 0.5 and deltaPositionY <= 0.5)
   {
     return false;
@@ -421,8 +420,6 @@ bool Agent::hasMovement()
 // → method to check if agent is stuck in a space
 bool Agent::checkIfFrozen()
 {
-  // ROS_INFO_STREAM("####################");
-  // ROS_INFO_STREAM("checking if agent is frozen");
   lastTimeIteration = ros::Time::now().sec;
   if (hasMovement())
   {
@@ -436,7 +433,6 @@ bool Agent::checkIfFrozen()
   {
     if (frozenStatus == "moving")
     {
-      // ROS_INFO_STREAM("possibly frozen agent");
       frozenStatus = "possibly_frozen";
       lastTimePosition = ros::Time::now().sec;
       return false;

@@ -82,7 +82,6 @@ protected:
   void deactivateState(AgentState stateIn);
   bool checkGroupForAttractions(AttractionArea **attractionOut = nullptr) const;
   QString stateToName(AgentState stateIn) const;
-  //bool checkIfFrozen();
 
   // Attributes
 protected:
