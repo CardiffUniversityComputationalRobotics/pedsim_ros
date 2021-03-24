@@ -13,7 +13,7 @@ string      TYPE_STANDING = "standing"
 string      TYPE_INDIVIDUAL_MOVING = "individual_moving"
 string      TYPE_WAITING_IN_QUEUE = "waiting_in_queue"
 string      TYPE_GROUP_MOVING = "group_moving"
-
+string      TYPE_FROZEN = "frozen"
 
 # Agent types
 # 0, 1 -> ordinary agents

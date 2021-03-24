@@ -109,6 +109,7 @@ public:
   QList<const Agent *> getNeighbors() const;
   void disableForce(const QString &forceNameIn);
   void enableAllForces();
+  uint64_t getLastTimeIteration() const;
 
   // → Ped::Tagent Overrides/Overloads
 public:

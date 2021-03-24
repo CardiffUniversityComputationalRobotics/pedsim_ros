@@ -77,12 +77,22 @@ void AgentStateMachine::loseAttraction()
 void AgentStateMachine::doStateTransition()
 {
 
-  if (agent->checkIfFrozen())
+  if ((ros::Time::now().sec - agent->getLastTimeIteration()) > 5)
   {
-    activateState(StateFrozen);
-    return;
+    if (agent->checkIfFrozen())
+    {
+      ROS_INFO_STREAM("agent [" << agent->getId() << "] is frozen");
+      activateState(StateFrozen);
+      return;
+    }
   }
-  // ROS_INFO_STREAM("agent state machine running.");
+
+  // if (agent->checkIfFrozen())
+  // {
+  //   activateState(StateFrozen);
+  //   return;
+  // }
+  // ROS_INFO_STREAM("Random destination number selected [" << iRandomWaypoint << "] for agent.");
   // determine new state
   // → randomly get attracted by attractions
   if ((state != StateShopping) && (state != StateQueueing))
@@ -216,6 +226,9 @@ void AgentStateMachine::activateState(AgentState stateIn)
     groupWaypointPlanner->setDestination(destination);
     groupWaypointPlanner->setGroup(agent->getGroup());
     agent->setWaypointPlanner(groupWaypointPlanner);
+    break;
+  case StateFrozen:
+    agent->setWaypointPlanner(nullptr);
     break;
   case StateShopping:
     shallLoseAttraction = false;

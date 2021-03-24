@@ -56,6 +56,8 @@ Agent::Agent()
 
   // frozenStatus to know if agent is frozen
   frozenStatus = "moving";
+
+  lastTimeIteration = 0;
 }
 
 Agent::~Agent()
@@ -398,10 +400,17 @@ QString Agent::toString() const
   return tr("Agent %1 (@%2,%3)").arg(getId()).arg(getx()).arg(gety());
 }
 
+uint64_t Agent::getLastTimeIteration() const
+{
+  return lastTimeIteration;
+}
+
 bool Agent::hasMovement()
 {
   double deltaPositionX = abs(Ped::Tagent::getPosition().x - lastPosition.x);
   double deltaPositionY = abs(Ped::Tagent::getPosition().y - lastPosition.y);
+
+  //ROS_INFO_STREAM("agent diff " << deltaPositionY << " " << deltaPositionX << "");
 
   if (deltaPositionX <= 0.5 and deltaPositionY <= 0.5)
   {
@@ -409,32 +418,46 @@ bool Agent::hasMovement()
   }
   return true;
 }
-
+// → method to check if agent is stuck in a space
 bool Agent::checkIfFrozen()
 {
+  // ROS_INFO_STREAM("####################");
+  // ROS_INFO_STREAM("checking if agent is frozen");
+  lastTimeIteration = ros::Time::now().sec;
   if (hasMovement())
   {
     frozenStatus = "moving";
+    lastTimePosition = ros::Time::now().sec;
+    lastPosition.x = Ped::Tagent::getPosition().x;
+    lastPosition.y = Ped::Tagent::getPosition().y;
+    return false;
   }
   else
   {
     if (frozenStatus == "moving")
     {
-      frozenStatus == "possibly_frozen";
-      lastTimePosition == ros::Time::now().sec;
+      // ROS_INFO_STREAM("possibly frozen agent");
+      frozenStatus = "possibly_frozen";
+      lastTimePosition = ros::Time::now().sec;
+      return false;
     }
     else
     {
       if (frozenStatus == "possibly_frozen")
       {
-        return false;
-      }
-      else
-      {
         if ((ros::Time::now().sec - lastTimePosition) > 10)
         {
           frozenStatus = "frozen";
+          return true;
         }
+        else
+        {
+          return false;
+        }
+      }
+      else
+      {
+        return true;
       }
     }
   }
