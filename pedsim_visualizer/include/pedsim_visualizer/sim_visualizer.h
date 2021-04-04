@@ -73,58 +73,61 @@
 #include <dynamic_reconfigure/server.h>
 #include <pedsim_visualizer/PedsimVisualizerConfig.h>
 
-namespace pedsim {
+namespace pedsim
+{
 
-class SimVisualizer {
- public:
-  using VizConfig = pedsim_visualizer::PedsimVisualizerConfig;
+  class SimVisualizer
+  {
+  public:
+    using VizConfig = pedsim_visualizer::PedsimVisualizerConfig;
 
-  explicit SimVisualizer(const ros::NodeHandle& node_in);
-  ~SimVisualizer();
-  SimVisualizer(const SimVisualizer& other) = delete;
+    explicit SimVisualizer(const ros::NodeHandle &node_in);
+    ~SimVisualizer();
+    SimVisualizer(const SimVisualizer &other) = delete;
 
-  void run();
+    void run();
 
-  // callbacks.
-  void agentStatesCallBack(const pedsim_msgs::AgentStatesConstPtr& agents);
-  void agentGroupsCallBack(const pedsim_msgs::AgentGroupsConstPtr& groups);
-  void obstaclesCallBack(const pedsim_msgs::LineObstaclesConstPtr& obstacles);
-  void waypointsCallBack(const pedsim_msgs::WaypointsConstPtr& waypoints);
+    // callbacks.
+    void agentStatesCallBack(const pedsim_msgs::AgentStatesConstPtr &agents);
+    void agentGroupsCallBack(const pedsim_msgs::AgentGroupsConstPtr &groups);
+    void obstaclesCallBack(const pedsim_msgs::LineObstaclesConstPtr &obstacles);
+    void waypointsCallBack(const pedsim_msgs::WaypointsConstPtr &waypoints);
 
- protected:
-  /// publishers
-  void publishAgentVisuals();
-  void publishRelationVisuals();
-  void publishActivityVisuals();
-  void publishGroupVisuals();
-  void publishObstacleVisuals();
-  void publishWaypointVisuals();
+  protected:
+    /// publishers
+    void publishAgentVisuals();
+    void publishRelationVisuals();
+    void publishActivityVisuals();
+    void publishGroupVisuals();
+    void publishObstacleVisuals();
+    void publishWaypointVisuals();
 
- private:
-  void setupPublishersAndSubscribers();
+  private:
+    void setupPublishersAndSubscribers();
 
-  ros::NodeHandle nh_;
-  double hz_;
+    ros::NodeHandle nh_;
+    double hz_;
+    double walls_marker_scale_;
 
-  /// publishers
-  ros::Publisher pub_obstacles_visuals_;
-  ros::Publisher pub_person_visuals_;
-  ros::Publisher pub_group_visuals_;
-  ros::Publisher pub_forces_;
-  ros::Publisher pub_waypoints_;
+    /// publishers
+    ros::Publisher pub_obstacles_visuals_;
+    ros::Publisher pub_person_visuals_;
+    ros::Publisher pub_group_visuals_;
+    ros::Publisher pub_forces_;
+    ros::Publisher pub_waypoints_;
 
-  /// Subscribers.
-  ros::Subscriber sub_states_;
-  ros::Subscriber sub_groups_;
-  ros::Subscriber sub_obstacles_;
-  ros::Subscriber sub_waypoints_;
+    /// Subscribers.
+    ros::Subscriber sub_states_;
+    ros::Subscriber sub_groups_;
+    ros::Subscriber sub_obstacles_;
+    ros::Subscriber sub_waypoints_;
 
-  /// Local data queues.
-  std::queue<pedsim_msgs::AgentStatesConstPtr> q_people_;
-  std::queue<pedsim_msgs::AgentGroupsConstPtr> q_groups_;
-  std::queue<pedsim_msgs::LineObstaclesConstPtr> q_obstacles_;
-  std::queue<pedsim_msgs::WaypointsConstPtr> q_waypoints_;
-};
-}  // namespace pedsim
+    /// Local data queues.
+    std::queue<pedsim_msgs::AgentStatesConstPtr> q_people_;
+    std::queue<pedsim_msgs::AgentGroupsConstPtr> q_groups_;
+    std::queue<pedsim_msgs::LineObstaclesConstPtr> q_obstacles_;
+    std::queue<pedsim_msgs::WaypointsConstPtr> q_waypoints_;
+  };
+} // namespace pedsim
 
 #endif
