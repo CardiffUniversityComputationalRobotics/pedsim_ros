@@ -1,0 +1,130 @@
+<launch>
+    <arg name="robot" default="cob4-8" />
+    <!-- cob4-5, cob4-7, cob4-8, cob4-10, cob4-13, cob4-16, cob4-24 -->
+    <arg name="robot_env" default="empty" />
+    <!-- empty, ipa-apartment, ipa-kitchen, ipa-office -->
+    <arg name="pkg_hardware_config" default="$(find cob_hardware_config)"/>
+    <arg name="pkg_moveit_config" default="$(find cob_moveit_config)"/>
+    <arg name="debug" default="false"/>
+    <arg name="pipeline" default="ompl" />
+    <arg name="scene_objects" default="pick_place" />
+
+    <arg name="mapping" default="true" />
+    <arg name="world_name" default="$(find pedsim_simulator)/worlds/empty_default.world" />
+    <!-- test_zone.sdf, test_zone_pick_place.sdf -->
+    <arg name="moveit" default="true"/>
+    <arg name="output" default="log"/>
+    <!-- <arg name="map_file" default="simulation_map_gmapping"/> -->
+
+    <!-- next three arguments are not used yet -->
+    <arg name="allow_active_sensing" default="true"/>
+    <arg name="vicon_bridge_params_file" default="localization_tests.yaml"/>
+    <arg name="prepare_robot_pick_place" default="true" />
+
+    <arg name="gui" default="true"/>
+
+    <!-- initial position of robot for localization testing -->
+    <arg name="x_pose" default="0.0"/>
+    <arg name="y_pose" default="0.0"/>
+
+    <!-- pre-made map for localization -->
+    <arg name="map_file" default="$(find test_cob4_simulation_bringup)/maps/map.yaml"/>
+    <!-- Map server -->
+    <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+    <!-- Start Gazebo simulation -->
+    <include file="$(find cob_bringup_sim)/launch/robot.launch">
+        <arg name="robot" value="$(arg robot)" />
+        <arg name="robot_env" value="$(arg robot_env)" />
+        <arg name="gui" value="$(arg gui)" />
+        <arg name="initial_config" value="-x $(arg x_pose) -y $(arg y_pose)" />
+        <arg name="world_name" value="$(arg world_name)"/>
+    </include>
+
+    <!-- start amcl -->
+    <node pkg="amcl" type="amcl" name="amcl">
+        <remap from="scan" to="scan_unified" />
+        <param name="odom_model_type" value="omni"/>
+        <param name="transform_tolerance" value="0.2" />
+        <param name="gui_publish_rate" value="-1.0"/>
+        <param name="laser_max_beams" value="180"/>
+        <param name="laser_max_range" value="10"/>
+        <param name="min_particles" value="100"/>
+        <param name="max_particles" value="5000"/>
+        <!--param name="update_min_a" value="1.0"/-->
+        <param name="kld_err" value="0.01"/>
+        <param name="kld_z" value="0.99"/>
+        <param name="odom_alpha1" value="0.1"/>
+        <param name="odom_alpha2" value="0.1"/>
+        <!-- translation std dev, m -->
+        <param name="odom_alpha3" value="0.1"/>
+        <param name="odom_alpha4" value="0.1"/>
+        <param name="odom_alpha5" value="0.1"/>
+        <param name="laser_z_hit" value="0.95"/>
+        <param name="laser_z_short" value="0.1"/>
+        <param name="laser_z_max" value="0.05"/>
+        <param name="laser_z_rand" value="0.05"/>
+        <param name="laser_sigma_hit" value="0.2"/>
+        <param name="laser_lambda_short" value="0.1"/>
+        <param name="laser_model_type" value="likelihood_field"/>
+        <!-- <param name="laser_model_type" value="beam"/> -->
+        <param name="laser_likelihood_max_dist" value="2.0"/>
+        <param name="update_min_d" value="0.2"/>
+        <param name="update_min_a" value="0.2"/>
+        <param name="odom_frame_id" value="odom_combined"/>
+        <param name="base_frame_id" value="base_footprint"/>
+        <param name="global_frame_id" value="map"/>
+        <param name="resample_interval" value="2"/>
+        <param name="transform_tolerance" value="0.1"/>
+        <param name="recovery_alpha_slow" value="0.0"/>
+        <param name="recovery_alpha_fast" value="0.0"/>
+    </node>
+
+    <!-- Including RVIZ to monitor mapping -->
+    <!-- <include file="$(find test_cob4_desktop_bringup)/launch/rviz.launch">
+        <arg name="config" value="amcl" />
+    </include> -->
+
+    <!-- MoveIt! -->
+    <group if="$(arg moveit)">
+        <include file="$(find cob_moveit_bringup)/launch/move_group.launch">
+            <arg name="robot" value="$(arg robot)" />
+            <arg name="pkg_hardware_config" value="$(arg pkg_hardware_config)"/>
+            <arg name="pkg_moveit_config" value="$(arg pkg_moveit_config)"/>
+            <arg name="load_robot_description" value="true"/>
+            <arg name="allow_trajectory_execution" value="true"/>
+            <arg name="fake_execution" value="false"/>
+            <arg name="use_sensors" value="false"/>
+            <arg name="info" value="true"/>
+            <arg name="debug" value="$(arg debug)"/>
+            <arg name="pipeline" value="$(arg pipeline)" />
+        </include>
+    </group>
+
+    <!-- Moving cob4 to its home state -->
+    <node pkg="test_cob4_common_bringup" type="cob4_moveit_home" name="cob4_moveit_home" output="screen" />
+
+    <!-- Teleop included for convenience -->
+    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" output="screen" launch-prefix="xterm -e">
+        <remap from="/cmd_vel" to="/base/twist_controller/command"/>
+    </node>
+
+    <arg name="pkg_nav_config" default="$(find cob_navigation_config)"/>
+
+    <!--- Run move base -->
+    <include file="$(find cob_navigation_global)/launch/2dnav_ros_dwa.xml">
+        <arg name="robot" value="$(arg robot)"/>
+        <arg name="pkg_nav_config" value="$(arg pkg_nav_config)"/>
+    </include>
+
+    <!-- gazebo physics parameters changed for faster simulation -->
+    <node name="gazebo_physics_config" pkg="dynamic_reconfigure" type="dynparam" args="set_from_parameters gazebo">
+        <rosparam file="$(find test_cob4_simulation_bringup)/param/physics_gazebo.yaml" command="load" />
+    </node>
+
+
+    <!-- this node spawn pedsim actors to gazebo once, then the plugin updates their pose -->
+    <node pkg="pedsim_gazebo_plugin" type="spawn_pedsim_agents.py" name="spawn_pedsim_agents" output="screen">
+    </node>
+
+</launch>

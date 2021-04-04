@@ -1,0 +1,41 @@
+<launch>
+
+    <!-- define arguments -->
+    <arg name="robot" default="cob4-8"/>
+    <arg name="robot_env" default="empty"/>
+    <arg name="pkg_robot_config" default="$(find cob_default_robot_config)"/>
+    <arg name="pkg_env_config" default="$(find cob_default_env_config)"/>
+    <arg name="pkg_gazebo_worlds" default="$(find cob_gazebo_worlds)"/>
+    <arg name="world_name" default="$(find pedsim_simulator)/worlds/empty_default.world"/>
+    <arg name="initial_config" default=""/>
+
+    <arg name="paused" default="false"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="true"/>
+
+
+    <!-- startup simulated world -->
+    <include file="$(find cob_gazebo_worlds)/launch/world.launch">
+        <arg name="robot_env" value="$(arg robot_env)" />
+        <arg name="pkg_env_config" value="$(arg pkg_env_config)" />
+        <arg name="pkg_gazebo_worlds" value="$(arg pkg_gazebo_worlds)" />
+        <arg name="world_name" value="$(arg world_name)"/>
+        <arg name="paused" value="$(arg paused)" />
+        <arg name="use_sim_time" value="$(arg use_sim_time)" />
+        <arg name="gui" value="$(arg gui)" />
+    </include>
+
+    <!-- startup simulated robot -->
+    <include file="$(find cob_gazebo)/launch/robot.launch">
+        <arg name="robot" value="$(arg robot)" />
+        <arg name="robot_env" value="$(arg robot_env)" />
+        <arg name="pkg_robot_config" value="$(arg pkg_robot_config)" />
+        <arg name="paused" value="$(arg paused)" />
+        <arg name="initial_config" value="$(arg initial_config)"/>
+    </include>
+
+    <!-- this node spawn pedsim actors to gazebo once, then the plugin updates their pose -->
+    <node pkg="pedsim_gazebo_plugin" type="spawn_pedsim_agents.py" name="spawn_pedsim_agents" output="screen">
+    </node>
+
+</launch>
