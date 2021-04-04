@@ -58,6 +58,8 @@ Agent::Agent()
   frozenStatus = "moving";
 
   lastTimeIteration = 0;
+  frozenDiffPosition = 0.5;
+  frozenDiffTime = 4;
 }
 
 Agent::~Agent()
@@ -411,7 +413,7 @@ bool Agent::hasMovement()
   double deltaPositionX = abs(Ped::Tagent::getPosition().x - lastPosition.x);
   double deltaPositionY = abs(Ped::Tagent::getPosition().y - lastPosition.y);
 
-  if (deltaPositionX <= 0.5 and deltaPositionY <= 0.5)
+  if (deltaPositionX <= frozenDiffPosition and deltaPositionY <= frozenDiffPosition)
   {
     return false;
   }
@@ -421,11 +423,11 @@ bool Agent::hasMovement()
 // → method to check if agent is stuck in a space
 bool Agent::checkIfFrozen()
 {
-  lastTimeIteration = ros::Time::now().nsec;
+  lastTimeIteration = ros::Time::now().sec;
   if (hasMovement())
   {
     frozenStatus = "moving";
-    lastTimePosition = ros::Time::now().nsec;
+    lastTimePosition = ros::Time::now().sec;
     lastPosition.x = Ped::Tagent::getPosition().x;
     lastPosition.y = Ped::Tagent::getPosition().y;
     return false;
@@ -435,15 +437,14 @@ bool Agent::checkIfFrozen()
     if (frozenStatus == "moving")
     {
       frozenStatus = "possibly_frozen";
-      lastTimePosition = ros::Time::now().nsec;
+      lastTimePosition = ros::Time::now().sec;
       return false;
     }
     else
     {
       if (frozenStatus == "possibly_frozen")
       {
-        ROS_INFO_STREAM("Agent [" << id << "] with diff time [" << ros::Time::now().nsec - lastTimePosition << "]");
-        if ((ros::Time::now().nsec - lastTimePosition) > 1000000000)
+        if (ros::Time::now().sec > frozenDiffTime)
         {
           frozenStatus = "frozen";
           return true;

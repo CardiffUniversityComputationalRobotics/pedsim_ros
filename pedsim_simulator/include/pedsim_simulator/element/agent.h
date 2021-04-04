@@ -168,6 +168,10 @@ protected:
 
   // → frozenStatus string moving|possibly_frozen|frozen
   string frozenStatus;
+
+  double frozenDiffPosition;
+
+  uint16_t frozenDiffTime;
 };
 
 #endif

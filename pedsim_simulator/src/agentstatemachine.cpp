@@ -57,6 +57,8 @@ AgentStateMachine::AgentStateMachine(Agent *agentIn)
 
   // initialize state machine
   state = StateNone;
+
+  diffTimeIteration = 1;
 }
 
 AgentStateMachine::~AgentStateMachine()
@@ -77,7 +79,7 @@ void AgentStateMachine::loseAttraction()
 void AgentStateMachine::doStateTransition()
 {
 
-  if ((ros::Time::now().nsec - agent->getLastTimeIteration()) > 3000000000)
+  if ((ros::Time::now().sec - agent->getLastTimeIteration()) > diffTimeIteration)
   {
     if (agent->checkIfFrozen())
     {

@@ -100,6 +100,7 @@ protected:
   // → Attraction
   AttractionArea *groupAttraction;
   bool shallLoseAttraction;
+  uint64_t diffTimeIteration;
 };
 
 #endif
