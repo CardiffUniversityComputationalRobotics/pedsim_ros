@@ -81,14 +81,17 @@ void AgentStateMachine::doStateTransition()
 
   if (CONFIG.frozenAgentsDetection)
   {
-    if ((ros::Time::now().sec - agent->getLastTimeIteration()) > diffTimeIteration)
+    if ((state != StateShopping) && (state != StateQueueing))
     {
-      if (agent->checkIfFrozen())
+      if ((ros::Time::now().sec - agent->getLastTimeIteration()) > diffTimeIteration)
       {
-        ROS_INFO_STREAM("###################");
-        ROS_INFO_STREAM("Agent [" << agent->getId() << "] is frozen");
-        activateState(StateFrozen);
-        return;
+        if (agent->checkIfFrozen())
+        {
+          ROS_INFO_STREAM("###################");
+          ROS_INFO_STREAM("Agent [" << agent->getId() << "] is frozen");
+          activateState(StateFrozen);
+          return;
+        }
       }
     }
   }
