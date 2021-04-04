@@ -37,22 +37,23 @@
 
 #include <pedsim_simulator/utilities.h>
 
-class Config : public QObject {
+class Config : public QObject
+{
   Q_OBJECT
 
- protected:
-  Config(QObject* parent = 0);
+protected:
+  Config(QObject *parent = 0);
 
 // Singleton Design Pattern
 #define CONFIG Config::getInstance()
- protected:
-  static Config* instance;
+protected:
+  static Config *instance;
 
- public:
-  static Config& getInstance();
+public:
+  static Config &getInstance();
 
   // Signals
- signals:
+signals:
   // → Forces
   void forceFactorChanged(QString name, double value);
   void forceFactorObstacleChanged(double value);
@@ -65,7 +66,7 @@ class Config : public QObject {
   void forceFactorAlongWallChanged(double value);
 
   // Slots
- public slots:
+public slots:
   // → Forces
   void setObstacleForce(double valueIn);
   void setObstacleSigma(double valueIn);
@@ -75,16 +76,17 @@ class Config : public QObject {
   void setGroupRepulsionForce(double valueIn);
   void setRandomForce(double valueIn);
   void setAlongWallForce(double valueIn);
+  void setFrozenAgentDetection(bool valueIn);
 
   // Methods
- public:
+public:
   // TODO - change to std::unordered_map
   QMap<QString, double> getForceMap() const;
 
   double getTimeStepSize() { return simulationFactor / updateRate; }
 
   // Attributes
- public:
+public:
   // Simulation
   double updateRate;
   double simulationFactor;
@@ -106,6 +108,9 @@ class Config : public QObject {
 
   // enable/disable groups behaviour
   bool groups_enabled;
+
+  // enable/disable frozen agent detection
+  bool frozenAgentsDetection;
 
   // cells
   double cell_width;

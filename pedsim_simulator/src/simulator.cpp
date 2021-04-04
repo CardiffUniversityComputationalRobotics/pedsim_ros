@@ -192,7 +192,10 @@ void Simulator::reconfigureCB(pedsim_simulator::PedsimSimulatorConfig &config,
   CONFIG.setRandomForce(config.force_random);
   CONFIG.setAlongWallForce(config.force_wall);
 
-  // puase or unpause the simulation
+  // update frozen agents detection
+  CONFIG.setFrozenAgentDetection(config.detect_frozen_agents);
+
+  // pause or unpause the simulation
   if (paused_ != config.paused)
   {
     paused_ = config.paused;

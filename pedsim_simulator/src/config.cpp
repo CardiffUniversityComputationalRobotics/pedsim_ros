@@ -32,9 +32,10 @@
 #include <pedsim_simulator/config.h>
 
 // initialize static value
-Config* Config::Config::instance = nullptr;
+Config *Config::Config::instance = nullptr;
 
-Config::Config(QObject* parent) {
+Config::Config(QObject *parent)
+{
   updateRate = 25.0;
   simulationFactor = 1.0;
 
@@ -56,19 +57,23 @@ Config::Config(QObject* parent) {
   max_robot_speed = 2.0;
 
   groups_enabled = true;
+  frozenAgentsDetection = true;
   group_size_lambda = 1.1;
   wait_time_beta = 0.2;
 
   visual_mode = VisualMode::MINIMAL;
 }
 
-Config& Config::getInstance() {
-  if (instance == nullptr) instance = new Config();
+Config &Config::getInstance()
+{
+  if (instance == nullptr)
+    instance = new Config();
 
   return *instance;
 }
 
-void Config::setObstacleForce(double valueIn) {
+void Config::setObstacleForce(double valueIn)
+{
   forceObstacle = valueIn;
 
   // inform users
@@ -76,7 +81,8 @@ void Config::setObstacleForce(double valueIn) {
   emit forceFactorObstacleChanged(valueIn);
 }
 
-void Config::setObstacleSigma(double valueIn) {
+void Config::setObstacleSigma(double valueIn)
+{
   sigmaObstacle = valueIn;
 
   // inform users
@@ -84,7 +90,8 @@ void Config::setObstacleSigma(double valueIn) {
   emit forceSigmaObstacleChanged(valueIn);
 }
 
-void Config::setSocialForce(double valueIn) {
+void Config::setSocialForce(double valueIn)
+{
   forceSocial = valueIn;
 
   // inform users
@@ -92,7 +99,8 @@ void Config::setSocialForce(double valueIn) {
   emit forceFactorSocialChanged(valueIn);
 }
 
-void Config::setGroupGazeForce(double valueIn) {
+void Config::setGroupGazeForce(double valueIn)
+{
   forceGroupGaze = valueIn;
 
   // inform users
@@ -100,7 +108,8 @@ void Config::setGroupGazeForce(double valueIn) {
   emit forceFactorGroupGazeChanged(valueIn);
 }
 
-void Config::setGroupCoherenceForce(double valueIn) {
+void Config::setGroupCoherenceForce(double valueIn)
+{
   forceGroupCoherence = valueIn;
 
   // inform users
@@ -108,7 +117,8 @@ void Config::setGroupCoherenceForce(double valueIn) {
   emit forceFactorGroupCoherenceChanged(valueIn);
 }
 
-void Config::setGroupRepulsionForce(double valueIn) {
+void Config::setGroupRepulsionForce(double valueIn)
+{
   forceGroupRepulsion = valueIn;
 
   // inform users
@@ -116,7 +126,8 @@ void Config::setGroupRepulsionForce(double valueIn) {
   emit forceFactorGroupRepulsionChanged(valueIn);
 }
 
-void Config::setRandomForce(double valueIn) {
+void Config::setRandomForce(double valueIn)
+{
   forceRandom = valueIn;
 
   // inform users
@@ -124,7 +135,8 @@ void Config::setRandomForce(double valueIn) {
   emit forceFactorRandomChanged(valueIn);
 }
 
-void Config::setAlongWallForce(double valueIn) {
+void Config::setAlongWallForce(double valueIn)
+{
   forceAlongWall = valueIn;
 
   // inform users
@@ -132,7 +144,8 @@ void Config::setAlongWallForce(double valueIn) {
   emit forceFactorAlongWallChanged(valueIn);
 }
 
-QMap<QString, double> Config::getForceMap() const {
+QMap<QString, double> Config::getForceMap() const
+{
   // create output map
   QMap<QString, double> forceMap;
   // → fill map
@@ -146,4 +159,9 @@ QMap<QString, double> Config::getForceMap() const {
   forceMap["alongwall"] = forceAlongWall;
 
   return forceMap;
+}
+
+void Config::setFrozenAgentDetection(bool valueIn)
+{
+  frozenAgentsDetection = valueIn;
 }

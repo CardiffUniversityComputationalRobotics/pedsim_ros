@@ -13,6 +13,7 @@
   <arg name="simulation_factor" default="1"/>
   <arg name="update_rate" default="25.0"/>
   <arg name="spawn_period" default="5.0"/>
+  <arg name="detect_frozen_agents" default="true" />
 
   <!-- main simulator node -->
   <node name="pedsim_simulator" pkg="pedsim_simulator" type="pedsim_simulator" output="screen">
@@ -24,6 +25,7 @@
     <param name="simulation_factor" value="$(arg simulation_factor)" type="double"/>
     <param name="update_rate" value="$(arg update_rate)" type="double"/>
     <param name="spawn_period" value="$(arg spawn_period)" type="double"/>
+    <param name="detect_frozen_agents" value="$(arg detect_frozen_agents)" type="bool" />
   </node>
 
   <!-- Robot controller (optional) -->
