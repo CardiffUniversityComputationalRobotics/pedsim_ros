@@ -21,6 +21,7 @@
 
   <arg name="scenario_file" default="ipa_apartment.xml"/>
   <arg name="detect_frozen_agents" default="true"/>
+  <arg name="walls_scale" default="0.1"/>
 
   <!-- Simulator -->
   <include file="$(find pedsim_simulator)/launch/simulator.launch">
@@ -51,7 +52,9 @@
   </include>
 
   <!-- Visualizer -->
-  <include file="$(find pedsim_simulator)/launch/visualizer.launch"/>
+  <include file="$(find pedsim_simulator)/launch/visualizer.launch">
+    <arg name="walls_scale" value="$(arg walls_scale)"/>
+  </include>
 
   <!-- Rviz -->
   <node pkg="rviz" type="rviz" name="rviz" args="-d $(find pedsim_simulator)/rviz/social_contexts_activities.rviz" if="$(arg visualize)"/>

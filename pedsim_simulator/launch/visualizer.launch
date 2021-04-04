@@ -1,8 +1,10 @@
 <launch>
 
-  <arg name="walls_scale" default="0.1"/>
+  <arg name="walls_scale" default="1.0"/>
+  <arg name="hz" default="25.0"/>
 
   <node name="pedsim_visualizer" type="pedsim_visualizer_node" pkg="pedsim_visualizer" output="screen">
+    <param name="hz" value="$(arg hz)" type="double"/>
     <param name="walls_marker_scale" value="$(arg walls_scale)" type="double"/>
   </node>
 </launch>
