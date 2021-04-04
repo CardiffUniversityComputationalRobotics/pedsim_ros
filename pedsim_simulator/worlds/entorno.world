@@ -1,0 +1,1759 @@
+<sdf version='1.6'>
+  <world name='default'>
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+    <model name='ground_plane'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <contact>
+              <collide_bitmask>65535</collide_bitmask>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <physics type='ode'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>1</shadows>
+    </scene>
+    <wind/>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <model name='onshape'>
+      <link name='paredes_1'>
+        <visual name='paredes_1_0_paredes_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/paredes.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.941176 0.87451 0.678431 1</ambient>
+            <diffuse>0.941176 0.87451 0.678431 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='paredes_1_0_paredes_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/paredes.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>1.70549 -1.17629 1.54093 0 -0 0</pose>
+          <mass>27310.2</mass>
+          <inertia>
+            <ixx>157595</ixx>
+            <ixy>85679</ixy>
+            <ixz>1090.4</ixz>
+            <iyy>227809</iyy>
+            <iyz>101.025</iyz>
+            <izz>344083</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='paredes_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <link name='puertaprincipal_1'>
+        <visual name='puertaprincipal_1_0_puertaprincipal_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/puertaprincipal.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.756863 0.462745 0.109804 1</ambient>
+            <diffuse>0.756863 0.462745 0.109804 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='puertaprincipal_1_0_puertaprincipal_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/puertaprincipal.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>3.46 -0.65 0.9 0 -0 0</pose>
+          <mass>43.2</mass>
+          <inertia>
+            <ixx>15.264</ixx>
+            <ixy>5.03704e-16</ixy>
+            <ixz>-4.4386e-16</ixz>
+            <iyy>11.745</iyy>
+            <iyz>5.30346e-15</iyz>
+            <izz>3.681</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='puertaprincipal_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='fd71e12a-0bdd-4c86-97fe-12ff8e1bdbf8_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>puertaprincipal_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='pilar_5_1'>
+        <visual name='pilar_5_1_0_pilar_5_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/pilar_5.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.917647 0.917647 0.917647 1</ambient>
+            <diffuse>0.917647 0.917647 0.917647 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='pilar_5_1_0_pilar_5_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/pilar_5.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>1.92 1.45 1.5 0 -0 0</pose>
+          <mass>172.5</mass>
+          <inertia>
+            <ixx>129.519</ixx>
+            <ixy>-7.19667e-15</ixy>
+            <ixz>0</ixz>
+            <iyy>130.273</iyy>
+            <iyz>-6.95663e-16</iyz>
+            <izz>1.04219</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='pilar_5_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='43a111ff-f5f9-44db-a753-785609512046_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>pilar_5_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='tacho_1'>
+        <visual name='tacho_1_0_tacho_visual'>
+          <pose>1.14014 -1.36643 0.025 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/tacho.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.615686 0.811765 0.929412 1</ambient>
+            <diffuse>0.615686 0.811765 0.929412 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='tacho_1_0_tacho_collision'>
+          <pose>1.14014 -1.36643 0.025 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/tacho.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>1.14014 -1.36643 0.132659 0 -0 0</pose>
+          <mass>1.33627</mass>
+          <inertia>
+            <ixx>0.0105319</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0105318</iyy>
+            <iyz>-4.18789e-07</iyz>
+            <izz>0.00903792</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='tacho_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='4088eaea-d731-4b01-8c4c-7d76334255cc_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>tacho_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='lateralmesapequena_1'>
+        <visual name='lateralmesapequena_1_0_lateralmesapequena_visual'>
+          <pose>4.40835 -4.09494 0.024227 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/lateralmesapequena.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.235294 0.133333 0.0117647 1</ambient>
+            <diffuse>0.235294 0.133333 0.0117647 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='lateralmesapequena_1_0_lateralmesapequena_collision'>
+          <pose>4.40835 -4.09494 0.024227 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/lateralmesapequena.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>4.73835 -4.47994 0.304227 0 -0 0</pose>
+          <mass>0.7056</mass>
+          <inertia>
+            <ixx>0.00134652</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0197627</iyy>
+            <iyz>0</iyz>
+            <izz>0.0184632</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='lateralmesapequena_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='a19970dd-f7f7-472a-a73e-dbb4943d7291_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>lateralmesapequena_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='office_chair_1'>
+        <visual name='office_chair_1_0_office_chair_visual'>
+          <pose>0.569683 -0.574069 0.02395 -1.5708 -0 3.14159</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/office_chair.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.498039 0.498039 0.498039 1</ambient>
+            <diffuse>0.498039 0.498039 0.498039 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='office_chair_1_0_office_chair_collision'>
+          <pose>0.569683 -0.574069 0.02395 -1.5708 -0 3.14159</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/office_chair.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>0.569705 -0.718574 0.654408 0 -0 0</pose>
+          <mass>21.5645</mass>
+          <inertia>
+            <ixx>2.0997</ixx>
+            <ixy>9.72629e-06</ixy>
+            <ixz>0.000283023</ixz>
+            <iyy>1.95327</iyy>
+            <iyz>0.670672</iyz>
+            <izz>1.21</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='office_chair_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='564f12d0-d1cd-4b98-a988-1162f9c08301_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>office_chair_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='tv_1'>
+        <visual name='tv_1_0_tv_visual'>
+          <pose>3.70845 -4.12894 0.063061 0 -0 -3.14159</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/tv.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.647059 0.647059 0.647059 1</ambient>
+            <diffuse>0.647059 0.647059 0.647059 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='tv_1_0_tv_collision'>
+          <pose>3.70845 -4.12894 0.063061 0 -0 -3.14159</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/tv.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>3.70845 -4.09894 1.05164 0 -0 0</pose>
+          <mass>14.7848</mass>
+          <inertia>
+            <ixx>0.441027</ixx>
+            <ixy>3.0898e-16</ixy>
+            <ixz>1.87169e-16</ixz>
+            <iyy>1.83255</iyy>
+            <iyz>-4.15598e-32</iyz>
+            <izz>1.39251</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='tv_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='fdd33587-e9f4-49f8-a64e-348ebfa15abe_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>tv_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='pilar_3_1'>
+        <visual name='pilar_3_1_0_pilar_3_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/pilar_3.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.917647 0.917647 0.917647 1</ambient>
+            <diffuse>0.917647 0.917647 0.917647 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='pilar_3_1_0_pilar_3_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/pilar_3.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>2.145 -4.45 1.5 0 -0 0</pose>
+          <mass>138</mass>
+          <inertia>
+            <ixx>103.615</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>103.96</iyy>
+            <iyz>0</iyz>
+            <izz>0.575</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='pilar_3_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='10dc8102-9522-4c11-b1c4-538350596339_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>pilar_3_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='puertabano_1'>
+        <visual name='puertabano_1_0_puertabano_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/puertabano.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.909804 0.572549 0.164706 1</ambient>
+            <diffuse>0.909804 0.572549 0.164706 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='puertabano_1_0_puertabano_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/puertabano.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>0.465 -1.575 0.9 0 -0 0</pose>
+          <mass>43.2</mass>
+          <inertia>
+            <ixx>11.745</ixx>
+            <ixy>-3.97112e-16</ixy>
+            <ixz>1.58303e-15</ixz>
+            <iyy>15.264</iyy>
+            <iyz>0</iyz>
+            <izz>3.681</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='puertabano_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='b0e2ed1d-04b9-4ad8-823a-7c2d790a4d7a_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>puertabano_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='soporte_1'>
+        <visual name='soporte_1_0_soporte_visual'>
+          <pose>3.70845 -4.12894 0.063061 0 -0 -3.14159</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/soporte.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.615686 0.811765 0.929412 1</ambient>
+            <diffuse>0.615686 0.811765 0.929412 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='soporte_1_0_soporte_collision'>
+          <pose>3.70845 -4.12894 0.063061 0 -0 -3.14159</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/soporte.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>3.70845 -4.12894 0.403177 0 -0 0</pose>
+          <mass>49.1596</mass>
+          <inertia>
+            <ixx>7.88998</ixx>
+            <ixy>-7.63317e-09</ixy>
+            <ixz>4.83824e-15</ixz>
+            <iyy>8.24213</iyy>
+            <iyz>-1.19898e-08</iyz>
+            <izz>1.87738</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='soporte_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='3272636b-8f9a-4a23-8b13-c91abeb3d603_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>soporte_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='puertacocina_1'>
+        <visual name='puertacocina_1_0_puertacocina_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/puertacocina.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.913725 0.647059 0.329412 1</ambient>
+            <diffuse>0.913725 0.647059 0.329412 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='puertacocina_1_0_puertacocina_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/puertacocina.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>-1.735 -1.575 0.9 0 -0 0</pose>
+          <mass>43.2</mass>
+          <inertia>
+            <ixx>11.745</ixx>
+            <ixy>-3.55368e-16</ixy>
+            <ixz>-4.81393e-16</ixz>
+            <iyy>15.264</iyy>
+            <iyz>0</iyz>
+            <izz>3.681</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='puertacocina_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='eb855c1e-d3fa-40c0-868f-c85fd7a87b27_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>puertacocina_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='armario_1'>
+        <visual name='armario_1_0_armario_visual'>
+          <pose>-3.28288 1.12005 1.10218 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/armario.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.6 0.580392 0.529412 1</ambient>
+            <diffuse>0.6 0.580392 0.529412 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='armario_1_0_armario_collision'>
+          <pose>-3.28288 1.12005 1.10218 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/armario.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>-3.04563 1.12005 1.10218 0 -0 0</pose>
+          <mass>930.199</mass>
+          <inertia>
+            <ixx>421.477</ixx>
+            <ixy>1.06803e-15</ixy>
+            <ixz>-5.58533e-16</ixz>
+            <iyy>394.908</iyy>
+            <iyz>-9.0314e-15</iyz>
+            <izz>61.7047</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='armario_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='477c8aa1-4ef6-4b37-a034-0e40d4936b95_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>armario_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='pilar_2_1'>
+        <visual name='pilar_2_1_0_pilar_2_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/pilar_2.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.917647 0.917647 0.917647 1</ambient>
+            <diffuse>0.917647 0.917647 0.917647 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='pilar_2_1_0_pilar_2_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/pilar_2.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>5.225 -4.45 1.5 0 -0 0</pose>
+          <mass>138</mass>
+          <inertia>
+            <ixx>103.615</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>103.96</iyy>
+            <iyz>3.40468e-15</iyz>
+            <izz>0.575</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='pilar_2_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='125417ce-facc-49c4-95da-c6e29af6153c_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>pilar_2_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='mueblegrande_1'>
+        <visual name='mueblegrande_1_0_mueblegrande_visual'>
+          <pose>4.29612 -1.86889 0.125 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/mueblegrande.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.87451 0.447059 0.317647 1</ambient>
+            <diffuse>0.87451 0.447059 0.317647 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='mueblegrande_1_0_mueblegrande_collision'>
+          <pose>4.29612 -1.86889 0.125 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/mueblegrande.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>4.14212 -1.8623 0.494656 0 -0 0</pose>
+          <mass>737.098</mass>
+          <inertia>
+            <ixx>93.2945</ixx>
+            <ixy>1.00106e-05</ixy>
+            <ixz>-8.15727e-08</ixz>
+            <iyy>274.529</iyy>
+            <iyz>-24.3003</iyz>
+            <izz>259.105</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='mueblegrande_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='dbc19021-1673-4534-afb8-6aae0868cf9c_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>mueblegrande_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='office_chair_2'>
+        <visual name='office_chair_2_0_office_chair_visual'>
+          <pose>0.597796 0.787671 0.024339 -1.5708 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/office_chair.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.498039 0.498039 0.498039 1</ambient>
+            <diffuse>0.498039 0.498039 0.498039 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='office_chair_2_0_office_chair_collision'>
+          <pose>0.597796 0.787671 0.024339 -1.5708 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/office_chair.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>0.597774 0.932175 0.654797 0 -0 0</pose>
+          <mass>21.5645</mass>
+          <inertia>
+            <ixx>2.0997</ixx>
+            <ixy>-9.72629e-06</ixy>
+            <ixz>0.000283023</ixz>
+            <iyy>1.95327</iyy>
+            <iyz>-0.670672</iyz>
+            <izz>1.21</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='office_chair_2_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='2c00e322-6dc1-4dc0-a57b-981d6d209808_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>office_chair_2</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='pilar_4_1'>
+        <visual name='pilar_4_1_0_pilar_4_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/pilar_4.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.917647 0.917647 0.917647 1</ambient>
+            <diffuse>0.917647 0.917647 0.917647 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='pilar_4_1_0_pilar_4_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/pilar_4.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>-3.335 1.45 1.5 0 -0 0</pose>
+          <mass>69</mass>
+          <inertia>
+            <ixx>51.8075</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>51.8075</iyy>
+            <iyz>1.14254e-16</iyz>
+            <izz>0.115</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='pilar_4_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='fa3a3c2b-df25-491e-b8c3-ff0e1a0c79a2_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>pilar_4_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='piso_1'>
+        <visual name='piso_1_0_piso_visual'>
+          <pose>0 0 0.025 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/piso.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 0.992157 0.992157 1</ambient>
+            <diffuse>1 0.992157 0.992157 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='piso_1_0_piso_collision'>
+          <pose>0 0 0.025 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/piso.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>1.21775 -1.00147 0.0125 0 -0 0</pose>
+          <mass>1992.55</mass>
+          <inertia>
+            <ixx>5885.48</ixx>
+            <ixy>4964.5</ixy>
+            <ixz>1.376e-15</ixz>
+            <iyy>12368.4</iyy>
+            <iyz>-1.2439e-15</iyz>
+            <izz>18253.7</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='piso_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='e6c7c297-f8fc-4156-99d5-08149d9c093c_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>piso_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='mesacuadrada_1'>
+        <visual name='mesacuadrada_1_0_mesacuadrada_visual'>
+          <pose>1.09 0.1 0.025 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/mesacuadrada.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.615686 0.811765 0.929412 1</ambient>
+            <diffuse>0.615686 0.811765 0.929412 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='mesacuadrada_1_0_mesacuadrada_collision'>
+          <pose>1.09 0.1 0.025 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/mesacuadrada.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>1.09 0.1 0.525 0 -0 0</pose>
+          <mass>216</mass>
+          <inertia>
+            <ixx>28.125</ixx>
+            <ixy>4.90719e-16</ixy>
+            <ixz>1.86517e-15</ixz>
+            <iyy>76.32</iyy>
+            <iyz>2.22045e-16</iyz>
+            <izz>68.445</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='mesacuadrada_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='b784b1c7-3159-4c06-8ae0-d46793c98f48_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>mesacuadrada_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='puertapatio_1'>
+        <visual name='puertapatio_1_0_puertapatio_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/puertapatio.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='puertapatio_1_0_puertapatio_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/puertapatio.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>-3.46 -0.5 1.5 0 -0 0</pose>
+          <mass>2250</mass>
+          <inertia>
+            <ixx>2437.5</ixx>
+            <ixy>1.68971e-13</ixy>
+            <ixz>5.35943e-14</ixz>
+            <iyy>1691.72</iyy>
+            <iyz>-6.71338e-13</iyz>
+            <izz>754.219</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='puertapatio_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='0b4d92ad-0deb-4155-9b98-1b6a80b320ab_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>puertapatio_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='pilar_1_1'>
+        <visual name='pilar_1_1_0_pilar_1_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/pilar_1.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.917647 0.917647 0.917647 1</ambient>
+            <diffuse>0.917647 0.917647 0.917647 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='pilar_1_1_0_pilar_1_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/pilar_1.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>1.92 -1.625 1.5 0 -0 0</pose>
+          <mass>431.25</mass>
+          <inertia>
+            <ixx>325.684</ixx>
+            <ixy>-3.65738e-15</ixy>
+            <ixz>-3.40468e-14</ixz>
+            <iyy>325.684</iyy>
+            <iyz>0</iyz>
+            <izz>4.49219</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='pilar_1_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='5e3a2773-1abd-4c35-ab85-452118ea04a4_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>pilar_1_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='mueblepequeno_1'>
+        <visual name='mueblepequeno_1_0_mueblepequeno_visual'>
+          <pose>2.04083 -3.57205 0.515822 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/mueblepequeno.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.972549 0.529412 0.00392157 1</ambient>
+            <diffuse>0.972549 0.529412 0.00392157 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='mueblepequeno_1_0_mueblepequeno_collision'>
+          <pose>2.04083 -3.57205 0.515822 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/mueblepequeno.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>2.32487 -3.77205 0.350212 0 -0 0</pose>
+          <mass>58.4105</mass>
+          <inertia>
+            <ixx>9.21458</ixx>
+            <ixy>-8.80183e-06</ixy>
+            <ixz>1.15478</ixz>
+            <iyy>5.27059</iyy>
+            <iyz>3.25316e-06</iyz>
+            <izz>10.1084</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='mueblepequeno_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='e56ba461-c8f5-4f06-869a-f1f3e78acc52_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>mueblepequeno_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <link name='basemesapequena_1'>
+        <visual name='basemesapequena_1_0_basemesapequena_visual'>
+          <pose>4.40835 -4.09494 0.024227 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/basemesapequena.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.235294 0.133333 0.0117647 1</ambient>
+            <diffuse>0.235294 0.133333 0.0117647 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='basemesapequena_1_0_basemesapequena_collision'>
+          <pose>4.40835 -4.09494 0.024227 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://entorno_sim/meshes/basemesapequena.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose>4.73835 -4.29244 0.299282 0 -0 0</pose>
+          <mass>11.3642</mass>
+          <inertia>
+            <ixx>0.327095</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.927162</iyy>
+            <iyz>0</iyz>
+            <izz>0.895582</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='basemesapequena_1_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <joint name='99ecbe60-a23a-4122-a7d1-3156a60d2427_fixing' type='fixed'>
+        <pose>0 0 0 0 -0 0</pose>
+        <parent>paredes_1</parent>
+        <child>basemesapequena_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+        </axis>
+      </joint>
+      <pose>-1.54797 0.885656 0 0 -0 0</pose>
+    </model>
+    <state world_name='default'>
+      <sim_time>55 178000000</sim_time>
+      <real_time>71 880539613</real_time>
+      <wall_time>1595646465 140487298</wall_time>
+      <iterations>55178</iterations>
+      <model name='ground_plane'>
+        <pose>0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='onshape'>
+        <pose>-1.54797 0.885657 -0 0 0 -1e-06</pose>
+        <scale>1 1 1</scale>
+        <link name='armario_1'>
+          <pose>-1.54797 0.885657 -1e-05 0 1e-06 -1e-06</pose>
+          <velocity>-0.000396 -0.00072 -0.000182 -0.000398 0.00048 -2.7e-05</velocity>
+          <acceleration>0.562474 -0.375387 1.37119 -0.718017 0.800516 -0.072621</acceleration>
+          <wrench>523.212 -349.184 1275.48 0 -0 0</wrench>
+        </link>
+        <link name='basemesapequena_1'>
+          <pose>-1.54797 0.885638 -0.000179 -1.2e-05 -4e-06 -0</pose>
+          <velocity>-0.000226 -0.00021 0.000599 -0.000356 0.000491 2.4e-05</velocity>
+          <acceleration>0.11677 -0.006841 -0.271825 -0.686578 0.810534 0.032835</acceleration>
+          <wrench>1.32699 -0.077741 -3.08908 0 -0 0</wrench>
+        </link>
+        <link name='lateralmesapequena_1'>
+          <pose>-1.54795 0.885355 -0.00252 -0.000195 -1.2e-05 -1e-06</pose>
+          <velocity>-0.00027 -0.000246 0.000699 -0.000337 0.000466 2.8e-05</velocity>
+          <acceleration>0.038274 0.001455 -0.010751 -0.661952 0.775995 0.036013</acceleration>
+          <wrench>0.027006 0.001026 -0.007586 0 -0 0</wrench>
+        </link>
+        <link name='mesacuadrada_1'>
+          <pose>-1.54797 0.885657 -0 0 0 -1e-06</pose>
+          <velocity>1.8e-05 8.4e-05 -8.8e-05 -0.000375 0.000483 1e-05</velocity>
+          <acceleration>0.440225 0.491477 -0.984936 -0.6944 0.805023 0.014506</acceleration>
+          <wrench>95.0885 106.159 -212.746 0 -0 0</wrench>
+        </link>
+        <link name='mueblegrande_1'>
+          <pose>-1.54797 0.885656 -2e-06 0 0 -1e-06</pose>
+          <velocity>0.000104 3.1e-05 -0.000532 -0.000439 0.000432 -1e-06</velocity>
+          <acceleration>0.48531 0.445988 -2.22337 -0.775858 0.735528 -0.006131</acceleration>
+          <wrench>357.721 328.737 -1638.84 0 -0 0</wrench>
+        </link>
+        <link name='mueblepequeno_1'>
+          <pose>-1.54797 0.885655 -1e-05 -1e-06 -0 -1e-06</pose>
+          <velocity>-4e-06 -5.8e-05 -0.000149 -0.000416 0.000474 9e-06</velocity>
+          <acceleration>0.297067 0.223045 1.12982 -0.712495 0.80895 0.01262</acceleration>
+          <wrench>17.3518 13.0282 65.9932 0 -0 0</wrench>
+        </link>
+        <link name='office_chair_1'>
+          <pose>-1.54797 0.885657 -0 0 0 -1e-06</pose>
+          <velocity>5.5e-05 9e-06 -6.3e-05 -0.000404 0.000462 1.4e-05</velocity>
+          <acceleration>0.638495 0.516169 0.128422 -0.741104 0.728307 0.028988</acceleration>
+          <wrench>13.7688 11.1309 2.76935 0 -0 0</wrench>
+        </link>
+        <link name='office_chair_2'>
+          <pose>-1.54797 0.885659 -8e-06 1e-06 1e-06 0</pose>
+          <velocity>-8.8e-05 -0.000275 -0.000114 -0.000399 0.000331 -7.6e-05</velocity>
+          <acceleration>0.377693 0.14916 -1.05857 -0.735266 0.638254 -0.073802</acceleration>
+          <wrench>8.14476 3.21656 -22.8274 0 -0 0</wrench>
+        </link>
+        <link name='paredes_1'>
+          <pose>-1.54797 0.885657 -0 0 0 -1e-06</pose>
+          <velocity>-0 0 -1.1e-05 -0.0004 0.000479 0</velocity>
+          <acceleration>1.23203 1.115 -0.446114 -0.723484 0.799495 6.5e-05</acceleration>
+          <wrench>33647.1 30450.8 -12183.5 0 -0 0</wrench>
+        </link>
+        <link name='pilar_1_1'>
+          <pose>-1.54797 0.885658 0 0 0 -1e-06</pose>
+          <velocity>0.000359 0.000398 -0.000169 -0.000415 0.000469 -0.000154</velocity>
+          <acceleration>1.24989 1.24676 -0.59946 -0.762695 0.760894 -0.154278</acceleration>
+          <wrench>539.015 537.663 -258.517 0 -0 0</wrench>
+        </link>
+        <link name='pilar_2_1'>
+          <pose>-1.54802 0.885501 2e-06 0 1e-06 9e-06</pose>
+          <velocity>0.001968 0.002328 0.001207 -0.000377 0.000546 -0.000437</velocity>
+          <acceleration>1.336 1.12302 0.04738 -0.704237 0.868392 -0.667338</acceleration>
+          <wrench>184.367 154.977 6.53849 0 -0 0</wrench>
+        </link>
+        <link name='pilar_3_1'>
+          <pose>-1.54788 0.885683 0 0 0 -7e-06</pose>
+          <velocity>0.002504 0.001138 -0.001373 -0.000536 0.000499 -0.000556</velocity>
+          <acceleration>1.35893 1.5637 -0.099279 -0.999101 0.847135 -1.74853</acceleration>
+          <wrench>187.532 215.791 -13.7005 0 -0 0</wrench>
+        </link>
+        <link name='pilar_4_1'>
+          <pose>-1.54783 0.887071 -1e-06 0 -0 8.9e-05</pose>
+          <velocity>0.004988 0.011707 -0.001093 -0.000285 0.000455 0.003564</velocity>
+          <acceleration>1.19765 0.858255 0.012976 -0.618137 0.843921 1.34236</acceleration>
+          <wrench>82.6381 59.2196 0.895321 0 -0 0</wrench>
+        </link>
+        <link name='pilar_5_1'>
+          <pose>-1.54797 0.88566 2e-06 -0 1e-06 -2e-06</pose>
+          <velocity>-0.001624 0.002087 0.001999 -0.000591 0.000616 -0.001162</velocity>
+          <acceleration>1.48329 1.27084 -1.09735 -0.943068 0.947803 -1.16988</acceleration>
+          <wrench>255.868 219.22 -189.293 0 -0 0</wrench>
+        </link>
+        <link name='piso_1'>
+          <pose>-1.54797 0.885656 -0 -1e-06 -0 -1e-06</pose>
+          <velocity>-7.7e-05 -0.000184 -0.000307 -0.000691 0.000463 2.4e-05</velocity>
+          <acceleration>-0.043886 -0.140611 -0.373733 -1.16807 0.729271 0.024076</acceleration>
+          <wrench>-87.4447 -280.175 -744.682 0 -0 0</wrench>
+        </link>
+        <link name='puertabano_1'>
+          <pose>-1.54797 0.885657 0 0 0 -1e-06</pose>
+          <velocity>7.7e-05 4.7e-05 4.2e-05 -0.000438 0.000462 -4.8e-05</velocity>
+          <acceleration>0.712119 0.777723 1.00718 -0.769239 0.783608 -0.071994</acceleration>
+          <wrench>30.7635 33.5976 43.5101 0 -0 0</wrench>
+        </link>
+        <link name='puertacocina_1'>
+          <pose>-1.54797 0.885659 -1e-06 0 1e-06 0</pose>
+          <velocity>-5.4e-05 4.1e-05 -0.001243 -0.00042 0.000547 3.3e-05</velocity>
+          <acceleration>0.802601 0.68777 0.505217 -0.782193 0.898397 0.039367</acceleration>
+          <wrench>34.6724 29.7117 21.8254 0 -0 0</wrench>
+        </link>
+        <link name='puertapatio_1'>
+          <pose>-1.54797 0.885659 -2e-06 0 1e-06 0</pose>
+          <velocity>-0.000163 0.000368 -0.002506 -0.000413 0.000574 0.000109</velocity>
+          <acceleration>1.26073 0.887309 -0.763637 -0.594704 0.975096 0.201285</acceleration>
+          <wrench>2836.63 1996.45 -1718.18 0 -0 0</wrench>
+        </link>
+        <link name='puertaprincipal_1'>
+          <pose>-1.54797 0.885657 1e-06 0 0 -1e-06</pose>
+          <velocity>0.000169 -0 -0.000854 -0.000418 0.000394 1.9e-05</velocity>
+          <acceleration>0.832798 0.78617 -2.38144 -0.709058 0.735791 -0.030458</acceleration>
+          <wrench>35.9769 33.9625 -102.878 0 -0 0</wrench>
+        </link>
+        <link name='soporte_1'>
+          <pose>-1.54797 0.885653 -2.3e-05 -2e-06 -1e-06 0</pose>
+          <velocity>-0.000383 -0.000477 -0.000388 -0.000422 0.000454 4.9e-05</velocity>
+          <acceleration>0.115311 -0.052349 0.016374 -0.734031 0.773102 0.063215</acceleration>
+          <wrench>5.66865 -2.57344 0.804925 0 -0 0</wrench>
+        </link>
+        <link name='tacho_1'>
+          <pose>-1.54798 0.885653 -2e-06 -1e-06 4e-06 -1e-06</pose>
+          <velocity>-8.9e-05 -6.9e-05 -5.3e-05 -0.000412 0.000526 1e-06</velocity>
+          <acceleration>-0.007292 -0.001627 0.104103 -0.717615 0.804147 -0.001962</acceleration>
+          <wrench>-0.009744 -0.002174 0.139109 0 -0 0</wrench>
+        </link>
+        <link name='tv_1'>
+          <pose>-1.54797 0.88564 -0.000124 -1e-05 -1e-06 -0</pose>
+          <velocity>-0.000392 -0.00079 -0.000281 -0.000423 0.000457 8.2e-05</velocity>
+          <acceleration>0.677612 0.290938 -0.090716 -0.752038 0.768453 0.08359</acceleration>
+          <wrench>10.0184 4.30146 -1.34122 0 -0 0</wrench>
+        </link>
+      </model>
+      <light name='sun'>
+        <pose>0 0 10 0 -0 0</pose>
+      </light>
+    </state>
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>-4.52187 -3.26858 7.10979 0 0.835644 0.580192</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+
+    <plugin name="ActorPosesPlugin" filename="libActorPosesPlugin.so">
+        </plugin>
+
+  </world>
+</sdf>
