@@ -59,7 +59,7 @@ Agent::Agent()
 
   lastTimeIteration = 0;
   frozenDiffPosition = 0.5;
-  frozenDiffTime = 4;
+  frozenDiffTime = 3;
 }
 
 Agent::~Agent()
@@ -444,7 +444,7 @@ bool Agent::checkIfFrozen()
     {
       if (frozenStatus == "possibly_frozen")
       {
-        if (ros::Time::now().sec > frozenDiffTime)
+        if ((ros::Time::now().sec - lastTimePosition) > frozenDiffTime)
         {
           frozenStatus = "frozen";
           return true;
