@@ -77,7 +77,7 @@ void AgentStateMachine::loseAttraction()
 void AgentStateMachine::doStateTransition()
 {
 
-  if ((ros::Time::now().sec - agent->getLastTimeIteration()) > 5)
+  if ((ros::Time::now().nsec - agent->getLastTimeIteration()) > 3000000000)
   {
     if (agent->checkIfFrozen())
     {
