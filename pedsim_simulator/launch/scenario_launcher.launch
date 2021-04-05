@@ -17,7 +17,7 @@
   <arg name="force_group_coherence" default="2.0"/>
   <arg name="force_group_repulsion" default="1.0"/>
   <arg name="force_random" default="0.1"/>
-  <arg name="force_wall" default="1.0"/>
+  <arg name="force_wall" default="2.0"/>
 
   <arg name="scenario_file" default="ipa_apartment.xml"/>
   <arg name="detect_frozen_agents" default="true"/>
@@ -41,14 +41,14 @@
     <arg name="detect_frozen_agents" value="$(arg detect_frozen_agents)" />
 
     <!-- extra parameters -->
-    <!-- <arg name="force_obstacle" value="$(arg force_obstacle)"/>
+    <arg name="force_obstacle" value="$(arg force_obstacle)"/>
     <arg name="sigma_obstacle" value="$(arg sigma_obstacle)"/>
     <arg name="force_social" value="$(arg force_social)"/>
     <arg name="force_group_gaze" value="$(arg force_group_gaze)"/>
     <arg name="force_group_coherence" value="$(arg force_group_coherence)"/>
     <arg name="force_group_repulsion" value="$(arg force_group_repulsion)"/>
     <arg name="force_random" value="$(arg force_random)"/>
-    <arg name="force_wall" value="$(arg force_wall)"/> -->
+    <arg name="force_wall" value="$(arg force_wall)"/>
   </include>
 
   <!-- Visualizer -->

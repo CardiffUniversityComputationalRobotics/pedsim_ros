@@ -51,7 +51,7 @@ Agent::Agent()
   stateMachine = new AgentStateMachine(this);
   // group
   group = nullptr;
-  //random option
+  // random option
   isRandom = 0;
 
   // frozenStatus to know if agent is frozen
