@@ -158,10 +158,31 @@ protected:
   bool isRandom;
 
   // → lastPosition for frozen checking
-  geometry_msgs::Point lastPosition;
+  // geometry_msgs::Point lastPosition;
 
-  // → lastTimePosition is the time of last recorded position
-  uint64_t lastTimePosition;
+  // → lastDesiredDirectionForce to store last force value
+  // Ped::Tvector lastDesiredDirectionForce;
+
+  // → lastSocialForce to store last force value
+  // Ped::Tvector lastSocialForce;
+
+  // → lastObstacleForce to store last force value
+  // Ped::Tvector lastObstacleForce;
+
+  // → lastMyForce to store last force value
+  // Ped::Tvector lastMyForce;
+
+  // → sumTotalForces to sum all forces
+  Ped::Tvector sumTotalForces;
+
+  double lastModuleTotalForces;
+
+  double currentModuleTotalForces;
+
+  double forcesGradient;
+
+  // → lastTimeGradient is the time of last recorded forces gradient
+  uint64_t lastTimeForcesGradient;
 
   // → lastTimeIteration is the time to control iterations
   uint64_t lastTimeIteration;
@@ -169,7 +190,7 @@ protected:
   // → frozenStatus string moving|possibly_frozen|frozen
   string frozenStatus;
 
-  double frozenDiffPosition;
+  // double frozenDiffPosition;
 
   uint16_t frozenDiffTime;
 };

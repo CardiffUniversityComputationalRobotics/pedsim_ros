@@ -58,7 +58,34 @@ Agent::Agent()
   frozenStatus = "moving";
 
   lastTimeIteration = 0;
-  frozenDiffPosition = 0.5;
+
+  // lastDesiredDirectionForce.x = 0;
+  // lastDesiredDirectionForce.y = 0;
+  // lastDesiredDirectionForce.z = 0;
+
+  // lastSocialForce.x = 0;
+  // lastSocialForce.y = 0;
+  // lastSocialForce.z = 0;
+
+  // lastObstacleForce.x = 0;
+  // lastObstacleForce.y = 0;
+  // lastObstacleForce.z = 0;
+
+  // lastMyForce.x = 0;
+  // lastMyForce.y = 0;
+  // lastMyForce.z = 0;
+
+  sumTotalForces.x = 0;
+  sumTotalForces.y = 0;
+  sumTotalForces.z = 0;
+
+  currentModuleTotalForces = 0;
+  lastModuleTotalForces = 0;
+  lastTimeForcesGradient = 0,
+
+  forcesGradient = 0;
+
+  //frozenDiffPosition = 0.5;
   frozenDiffTime = 3;
 }
 
@@ -410,10 +437,15 @@ uint64_t Agent::getLastTimeIteration() const
 
 bool Agent::hasMovement()
 {
-  double deltaPositionX = abs(Ped::Tagent::getPosition().x - lastPosition.x);
-  double deltaPositionY = abs(Ped::Tagent::getPosition().y - lastPosition.y);
+  sumTotalForces = getDesiredDirection() + getSocialForce() + getObstacleForce() + getMyForce();
 
-  if (deltaPositionX <= frozenDiffPosition and deltaPositionY <= frozenDiffPosition)
+  currentModuleTotalForces = sqrt(pow(sumTotalForces.x, 2) + pow(sumTotalForces.y, 2));
+
+  forcesGradient = (currentModuleTotalForces - lastModuleTotalForces) / (SCENE.getTime() - lastTimeForcesGradient);
+
+  lastModuleTotalForces = currentModuleTotalForces;
+
+  if (abs(forcesGradient) <= 0.25)
   {
     return false;
   }
@@ -423,13 +455,13 @@ bool Agent::hasMovement()
 // → method to check if agent is stuck in a space
 bool Agent::checkIfFrozen()
 {
-  lastTimeIteration = ros::Time::now().sec;
+  lastTimeIteration = SCENE.getTime();
   if (hasMovement())
   {
     frozenStatus = "moving";
-    lastTimePosition = ros::Time::now().sec;
-    lastPosition.x = Ped::Tagent::getPosition().x;
-    lastPosition.y = Ped::Tagent::getPosition().y;
+    lastTimeForcesGradient = SCENE.getTime();
+    // lastPosition.x = Ped::Tagent::getPosition().x;
+    // lastPosition.y = Ped::Tagent::getPosition().y;
     return false;
   }
   else
@@ -437,14 +469,14 @@ bool Agent::checkIfFrozen()
     if (frozenStatus == "moving")
     {
       frozenStatus = "possibly_frozen";
-      lastTimePosition = ros::Time::now().sec;
+      lastTimeForcesGradient = SCENE.getTime();
       return false;
     }
     else
     {
       if (frozenStatus == "possibly_frozen")
       {
-        if ((ros::Time::now().sec - lastTimePosition) > frozenDiffTime)
+        if ((SCENE.getTime() - lastTimeForcesGradient) > frozenDiffTime)
         {
           frozenStatus = "frozen";
           return true;
