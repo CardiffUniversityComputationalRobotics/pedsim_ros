@@ -166,6 +166,10 @@ protected:
 
   double forcesGradient;
 
+  Ped::Tvector currentVelocity;
+
+  double currentModuleTotalVelocities;
+
   // → lastTimeGradient is the time of last recorded forces gradient
   uint64_t lastTimeForcesGradient;
 

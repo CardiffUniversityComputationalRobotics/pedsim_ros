@@ -65,7 +65,13 @@ Agent::Agent()
 
   currentModuleTotalForces = 0;
   lastModuleTotalForces = 0;
-  lastTimeForcesGradient = 0,
+  lastTimeForcesGradient = 0;
+
+  currentVelocity.x = 0;
+  currentVelocity.y = 0;
+  currentVelocity.z = 0;
+
+  currentModuleTotalVelocities = 0;
 
   forcesGradient = 0;
 
@@ -421,6 +427,13 @@ uint64_t Agent::getLastTimeIteration() const
 
 bool Agent::hasMovement()
 {
+
+  currentVelocity = Ped::Tagent::getVelocity();
+
+  currentModuleTotalVelocities = sqrt(pow(currentVelocity.x, 2) +
+                                      pow(currentVelocity.y, 2) +
+                                      pow(currentVelocity.z, 2));
+
   sumTotalForces = getDesiredDirection() + getSocialForce() + getObstacleForce() + getMyForce();
 
   currentModuleTotalForces = sqrt(pow(sumTotalForces.x, 2) + pow(sumTotalForces.y, 2));
@@ -429,7 +442,8 @@ bool Agent::hasMovement()
 
   lastModuleTotalForces = currentModuleTotalForces;
 
-  if (abs(forcesGradient) <= frozenDiffGradient)
+  if ((abs(forcesGradient) <= frozenDiffGradient) and
+      (currentModuleTotalVelocities <= Ped::Tagent::getVmax() * 0.9))
   {
     return false;
   }
