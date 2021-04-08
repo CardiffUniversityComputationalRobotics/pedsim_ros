@@ -433,7 +433,8 @@ bool Agent::hasMovement()
 
   lastModuleTotalVelocities = currentModuleTotalVelocities;
 
-  if (abs(kinectGradient) <= frozenDiffGradient)
+  if ((abs(kinectGradient) <= frozenDiffGradient) and
+      (currentModuleTotalVelocities >= Ped::Tagent::getVmax() * 0.8))
   {
     return false;
   }
