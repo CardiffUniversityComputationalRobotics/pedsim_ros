@@ -59,22 +59,6 @@ Agent::Agent()
 
   lastTimeIteration = 0;
 
-  // lastDesiredDirectionForce.x = 0;
-  // lastDesiredDirectionForce.y = 0;
-  // lastDesiredDirectionForce.z = 0;
-
-  // lastSocialForce.x = 0;
-  // lastSocialForce.y = 0;
-  // lastSocialForce.z = 0;
-
-  // lastObstacleForce.x = 0;
-  // lastObstacleForce.y = 0;
-  // lastObstacleForce.z = 0;
-
-  // lastMyForce.x = 0;
-  // lastMyForce.y = 0;
-  // lastMyForce.z = 0;
-
   sumTotalForces.x = 0;
   sumTotalForces.y = 0;
   sumTotalForces.z = 0;
@@ -85,8 +69,8 @@ Agent::Agent()
 
   forcesGradient = 0;
 
-  //frozenDiffPosition = 0.5;
-  frozenDiffTime = 3;
+  frozenDiffGradient = 0.15;
+  frozenDiffTime = 2;
 }
 
 Agent::~Agent()
@@ -445,7 +429,7 @@ bool Agent::hasMovement()
 
   lastModuleTotalForces = currentModuleTotalForces;
 
-  if (abs(forcesGradient) <= 0.25)
+  if (abs(forcesGradient) <= frozenDiffGradient)
   {
     return false;
   }
@@ -460,8 +444,6 @@ bool Agent::checkIfFrozen()
   {
     frozenStatus = "moving";
     lastTimeForcesGradient = SCENE.getTime();
-    // lastPosition.x = Ped::Tagent::getPosition().x;
-    // lastPosition.y = Ped::Tagent::getPosition().y;
     return false;
   }
   else

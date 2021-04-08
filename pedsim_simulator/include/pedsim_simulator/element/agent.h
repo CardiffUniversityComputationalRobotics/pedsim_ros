@@ -157,21 +157,6 @@ protected:
   // → random waypoints
   bool isRandom;
 
-  // → lastPosition for frozen checking
-  // geometry_msgs::Point lastPosition;
-
-  // → lastDesiredDirectionForce to store last force value
-  // Ped::Tvector lastDesiredDirectionForce;
-
-  // → lastSocialForce to store last force value
-  // Ped::Tvector lastSocialForce;
-
-  // → lastObstacleForce to store last force value
-  // Ped::Tvector lastObstacleForce;
-
-  // → lastMyForce to store last force value
-  // Ped::Tvector lastMyForce;
-
   // → sumTotalForces to sum all forces
   Ped::Tvector sumTotalForces;
 
@@ -190,7 +175,7 @@ protected:
   // → frozenStatus string moving|possibly_frozen|frozen
   string frozenStatus;
 
-  // double frozenDiffPosition;
+  double frozenDiffGradient;
 
   uint16_t frozenDiffTime;
 };
