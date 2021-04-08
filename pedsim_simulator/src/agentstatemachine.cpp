@@ -83,7 +83,7 @@ void AgentStateMachine::doStateTransition()
   {
     if ((state != StateShopping) && (state != StateQueueing))
     {
-      if ((ros::Time::now().sec - agent->getLastTimeIteration()) > diffTimeIteration)
+      if ((SCENE.getTime() - agent->getLastTimeIteration()) > diffTimeIteration)
       {
         if (agent->checkIfFrozen())
         {

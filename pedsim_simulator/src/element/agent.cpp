@@ -423,11 +423,11 @@ bool Agent::hasMovement()
 // → method to check if agent is stuck in a space
 bool Agent::checkIfFrozen()
 {
-  lastTimeIteration = ros::Time::now().sec;
+  lastTimeIteration = SCENE.getTime();
   if (hasMovement())
   {
     frozenStatus = "moving";
-    lastTimePosition = ros::Time::now().sec;
+    lastTimePosition = SCENE.getTime();
     lastPosition.x = Ped::Tagent::getPosition().x;
     lastPosition.y = Ped::Tagent::getPosition().y;
     return false;
@@ -437,14 +437,14 @@ bool Agent::checkIfFrozen()
     if (frozenStatus == "moving")
     {
       frozenStatus = "possibly_frozen";
-      lastTimePosition = ros::Time::now().sec;
+      lastTimePosition = SCENE.getTime();
       return false;
     }
     else
     {
       if (frozenStatus == "possibly_frozen")
       {
-        if ((ros::Time::now().sec - lastTimePosition) > frozenDiffTime)
+        if ((SCENE.getTime() - lastTimePosition) > frozenDiffTime)
         {
           frozenStatus = "frozen";
           return true;
