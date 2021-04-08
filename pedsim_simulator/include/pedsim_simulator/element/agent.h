@@ -158,16 +158,16 @@ protected:
   bool isRandom;
 
   // → sumTotalForces to sum all forces
-  Ped::Tvector sumTotalForces;
+  Ped::Tvector currentVelocity;
 
-  double lastModuleTotalForces;
+  double lastModuleTotalVelocities;
 
-  double currentModuleTotalForces;
+  double currentModuleTotalVelocities;
 
-  double forcesGradient;
+  double kinectGradient;
 
   // → lastTimeGradient is the time of last recorded forces gradient
-  uint64_t lastTimeForcesGradient;
+  uint64_t lastTimeKinectGradient;
 
   // → lastTimeIteration is the time to control iterations
   uint64_t lastTimeIteration;

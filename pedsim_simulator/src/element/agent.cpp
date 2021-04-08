@@ -58,18 +58,19 @@ Agent::Agent()
   frozenStatus = "moving";
 
   lastTimeIteration = 0;
+  lastTimeKinectGradient = 0;
 
-  sumTotalForces.x = 0;
-  sumTotalForces.y = 0;
-  sumTotalForces.z = 0;
+  currentVelocity.x = 0;
+  currentVelocity.y = 0;
+  currentVelocity.z = 0;
 
-  currentModuleTotalForces = 0;
-  lastModuleTotalForces = 0;
-  lastTimeForcesGradient = 0,
+  currentModuleTotalVelocities = 0;
+  kinectGradient = 0;
 
-  forcesGradient = 0;
+  lastModuleTotalVelocities = 0;
 
-  frozenDiffGradient = 0.15;
+  // parameters for tuning
+  frozenDiffGradient = 3;
   frozenDiffTime = 2;
 }
 
@@ -421,15 +422,18 @@ uint64_t Agent::getLastTimeIteration() const
 
 bool Agent::hasMovement()
 {
-  sumTotalForces = getDesiredDirection() + getSocialForce() + getObstacleForce() + getMyForce();
+  currentVelocity = Ped::Tagent::getVelocity();
 
-  currentModuleTotalForces = sqrt(pow(sumTotalForces.x, 2) + pow(sumTotalForces.y, 2));
+  currentModuleTotalVelocities = sqrt(pow(currentVelocity.x, 2) +
+                                      pow(currentVelocity.y, 2) +
+                                      pow(currentVelocity.z, 2));
 
-  forcesGradient = (currentModuleTotalForces - lastModuleTotalForces) / (SCENE.getTime() - lastTimeForcesGradient);
+  kinectGradient = 40 * (pow(currentModuleTotalVelocities, 2) + pow(lastModuleTotalVelocities, 2)) /
+                   (SCENE.getTime() - lastTimeKinectGradient);
 
-  lastModuleTotalForces = currentModuleTotalForces;
+  lastModuleTotalVelocities = currentModuleTotalVelocities;
 
-  if (abs(forcesGradient) <= frozenDiffGradient)
+  if (abs(kinectGradient) <= frozenDiffGradient)
   {
     return false;
   }
@@ -443,7 +447,7 @@ bool Agent::checkIfFrozen()
   if (hasMovement())
   {
     frozenStatus = "moving";
-    lastTimeForcesGradient = SCENE.getTime();
+    lastTimeKinectGradient = SCENE.getTime();
     return false;
   }
   else
@@ -451,14 +455,14 @@ bool Agent::checkIfFrozen()
     if (frozenStatus == "moving")
     {
       frozenStatus = "possibly_frozen";
-      lastTimeForcesGradient = SCENE.getTime();
+      lastTimeKinectGradient = SCENE.getTime();
       return false;
     }
     else
     {
       if (frozenStatus == "possibly_frozen")
       {
-        if ((SCENE.getTime() - lastTimeForcesGradient) > frozenDiffTime)
+        if ((SCENE.getTime() - lastTimeKinectGradient) > frozenDiffTime)
         {
           frozenStatus = "frozen";
           return true;
