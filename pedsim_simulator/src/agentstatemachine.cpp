@@ -58,6 +58,7 @@ AgentStateMachine::AgentStateMachine(Agent *agentIn)
   // initialize state machine
   state = StateNone;
 
+  // parameter for tunning
   diffTimeIteration = 1;
 }
 
