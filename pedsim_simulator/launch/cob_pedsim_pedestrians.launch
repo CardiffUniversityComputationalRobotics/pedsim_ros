@@ -17,13 +17,17 @@
   <arg name="force_group_coherence" default="2.0"/>
   <arg name="force_group_repulsion" default="1.0"/>
   <arg name="force_random" default="0.1"/>
-  <arg name="force_wall" default="1.0"/>
+  <arg name="force_wall" default="2.0"/>
+
+  <arg name="scenario_file" default="ipa_apartment.xml"/>
+  <arg name="detect_frozen_agents" default="true"/>
+  <arg name="walls_scale" default="0.1"/>
 
   <!-- Simulator -->
   <include file="$(find pedsim_simulator)/launch/simulator.launch">
     <arg name="kbd_teleop" value="$(arg kbd_teleop)"/>
     <arg name="rqt_teleop" value="$(arg rqt_teleop)"/>
-    <arg name="scene_file" value="$(find pedsim_simulator)/scenarios/airport_activities.xml"/>
+    <arg name="scene_file" value="$(find pedsim_simulator)/scenarios/$(arg scenario_file)"/>
     <arg name="with_robot" value="$(arg with_robot)"/>
     <arg name="simulation_factor" value="$(arg simulation_factor)"/>
     <arg name="update_rate" value="$(arg update_rate)"/>
@@ -34,20 +38,23 @@
     <arg name="pose_initial_x" value="10.0"/>
     <arg name="pose_initial_y" value="15.0"/>
     <arg name="pose_initial_theta" value="0.7"/>
+    <arg name="detect_frozen_agents" value="$(arg detect_frozen_agents)" />
 
     <!-- extra parameters -->
-    <!-- <arg name="force_obstacle" value="$(arg force_obstacle)"/>
+    <arg name="force_obstacle" value="$(arg force_obstacle)"/>
     <arg name="sigma_obstacle" value="$(arg sigma_obstacle)"/>
     <arg name="force_social" value="$(arg force_social)"/>
     <arg name="force_group_gaze" value="$(arg force_group_gaze)"/>
     <arg name="force_group_coherence" value="$(arg force_group_coherence)"/>
     <arg name="force_group_repulsion" value="$(arg force_group_repulsion)"/>
     <arg name="force_random" value="$(arg force_random)"/>
-    <arg name="force_wall" value="$(arg force_wall)"/> -->
+    <arg name="force_wall" value="$(arg force_wall)"/>
   </include>
 
   <!-- Visualizer -->
-  <include file="$(find pedsim_simulator)/launch/visualizer.launch"/>
+  <include file="$(find pedsim_simulator)/launch/visualizer.launch">
+    <arg name="walls_scale" value="$(arg walls_scale)"/>
+  </include>
 
   <!-- Rviz -->
   <node pkg="rviz" type="rviz" name="rviz" args="-d $(find pedsim_simulator)/rviz/social_contexts_activities.rviz" if="$(arg visualize)"/>

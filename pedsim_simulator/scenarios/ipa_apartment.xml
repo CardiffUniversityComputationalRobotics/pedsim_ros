@@ -5443,10 +5443,10 @@
   </agent>
 
   <!--robot-->
-  <!-- <agent x="0" y="0" n="1" dx="0" dy="0" type="2">
+  <agent x="0" y="0" n="1" dx="0" dy="0" type="0">
     <addwaypoint id="office4"/>
     <addwaypoint id="office3"/>
-  </agent> -->
+  </agent>
 
   <!-- AGENT CLUSTERS -->
   <agent x="5" y="15" n="3" dx="3" dy="3" type="0">

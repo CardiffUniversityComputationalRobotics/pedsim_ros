@@ -33,7 +33,7 @@
     <arg name="update_rate" value="$(arg update_rate)"/>
     <arg name="default_queue_size" value="10"/>
     <arg name="max_robot_speed" value="1.5"/>
-    <arg name="robot_mode" value="1"/>
+    <arg name="robot_mode" value="0"/>
     <arg name="enable_groups" value="true"/>
     <arg name="pose_initial_x" value="10.0"/>
     <arg name="pose_initial_y" value="15.0"/>
