@@ -75,6 +75,7 @@
 
   <!--tf description publisher-->
   <node name="cob_tf_publisher" pkg="pedsim_simulator" type="cob_tf_publisher.py" output="screen" />
+  <node name="cob_joint_states_publisher" pkg="pedsim_simulator" type="cob_joint_states_publisher.py" output="screen" />
 
   <!--pedsim simulator-->
   <!-- Simulator -->
