@@ -68,14 +68,16 @@
 
   <param name="robot_description" command="$(find xacro)/xacro --inorder '$(arg pkg_hardware_config)/robots/$(arg robot)/urdf/$(arg robot).urdf.xacro'" />
   <param name="use_gui" value="$(arg gui)"/>
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <rosparam file="$(find pedsim_simulator)/param/home_state_cob.yaml"/>
+  </node>
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
   <!--end of cob urd description-->
 
   <!--tf description publisher-->
   <node name="cob_tf_publisher" pkg="pedsim_simulator" type="cob_tf_publisher.py" output="screen" />
-  <node name="cob_joint_states_publisher" pkg="pedsim_simulator" type="cob_joint_states_publisher.py" output="screen" />
+  <!-- <node name="cob_joint_states_publisher" pkg="pedsim_simulator" type="cob_joint_states_publisher.py" output="screen" /> -->
 
   <!--pedsim simulator-->
   <!-- Simulator -->
