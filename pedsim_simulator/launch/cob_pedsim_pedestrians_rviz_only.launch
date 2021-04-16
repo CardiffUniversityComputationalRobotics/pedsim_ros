@@ -21,7 +21,7 @@
   <arg name="allow_active_sensing" default="true"/>
   <arg name="vicon_bridge_params_file" default="localization_tests.yaml"/>
   <arg name="prepare_robot_pick_place" default="true" />
-  <arg name="gui" default="true"/>
+  <arg name="gui" default="false"/>
 
   <!-- initial position of robot for localization testing -->
   <arg name="x_pose" default="0.0"/>
@@ -53,15 +53,28 @@
   <arg name="walls_scale" default="0.1"/>
 
   <!--additional parameters for cob simulation-->
-  <arg name="frame_id" default="map"/>
+  <arg name="frame_id" default="odom"/>
   <arg name="robot_base_frame_id" default="base_footprint"/>
   <arg name="obstacle_offset" default="-19.2"/>
-  <arg name="world_frame" default="map"/>
+  <arg name="world_frame" default="odom"/>
   <arg name="robot_frame" default="base_footprint"/>
   <arg name="publish_tf" default="false"/>
 
 
   <!--end of args and parameters-->
+
+
+  <!--cob urdf description-->
+
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(arg pkg_hardware_config)/robots/$(arg robot)/urdf/$(arg robot).urdf.xacro'" />
+  <param name="use_gui" value="$(arg gui)"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+  <!--end of cob urd description-->
+
+  <!--tf description publisher-->
+  <node name="cob_tf_publisher" pkg="pedsim_simulator" type="cob_tf_publisher.py" output="screen" />
 
   <!--pedsim simulator-->
   <!-- Simulator -->
@@ -106,6 +119,6 @@
   </include>
 
   <!-- Rviz -->
-  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find pedsim_simulator)/rviz/social_contexts_activities.rviz" if="$(arg visualize)"/>
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find pedsim_simulator)/rviz/cob_ped_rviz_only.rviz" if="$(arg visualize)"/>
 
 </launch>
