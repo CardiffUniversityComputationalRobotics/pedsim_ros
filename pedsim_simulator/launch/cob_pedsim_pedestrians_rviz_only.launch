@@ -1,0 +1,111 @@
+<launch>
+
+  <arg name="robot" default="cob4-8" />
+  <!-- cob4-5, cob4-7, cob4-8, cob4-10, cob4-13, cob4-16, cob4-24 -->
+  <arg name="robot_env" default="empty" />
+  <!-- empty, ipa-apartment, ipa-kitchen, ipa-office -->
+  <arg name="pkg_hardware_config" default="$(find cob_hardware_config)"/>
+  <arg name="pkg_moveit_config" default="$(find cob_moveit_config)"/>
+  <arg name="debug" default="false"/>
+  <arg name="pipeline" default="ompl" />
+  <arg name="scene_objects" default="pick_place" />
+
+  <arg name="moveit" default="false"/>
+  <arg name="mapping" default="false" />
+  <arg name="localization" default="false" />
+  <arg name="navigation" default="false" />
+
+  <arg name="world_name" default="$(find pedsim_simulator)/worlds/empty_default.world" />
+  <!-- test_zone.sdf, test_zone_pick_place.sdf -->
+  <arg name="output" default="log"/>
+  <arg name="allow_active_sensing" default="true"/>
+  <arg name="vicon_bridge_params_file" default="localization_tests.yaml"/>
+  <arg name="prepare_robot_pick_place" default="true" />
+  <arg name="gui" default="true"/>
+
+  <!-- initial position of robot for localization testing -->
+  <arg name="x_pose" default="0.0"/>
+  <arg name="y_pose" default="0.0"/>
+
+  <!--pedsim parameters config-->
+  <arg name="kbd_teleop" default="false"/>
+  <arg name="rqt_teleop" default="false"/>
+  <arg name="visualize" default="true"/>
+  <arg name="with_robot" default="true"/>
+
+  <arg name="simulation_factor" default="1.0"/>
+  <!-- Speed up -->
+  <arg name="update_rate" default="25.0"/>
+  <!-- Hz -->
+
+  <!-- additional parameters configured -->
+  <arg name="force_obstacle" default="10.0"/>
+  <arg name="sigma_obstacle" default="0.2"/>
+  <arg name="force_social" default="5.1"/>
+  <arg name="force_group_gaze" default="3.0"/>
+  <arg name="force_group_coherence" default="2.0"/>
+  <arg name="force_group_repulsion" default="1.0"/>
+  <arg name="force_random" default="0.1"/>
+  <arg name="force_wall" default="2.0"/>
+
+  <arg name="scenario_file" default="ipa_apartment.xml"/>
+  <arg name="detect_frozen_agents" default="false"/>
+  <arg name="walls_scale" default="0.1"/>
+
+  <!--additional parameters for cob simulation-->
+  <arg name="frame_id" default="map"/>
+  <arg name="robot_base_frame_id" default="base_footprint"/>
+  <arg name="obstacle_offset" default="-19.2"/>
+  <arg name="world_frame" default="map"/>
+  <arg name="robot_frame" default="base_footprint"/>
+  <arg name="publish_tf" default="false"/>
+
+
+  <!--end of args and parameters-->
+
+  <!--pedsim simulator-->
+  <!-- Simulator -->
+  <include file="$(find pedsim_simulator)/launch/simulator.launch">
+    <arg name="kbd_teleop" value="$(arg kbd_teleop)"/>
+    <arg name="rqt_teleop" value="$(arg rqt_teleop)"/>
+    <arg name="scene_file" value="$(find pedsim_simulator)/scenarios/$(arg scenario_file)"/>
+    <arg name="with_robot" value="$(arg with_robot)"/>
+    <arg name="simulation_factor" value="$(arg simulation_factor)"/>
+    <arg name="update_rate" value="$(arg update_rate)"/>
+    <arg name="default_queue_size" value="10"/>
+    <arg name="max_robot_speed" value="1.5"/>
+    <arg name="robot_mode" value="1"/>
+    <arg name="enable_groups" value="true"/>
+    <arg name="pose_initial_x" value="10.0"/>
+    <arg name="pose_initial_y" value="15.0"/>
+    <arg name="pose_initial_theta" value="0.7"/>
+    <arg name="detect_frozen_agents" value="$(arg detect_frozen_agents)" />
+
+    <!-- extra parameters -->
+    <arg name="force_obstacle" value="$(arg force_obstacle)"/>
+    <arg name="sigma_obstacle" value="$(arg sigma_obstacle)"/>
+    <arg name="force_social" value="$(arg force_social)"/>
+    <arg name="force_group_gaze" value="$(arg force_group_gaze)"/>
+    <arg name="force_group_coherence" value="$(arg force_group_coherence)"/>
+    <arg name="force_group_repulsion" value="$(arg force_group_repulsion)"/>
+    <arg name="force_random" value="$(arg force_random)"/>
+    <arg name="force_wall" value="$(arg force_wall)"/>
+
+    <!--additional parameters for cob simulation-->
+    <arg name="frame_id" value="$(arg frame_id)"/>
+    <arg name="robot_base_frame_id" value="$(arg robot_base_frame_id)"/>
+    <arg name="obstacle_offset" value="$(arg obstacle_offset)"/>
+    <arg name="world_frame" value="$(arg world_frame)"/>
+    <arg name="robot_frame" value="$(arg robot_frame)"/>
+    <arg name="publish_tf" value="$(arg publish_tf)"/>
+  </include>
+
+  <!-- Visualizer -->
+  <include file="$(find pedsim_simulator)/launch/visualizer.launch">
+    <arg name="walls_scale" value="$(arg walls_scale)"/>
+  </include>
+
+  <!-- Rviz -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find pedsim_simulator)/rviz/social_contexts_activities.rviz" if="$(arg visualize)"/>
+
+</launch>
