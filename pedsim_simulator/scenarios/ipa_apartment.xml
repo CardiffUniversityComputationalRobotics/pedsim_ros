@@ -5381,38 +5381,43 @@
 
   <!-- WAYPOINTS -->
   <!-- office # 1 x=3 y=26 -->
-  <waypoint id="office1" x="5" y="27" r="0.5"/>
+  <waypoint id="office1" x="-14.2" y="7.8" r="0.5"/>
   <!-- office # 2 x=11 y=28 -->
-  <waypoint id="office2" x="11" y="28" r="0.5"/>
+  <waypoint id="office2" x="-8.2" y="8.8" r="0.5"/>
   <!-- office # 3 x=4 y=30 -->
-  <waypoint id="office3" x="4" y="30" r="0.5"/>
+  <waypoint id="office3" x="-15.2" y="10.8" r="0.5"/>
   <!-- office # 4 x=5 y=32 -->
-  <waypoint id="office4" x="11" y="32" r="0.5"/>
+  <waypoint id="office4" x="-8.2" y="12.8" r="0.5"/>
   <!-- ticket dispensor x=5 y=32 -->
-  <waypoint id="ticket_dispensor" x="3" y="15" r="0.5"/>
+  <waypoint id="ticket_dispensor" x="-16.2" y="-4.2" r="0.5"/>
   <!-- waiting room x=5 y=32 -->
-  <waypoint id="waiting_room" x="22" y="18" r="0.5"/>
+  <waypoint id="waiting_room" x="2.8" y="-1.2" r="0.5"/>
   <!-- information room x=5 y=32 -->
-  <waypoint id="information_room" x="21" y="12" r="0.5"/>
+  <waypoint id="information_room" x="1.8" y="-7.2" r="0.5"/>
   <!-- end of hall x=7.5 y=32 -->
-  <waypoint id="end_hall" x="7.5" y="31" r="0.5"/>
+  <waypoint id="end_hall" x="-11.7" y="11.8" r="0.5"/>
   <!-- middle hall x=7.5 y=23 -->
-  <waypoint id="middle_hall" x="7.5" y="23" r="0.5"/>
+  <waypoint id="middle_hall" x="-11.7" y="3.8" r="0.5"/>
   <!-- 3/4 hall x=7.5 y=23 -->
-  <waypoint id="three_quarter_hall" x="7.5" y="28" r="0.5"/>
+  <waypoint id="three_quarter_hall" x="-11.7" y="8.8" r="0.5"/>
   <!-- entrance room x=17 y=15.5 -->
-  <waypoint id="entrance_room" x="17" y="15.5" r="0.5"/>
+  <waypoint id="entrance_room" x="-2.2" y="-3.7" r="0.5"/>
 
   <!-- QUEUES -->
-  <queue id="klm" x="23" y="14" direction="0"/>
+  <queue id="klm" x="3.8" y="-5.2" direction="0"/>
 
   <!-- ATTRACTIONS -->
-  <attraction id="robot_marketing" x="7" y="15" width="0.5" height="0.5" strength="2"/>
+  <attraction id="robot_marketing" x="-12.2" y="-4.2" width="0.5" height="0.5" strength="2"/>
 
+  <!--robot-->
+  <agent x="0" y="0" n="1" dx="0" dy="0" type="2">
+    <addwaypoint id="office4"/>
+    <addwaypoint id="office3"/>
+  </agent>
 
   <!-- AGENTS -->
   <!-- SINGLE AGENTS -->
-  <agent x="8" y="18" n="1" dx="3" dy="3" type="1">
+  <agent x="-11.2" y="-1.2" n="1" dx="2" dy="2" type="1">
     <addwaypoint id="office1"/>
     <addwaypoint id="middle_hall"/>
     <addwaypoint id="three_quarter_hall"/>
@@ -5425,7 +5430,7 @@
     <addwaypoint id="middle_hall"/>
   </agent>
 
-  <agent x="10" y="18" n="1" dx="1" dy="1" type="1">
+  <agent x="-9.2" y="-1.2" n="1" dx="1" dy="1" type="1">
     <addwaypoint id="office4"/>
     <addwaypoint id="end_hall"/>
     <addwaypoint id="middle_hall"/>
@@ -5435,21 +5440,15 @@
     <addwaypoint id="three_quarter_hall"/>
   </agent>
 
-  <agent x="9" y="18" n="1" dx="3" dy="3" type="1">
+  <agent x="-10.2" y="-1.2" n="1" dx="2" dy="2" type="1">
     <addwaypoint id="ticket_dispensor"/>
     <addwaypoint id="middle_hall"/>
     <addwaypoint id="end_hall"/>
     <addwaypoint id="middle_hall"/>
   </agent>
 
-  <!--robot-->
-  <agent x="0" y="0" n="1" dx="0" dy="0" type="0">
-    <addwaypoint id="office4"/>
-    <addwaypoint id="office3"/>
-  </agent>
-
   <!-- AGENT CLUSTERS -->
-  <agent x="5" y="15" n="3" dx="3" dy="3" type="0">
+  <agent x="-14.2" y="-4.2" n="3" dx="3" dy="3" type="0">
     <addwaypoint id="ticket_dispensor"/>
     <addwaypoint id="waiting_room"/>
     <addwaypoint id="entrance_room"/>
