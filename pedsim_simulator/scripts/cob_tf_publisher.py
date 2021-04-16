@@ -125,7 +125,7 @@ if __name__ == "__main__":
                 poses_list[i + 1][0].orientation.z - poses_list[i][0].orientation.z
             ) / poses_list[i][1]
 
-            for i in range(0, poses_list[i][1]):
+            for j in range(0, poses_list[i][1]):
                 # print("current_x_position", current_x_position)
                 # print("current_y_position", current_y_position)
 
@@ -148,14 +148,6 @@ if __name__ == "__main__":
                 )[3]
 
                 br.sendTransformMessage(t)
-
-                # br.sendTransform(
-                #     (current_x_position, current_y_position, 0.0),
-                #     (0.0, 0.0, 0.0, 1.0),
-                #     rospy.Time.now(),
-                #     "odom",
-                #     "base_footprint",
-                # )
 
                 current_x_position += diff_x_position
                 current_y_position += diff_y_position
