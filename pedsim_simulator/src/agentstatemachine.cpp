@@ -58,7 +58,7 @@ AgentStateMachine::AgentStateMachine(Agent *agentIn)
   // initialize state machine
   state = StateNone;
 
-  diffTimeIteration = 0.75;
+  diffTimeIteration = 1;
 }
 
 AgentStateMachine::~AgentStateMachine()

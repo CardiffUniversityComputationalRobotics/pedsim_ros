@@ -173,8 +173,8 @@ Ped::Twaypoint *Agent::updateDestination()
     else
     {
       int iRandomWaypoint = (rand() % static_cast<int>(destinations.size()));
-      // ROS_INFO_STREAM("Random destination agent [" << id << "] reached destination.");
-      // ROS_INFO_STREAM("Random destination number selected [" << iRandomWaypoint << "] for agent.");
+      ROS_INFO_STREAM("Random destination agent [" << id << "] reached destination.");
+      ROS_INFO_STREAM("Random destination number selected [" << iRandomWaypoint << "] for agent.");
       currentDestination = destinations.takeAt(iRandomWaypoint);
     }
     //currentDestination = destinations.first();

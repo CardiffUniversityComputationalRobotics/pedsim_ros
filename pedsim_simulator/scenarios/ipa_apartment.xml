@@ -5430,7 +5430,7 @@
     <addwaypoint id="middle_hall"/>
   </agent>
 
-  <agent x="-9.2" y="-1.2" n="1" dx="1" dy="1" type="1">
+  <agent x="-9.2" y="-1.2" n="1" dx="1" dy="1" type="1" random="1">
     <addwaypoint id="office4"/>
     <addwaypoint id="end_hall"/>
     <addwaypoint id="middle_hall"/>

@@ -49,6 +49,8 @@
     <arg name="force_group_repulsion" value="$(arg force_group_repulsion)"/>
     <arg name="force_random" value="$(arg force_random)"/>
     <arg name="force_wall" value="$(arg force_wall)"/>
+
+    <arg name="obstacle_offset" value="-19.2"/>
   </include>
 
   <!-- Visualizer -->
