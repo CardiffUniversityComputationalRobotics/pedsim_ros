@@ -12,7 +12,7 @@ The packages needed in order to create a Social Agents Simulation including a ro
 
 An scenario is an space where walls that enclose the agents are defined and there are different conigurations that can be defined. This is defined in an `.xml` file. Here is an example o one of them [ipa_apartment.xml](../pedsim_simulator/scenarios/ipa_apartment.xml).
 
-### Obstacle
+### Obstacles
 
 These are needed so that the agent knows where it can walk and where is it can't, this gives the repulsive forces and is mainly used to represent walls, obstacles are represented as prisms.
 
