@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
+from time import sleep
 import roslib
 import rospy
 import tf
 from geometry_msgs.msg import Pose, TransformStamped
 from dynamic_reconfigure.msg import Config
-from time import sleep
 
 roslib.load_manifest("pedsim_simulator")
 
@@ -73,24 +73,36 @@ pose13.position.x = -11.7
 pose13.position.y = 12.8
 pose13.orientation.z = -1.57
 
+
+def calculate_steps(time):
+    """
+    Function to calculate the amount of steps for each trayectory.
+    """
+    return int(time * 100)
+
+
 poses_list = [
-    [pose1, 20],  # recta
-    [pose2, 4],  # giro
-    [pose3, 8],  # recta
-    [pose4, 5],  # giro
-    [pose5, 15],  # recta
-    [pose6, 8],  # giro regreso
-    [pose7, 15],  # recta
-    [pose8, 4],  # giro
-    [pose9, 9],  # recto
-    [pose10, 3],  # giro
-    [pose11, 20],  # recta
-    [pose12, 5],  # giro
-    [pose13, 5],  # no se da tiempo
+    [pose1, calculate_steps(20)],  # recta
+    [pose2, calculate_steps(4)],  # giro
+    [pose3, calculate_steps(8)],  # recta
+    [pose4, calculate_steps(5)],  # giro
+    [pose5, calculate_steps(15)],  # recta
+    [pose6, calculate_steps(8)],  # giro regreso
+    [pose7, calculate_steps(15)],  # recta
+    [pose8, calculate_steps(4)],  # giro
+    [pose9, calculate_steps(9)],  # recto
+    [pose10, calculate_steps(3)],  # giro
+    [pose11, calculate_steps(20)],  # recta
+    [pose12, calculate_steps(5)],  # giro
+    [pose13, calculate_steps(5)],  # no se da tiempo
 ]
 
 
-class COB_TF_Publisher:
+class CobTfPublisher:
+    """
+    Publishes the Pose of the robot as fast as the simulation factor specifies.
+    """
+
     def __init__(self):
         rospy.init_node("simulator_tf_broadcaster")
         self.rqt_parameters_sub = rospy.Subscriber(
@@ -99,35 +111,34 @@ class COB_TF_Publisher:
             self.parameters_callback,
             queue_size=1,
         )
-        self.update_rate = 25
-        self.simualtion_factor = 1
+        self.update_rate = 100
+        self.simulation_factor = 1
 
         self.current_x_position = pose1.position.x
         self.current_y_position = pose1.position.y
         self.current_z_orientation = pose1.orientation.z
 
-        self.t = TransformStamped()
-        self.t.header.frame_id = "odom"
-        self.t.child_frame_id = "base_footprint"
+        self._t = TransformStamped()
+        self._t.header.frame_id = "odom"
+        self._t.child_frame_id = "base_footprint"
 
-        self.br = tf.TransformBroadcaster()
-        self.rate = rospy.Rate(self.update_rate)
-
-    def calculate_steps(self, time):
-        """
-        Function to calculate the amount of steps for each trayectory.
-        """
-        return int(time * 25)
+        self._br = tf.TransformBroadcaster()
 
     def parameters_callback(self, msg):
+        """
+        updates simulation factor and update rate modified by rqt_reconfigure
+        """
         data = msg.doubles
-
-        self.update_rate = data[0].value
+        # self.update_rate = data[0].value
         self.simulation_factor = data[1].value
-        self.rate = rospy.Rate(self.update_rate)
+        # self.rate = rospy.Rate(self.update_rate * self.simualtion_factor)
+        # print("Rate changed for transform")
 
-    def cob_tf_compute(self):
-        while True:
+    def cob_tf_publisher(self):
+        """
+        Publishes and changes the Pose of the cob robot.
+        """
+        while not rospy.is_shutdown():
             self.current_x_position = pose1.position.x
             self.current_y_position = pose1.position.y
             self.current_z_orientation = pose1.orientation.z
@@ -135,66 +146,55 @@ class COB_TF_Publisher:
             for i in range(0, len(poses_list) - 1):
                 diff_x_position = (
                     poses_list[i + 1][0].position.x - poses_list[i][0].position.x
-                )
+                ) / poses_list[i][1]
 
                 diff_y_position = (
                     poses_list[i + 1][0].position.y - poses_list[i][0].position.y
-                )
+                ) / poses_list[i][1]
 
                 diff_z_orientation = (
                     poses_list[i + 1][0].orientation.z - poses_list[i][0].orientation.z
-                )
+                ) / poses_list[i][1]
 
-                while (
-                    (
-                        abs(poses_list[i + 1][0].position.x - self.current_x_position)
-                        > 0.1
+                for j in range(0, poses_list[i][1]):
+
+                    self._t.header.stamp = rospy.Time.now()
+                    self._t.transform.translation.x = self.current_x_position
+                    self._t.transform.translation.y = self.current_y_position
+                    self._t.transform.translation.z = 0
+
+                    self._t.transform.rotation.x = (
+                        tf.transformations.quaternion_from_euler(
+                            0, 0, self.current_z_orientation
+                        )[0]
                     )
-                    and (
-                        abs(poses_list[i + 1][0].position.y - self.current_y_position)
-                        > 0.1
+                    self._t.transform.rotation.y = (
+                        tf.transformations.quaternion_from_euler(
+                            0, 0, self.current_z_orientation
+                        )[1]
                     )
-                    and (
-                        abs(
-                            poses_list[i + 1][0].orientation.z
-                            - self.current_z_orientation
-                        )
-                        > 0.1
+                    self._t.transform.rotation.z = (
+                        tf.transformations.quaternion_from_euler(
+                            0, 0, self.current_z_orientation
+                        )[2]
                     )
-                ):
-                    for j in range(0, poses_list[i][1]):
+                    self._t.transform.rotation.w = (
+                        tf.transformations.quaternion_from_euler(
+                            0, 0, self.current_z_orientation
+                        )[3]
+                    )
 
-                        self.current_x_position += diff_x_position
-                        self.current_y_position += diff_y_position
-                        self.current_z_orientation += diff_z_orientation
+                    self._br.sendTransformMessage(self._t)
 
-            rospy.sleep()
+                    self.current_x_position += diff_x_position
+                    self.current_y_position += diff_y_position
+                    self.current_z_orientation += diff_z_orientation
 
-    def cob_tf_publisher(self):
-        while True:
-            self.t.header.stamp = rospy.Time.now()
-            self.t.transform.translation.x = self.current_x_position
-            self.t.transform.translation.y = self.current_y_position
-            self.t.transform.translation.z = 0
-
-            self.t.transform.rotation.x = tf.transformations.quaternion_from_euler(
-                0, 0, self.current_z_orientation
-            )[0]
-            self.t.transform.rotation.y = tf.transformations.quaternion_from_euler(
-                0, 0, self.current_z_orientation
-            )[1]
-            self.t.transform.rotation.z = tf.transformations.quaternion_from_euler(
-                0, 0, self.current_z_orientation
-            )[2]
-            self.t.transform.rotation.w = tf.transformations.quaternion_from_euler(
-                0, 0, self.current_z_orientation
-            )[3]
-
-            self.br.sendTransformMessage(self.t)
-
-            self.rate.sleep()
+                    sleep(1 / (self.update_rate * self.simulation_factor))
+                    rospy.sleep(-1)
 
 
 if __name__ == "__main__":
 
-    cob_transform_publisher = COB_TF_Publisher()
+    cob_transform_publisher = CobTfPublisher()
+    cob_transform_publisher.cob_tf_publisher()
