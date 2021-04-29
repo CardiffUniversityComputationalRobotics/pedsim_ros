@@ -167,7 +167,7 @@ Ped::Twaypoint *Agent::updateDestination()
       destinations.append(previousDestination);
     }
 
-    if (isRandom == 0)
+    if (isRandom == 0 and frozenStatus != "frozen")
     {
       currentDestination = destinations.first();
       // ROS_INFO_STREAM("Destination [" << currentDestination->getName().toStdString() << "] for agent [" << id << "]");
@@ -462,4 +462,10 @@ bool Agent::checkIfFrozen()
       }
     }
   }
+}
+
+void Agent::setFrozenStatus(string status)
+{
+  frozenStatus = status;
+  return;
 }

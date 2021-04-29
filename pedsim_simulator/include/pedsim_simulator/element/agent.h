@@ -128,6 +128,7 @@ public:
   void setRandom(bool randomIn);
   bool checkIfFrozen();
   bool hasMovement();
+  void setFrozenStatus(string status);
 
   // → VisibleScenarioElement Overrides/Overloads
 public:
