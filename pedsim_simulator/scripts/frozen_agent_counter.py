@@ -6,15 +6,25 @@ import math
 
 
 class FrozenAgentDetector:
-    """This class manages the state of the agents based on it position and time"""
+    """This class checks and publishes wether an agent is stuck or not"""
 
     def __init__(self):
 
         # Specific parameters that could be tuned
-        self.callback_delay = rospy.get_param("callback_delay", 2)
-        self.distance_threshold = rospy.get_param("distance_threshold", 0.5)
-        self.time_threshold = rospy.get_param("time_threshold", 10)
-        self.publish_frequency = rospy.get_param("publish_frequency", 1)
+        self.callback_delay = rospy.get_param(
+            "/frozen_agent_counter/callback_delay", 2.0
+        )
+        self.radius_threshold = rospy.get_param(
+            "/frozen_agent_counter/radius_threshold", 1.0
+        )
+        self.time_threshold = rospy.get_param(
+            "/frozen_agent_counter/time_threshold", 10.0
+        )
+        self.publish_frequency = rospy.get_param(
+            "/frozen_agent_counter/publish_frequency", 1.0
+        )
+
+        print("frozen agent counter:", self.radius_threshold)
 
         rospy.init_node("frozen_agent_detector_node", anonymous=True)
 
@@ -95,7 +105,7 @@ class FrozenAgentDetector:
             math.pow(delta_position_x, 2) + math.pow(delta_position_y, 2)
         )
 
-        if rad_mov_value < 1:
+        if rad_mov_value < self.radius_threshold:
             return True
         return False
 
