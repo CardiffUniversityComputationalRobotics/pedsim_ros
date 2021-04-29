@@ -24,8 +24,6 @@ class FrozenAgentDetector:
             "/frozen_agent_counter/publish_frequency", 1.0
         )
 
-        print("frozen agent counter:", self.radius_threshold)
-
         rospy.init_node("frozen_agent_detector_node", anonymous=True)
 
         # subcribers

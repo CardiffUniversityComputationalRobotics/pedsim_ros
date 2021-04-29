@@ -60,6 +60,15 @@
   <arg name="robot_frame" default="base_footprint"/>
   <arg name="publish_tf" default="false"/>
 
+  <!-- parameters for metrics recording -->
+  <arg name="callback_delay" default="2.0"/>
+  <arg name="radius_threshold" default="3.0"/>
+  <arg name="time_threshold" default="10.0"/>
+  <arg name="publish_frequency" default="1.0"/>
+
+  <arg name="csv_dir" default="/home/sasm/people_sim_ws/src/pedsim_ros/pedsim_simulator/metrics/"/>
+  <arg name="solution_type" default="force_gradient"/>
+  <arg name="csv_name" default="first_test.csv"/>
 
   <!--end of args and parameters-->
 
@@ -124,11 +133,6 @@
   <!-- Rviz -->
   <node pkg="rviz" type="rviz" name="rviz" args="-d $(find pedsim_simulator)/rviz/cob_ped_rviz_only.rviz" if="$(arg visualize)"/>
 
-  <arg name="callback_delay" default="2.0"/>
-  <arg name="radius_threshold" default="3.0"/>
-  <arg name="time_threshold" default="10.0"/>
-  <arg name="publish_frequency" default="1.0"/>
-
   <node type="frozen_agent_counter.py" name="frozen_agent_counter" pkg="pedsim_simulator" output="screen">
     <param name="callback_delay" value="$(arg callback_delay)" type="double"/>
     <param name="radius_threshold" value="$(arg radius_threshold)" type="double"/>
@@ -137,6 +141,9 @@
   </node>
 
   <node type="frozen_agent_csv.py" name="frozen_agent_csv" pkg="pedsim_simulator" output="screen">
+    <param name="csv_dir" value="$(arg csv_dir)" type="string"/>
+    <param name="solution_type" value="$(arg solution_type)" type="string"/>
+    <param name="csv_name" value="$(arg csv_name)" type="string"/>
   </node>
 
 </launch>

@@ -1,9 +1,23 @@
 #!/usr/bin/env python3
 
 import rospy
-from pedsim_msgs.msg import AgentStates, FrozenAgent, FrozenAgents
-import math
+from pedsim_msgs.msg import FrozenAgents
 import csv
+from datetime import datetime
+
+
+def import_csv(csvfilename):
+    data = []
+    with open(csvfilename, "r", encoding="utf-8", errors="ignore") as scraped:
+        reader = csv.reader(scraped, delimiter=",")
+        row_index = 0
+        for row in reader:
+            if row:  # avoid blank lines
+                row_index += 1
+                columns = [str(row_index), row[0], row[1], row[2]]
+                data.append(columns)
+        scraped.close()
+    return data
 
 
 class FrozenAgentCounter:
@@ -11,19 +25,52 @@ class FrozenAgentCounter:
 
     def save_value_csv(self):
         # TODO: create or modify csv adding value
-        pass
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+
+        last_data = None
+        try:
+            csv_read_data = import_csv(
+                self.csv_dir + self.solution_type + "/" + self.csv_name
+            )
+            last_data = csv_read_data[-1]
+        except:
+            pass
+
         with open(
-            self.csv_dir + self.solution_type + self.csv_name, "a", newline=""
-        ) as csvfile:
-            spamwriter = csv.writer(
-                csvfile, delimiter=" ", quotechar="|", quoting=csv.QUOTE_MINIMAL
-            )
-            spamwriter.writerow(
-                [
-                    "first_test",
-                    str(self.frozen_agents_counter),
-                ]
-            )
+            self.csv_dir + self.solution_type + "/" + self.csv_name, "a", newline=""
+        ) as csvfile_write, open(
+            self.csv_dir + self.solution_type + "/" + self.csv_name,
+            "r",
+        ) as csvfile_read:
+            reader = csv.reader(csvfile_read)
+            fieldnames = ["test_number", "time", "frozen_counter"]
+            writer = csv.DictWriter(csvfile_write, fieldnames=fieldnames)
+            try:
+                if next(reader) != ["test_number", "time", "frozen_counter"]:
+                    writer.writeheader()
+            except:
+                writer.writeheader()
+
+            if last_data is not None:
+                writer.writerow(
+                    {
+                        "test_number": int(last_data[1]) + 1,
+                        "time": dt_string,
+                        "frozen_counter": self.frozen_agents_counter,
+                    }
+                )
+            else:
+                writer.writerow(
+                    {
+                        "test_number": 1,
+                        "time": dt_string,
+                        "frozen_counter": self.frozen_agents_counter,
+                    }
+                )
+            print("[INFO] [" + str(rospy.get_time()) + "] Frozen Agents Counter saved.")
+            csvfile_write.close()
+            csvfile_read.close()
 
     def __init__(self):
 
