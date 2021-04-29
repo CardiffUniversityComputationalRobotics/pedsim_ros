@@ -49,7 +49,7 @@
   <arg name="force_wall" default="2.0"/>
 
   <arg name="scenario_file" default="ipa_apartment.xml"/>
-  <arg name="detect_frozen_agents" default="false"/>
+  <arg name="detect_frozen_agents" default="true"/>
   <arg name="walls_scale" default="0.1"/>
 
   <!--additional parameters for cob simulation-->

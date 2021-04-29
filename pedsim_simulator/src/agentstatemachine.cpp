@@ -87,8 +87,8 @@ void AgentStateMachine::doStateTransition()
       {
         if (agent->checkIfFrozen())
         {
-          ROS_INFO_STREAM("###################");
-          ROS_INFO_STREAM("Agent [" << agent->getId() << "] is frozen");
+          // ROS_INFO_STREAM("###################");
+          // ROS_INFO_STREAM("Agent [" << agent->getId() << "] is frozen");
           activateState(StateFrozen);
           return;
         }
@@ -237,7 +237,7 @@ void AgentStateMachine::activateState(AgentState stateIn)
     individualPlanner->setAgent(agent);
     individualPlanner->setDestination(destination);
     agent->setWaypointPlanner(individualPlanner);
-    ROS_INFO_STREAM("New destination [" << destination->getName().toStdString() << "] for frozen agent");
+    // ROS_INFO_STREAM("New destination [" << destination->getName().toStdString() << "] for frozen agent");
     break;
   case StateShopping:
     shallLoseAttraction = false;
