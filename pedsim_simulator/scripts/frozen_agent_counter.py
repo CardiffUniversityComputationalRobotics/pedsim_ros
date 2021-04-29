@@ -3,12 +3,16 @@
 import rospy
 from pedsim_msgs.msg import AgentStates, FrozenAgent, FrozenAgents
 import math
+from dynamic_reconfigure.msg import Config
+from time import sleep
 
 
 class FrozenAgentDetector:
     """This class checks and publishes wether an agent is stuck or not"""
 
     def __init__(self):
+
+        rospy.init_node("frozen_agent_detector_node", anonymous=True)
 
         # Specific parameters that could be tuned
         self.callback_delay = rospy.get_param(
@@ -24,13 +28,18 @@ class FrozenAgentDetector:
             "/frozen_agent_counter/publish_frequency", 1.0
         )
 
-        rospy.init_node("frozen_agent_detector_node", anonymous=True)
-
         # subcribers
         self._agents_status_sub = rospy.Subscriber(
             "/pedsim_simulator/simulated_agents",
             AgentStates,
             self.agent_freezing_callback,
+            queue_size=1,
+        )
+
+        self._sim_parameters_sub = rospy.Subscriber(
+            "pedsim_simulator/parameter_updates",
+            Config,
+            self.sim_parameters_callback,
             queue_size=1,
         )
 
@@ -48,18 +57,39 @@ class FrozenAgentDetector:
 
         self.rate = rospy.Rate(self.publish_frequency)
 
+        self.agent_callback_inc_msg = None
+        self.sim_time = 0
+
+        self.update_rate = 25
+        self.simulation_factor = 1
+
+    def sim_parameters_callback(self, data):
+        data = data.doubles
+        self.update_rate = data[0].value
+        self.simulation_factor = data[1].value
+
     def agent_freezing_callback(self, data):
         """AgentStates subscribe to get agents position"""
         if rospy.get_rostime().secs - self.last_callback_time > self.callback_delay:
             self.last_callback_time = rospy.get_rostime().secs
             input_msg = data.agent_states
+            self.agent_callback_inc_msg = input_msg
             self.process_agents(input_msg)
+
+    def sim_time_process(self):
+        while True:
+            self.sim_time += self.simulation_factor / self.update_rate
+            sleep(1 / self.update_rate)
 
     def process_agents(self, agents_data):
         """Processes the agents data and carries frozen detection procedure."""
         for agent in agents_data:
             if str(agent.id) in self.agents_register_dict:
-                if self.is_frozen(agent.id, agent.pose.position):
+
+                if (
+                    self.is_frozen(agent.id, agent.pose.position)
+                    and agent.social_state != "Unknown"
+                ):
                     if self.agents_register_dict[str(agent.id)][2] == "moving":
                         agent_last_info = self.agents_register_dict[str(agent.id)]
                         agent_last_info[1] = rospy.get_rostime().secs
@@ -123,7 +153,20 @@ class FrozenAgentDetector:
                 self.frozen_agents_list.append(FrozenAgent(int(key), value[2]))
             self.frozen_agents_msg.frozen_agents = self.frozen_agents_list
 
+            # bug fix
             self._frozen_agents_pub.publish(self.frozen_agents_msg)
+
+            try:
+                for agent in self.agent_callback_inc_msg:
+                    for key, value in self.agents_register_dict.items():
+                        if value[2] == "stuck":
+                            self.agents_register_dict[str(key)] = [
+                                agent.pose.position,
+                                rospy.get_rostime().secs,
+                                "moving",
+                            ]
+            except Exception as e:
+                print(e)
             self.rate.sleep()
 
 

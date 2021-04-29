@@ -33,9 +33,9 @@
   <arg name="visualize" default="true"/>
   <arg name="with_robot" default="true"/>
 
-  <arg name="simulation_factor" default="1.0"/>
+  <arg name="simulation_factor" default="2.0"/>
   <!-- Speed up -->
-  <arg name="update_rate" default="25.0"/>
+  <arg name="update_rate" default="50.0"/>
   <!-- Hz -->
 
   <!-- additional parameters configured -->
@@ -61,13 +61,13 @@
   <arg name="publish_tf" default="false"/>
 
   <!-- parameters for metrics recording -->
-  <arg name="callback_delay" default="2.0"/>
-  <arg name="radius_threshold" default="3.0"/>
-  <arg name="time_threshold" default="10.0"/>
-  <arg name="publish_frequency" default="1.0"/>
+  <arg name="callback_delay" default="1.0"/>
+  <arg name="radius_threshold" default="1.0"/>
+  <arg name="time_threshold" default="1.0"/>
+  <arg name="publish_frequency" default="10"/>
 
   <arg name="csv_dir" default="/home/sasm/people_sim_ws/src/pedsim_ros/pedsim_simulator/metrics/"/>
-  <arg name="solution_type" default="force_gradient"/>
+  <arg name="solution_type" default="position"/>
   <arg name="csv_name" default="first_test.csv"/>
 
   <!--end of args and parameters-->

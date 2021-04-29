@@ -34,8 +34,8 @@ class FrozenAgentCounter:
                 self.csv_dir + self.solution_type + "/" + self.csv_name
             )
             last_data = csv_read_data[-1]
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
         with open(
             self.csv_dir + self.solution_type + "/" + self.csv_name, "a", newline=""
@@ -114,6 +114,9 @@ class FrozenAgentCounter:
                     and self.agents_register_dict[str(agent.id)] == "moving"
                 ):
                     self.frozen_agents_counter += 1
+                    print("-----------------------")
+                    print("Counter de frozen agent aumentado")
+                    print("Numero total de congelados: ", self.frozen_agents_counter)
                     self.agents_register_dict[str(agent.id)] == "stuck"
                 elif agent.is_frozen == "moving":
                     self.agents_register_dict[str(agent.id)] == "moving"
