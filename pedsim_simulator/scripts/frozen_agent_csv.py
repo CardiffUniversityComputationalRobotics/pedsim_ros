@@ -35,7 +35,8 @@ class FrozenAgentCounter:
             )
             last_data = csv_read_data[-1]
         except Exception as e:
-            print(e)
+            pass
+            # print(e)
 
         with open(
             self.csv_dir + self.solution_type + "/" + self.csv_name, "a", newline=""

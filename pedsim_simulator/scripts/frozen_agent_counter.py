@@ -166,7 +166,8 @@ class FrozenAgentDetector:
                                 "moving",
                             ]
             except Exception as e:
-                print(e)
+                pass
+                # print(e)
             self.rate.sleep()
 
 
