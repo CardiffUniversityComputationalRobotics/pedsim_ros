@@ -5,6 +5,7 @@ from pedsim_msgs.msg import AgentStates, FrozenAgent, FrozenAgents
 import math
 from dynamic_reconfigure.msg import Config
 from time import sleep
+import threading
 
 
 class FrozenAgentDetector:
@@ -53,12 +54,11 @@ class FrozenAgentDetector:
         self.frozen_agents_list = []
         self.frozen_agents_msg = FrozenAgents()
 
-        self.last_callback_time = rospy.get_rostime().secs
-
         self.rate = rospy.Rate(self.publish_frequency)
 
         self.agent_callback_inc_msg = None
         self.sim_time = 0
+        self.last_callback_time = self.sim_time
 
         self.update_rate = 25
         self.simulation_factor = 1
@@ -70,8 +70,8 @@ class FrozenAgentDetector:
 
     def agent_freezing_callback(self, data):
         """AgentStates subscribe to get agents position"""
-        if rospy.get_rostime().secs - self.last_callback_time > self.callback_delay:
-            self.last_callback_time = rospy.get_rostime().secs
+        if self.sim_time - self.last_callback_time > self.callback_delay:
+            self.last_callback_time = self.sim_time
             input_msg = data.agent_states
             self.agent_callback_inc_msg = input_msg
             self.process_agents(input_msg)
@@ -92,7 +92,7 @@ class FrozenAgentDetector:
                 ):
                     if self.agents_register_dict[str(agent.id)][2] == "moving":
                         agent_last_info = self.agents_register_dict[str(agent.id)]
-                        agent_last_info[1] = rospy.get_rostime().secs
+                        agent_last_info[1] = self.sim_time
                         agent_last_info[2] = "possibly_stuck"
                         self.agents_register_dict[str(agent.id)] = agent_last_info
                     else:
@@ -112,13 +112,13 @@ class FrozenAgentDetector:
                 else:
                     self.agents_register_dict[str(agent.id)] = [
                         agent.pose.position,
-                        rospy.get_rostime().secs,
+                        self.sim_time,
                         "moving",
                     ]
             else:
                 self.agents_register_dict[str(agent.id)] = [
                     agent.pose.position,
-                    rospy.get_rostime().secs,
+                    self.sim_time,
                     "moving",
                 ]
 
@@ -141,7 +141,7 @@ class FrozenAgentDetector:
         """Outputs whether 60secs have passed considering the agent possibly stuck"""
         last_time = self.agents_register_dict[str(agent_id)][1]
 
-        if (rospy.get_rostime().secs - last_time) > self.time_threshold:
+        if (self.sim_time - last_time) > self.time_threshold:
             return True
         return False
 
@@ -162,7 +162,7 @@ class FrozenAgentDetector:
                         if value[2] == "stuck":
                             self.agents_register_dict[str(key)] = [
                                 agent.pose.position,
-                                rospy.get_rostime().secs,
+                                self.sim_time,
                                 "moving",
                             ]
             except Exception as e:
@@ -172,4 +172,11 @@ class FrozenAgentDetector:
 
 if __name__ == "__main__":
     frozen_agent_detector = FrozenAgentDetector()
-    frozen_agent_detector.start_detector()
+    sim_time_processor = threading.Thread(target=frozen_agent_detector.sim_time_process)
+    agents_detection_process = threading.Thread(
+        target=frozen_agent_detector.start_detector
+    )
+    sim_time_processor.setDaemon(False)
+    agents_detection_process.setDaemon(False)
+    sim_time_processor.start()
+    agents_detection_process.start()
