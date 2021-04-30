@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-import rospy
-from pedsim_msgs.msg import AgentStates, FrozenAgent, FrozenAgents
 import math
-from dynamic_reconfigure.msg import Config
 from time import sleep
 import threading
+import rospy
+from pedsim_msgs.msg import AgentStates, FrozenAgent, FrozenAgents
+from dynamic_reconfigure.msg import Config
 
 
 class FrozenAgentDetector:
@@ -64,6 +64,7 @@ class FrozenAgentDetector:
         self.simulation_factor = 1
 
     def sim_parameters_callback(self, data):
+        """captures dynamic reconfigura parameters and changes them locally"""
         data = data.doubles
         self.update_rate = data[0].value
         self.simulation_factor = data[1].value
@@ -77,6 +78,7 @@ class FrozenAgentDetector:
             self.process_agents(input_msg)
 
     def sim_time_process(self):
+        """keeps track of the time as the simulation does"""
         while True:
             self.sim_time += self.simulation_factor / self.update_rate
             sleep(1 / self.update_rate)
@@ -165,9 +167,9 @@ class FrozenAgentDetector:
                                 self.sim_time,
                                 "moving",
                             ]
-            except Exception as e:
+            except Exception as _e:
                 pass
-                # print(e)
+                # print(_e)
             self.rate.sleep()
 
 

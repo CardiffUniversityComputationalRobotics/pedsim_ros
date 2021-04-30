@@ -6,9 +6,10 @@ from std_msgs.msg import Header
 
 
 def joint_state_publisher():
+    """function to publish continously the position of the joints of care o bot"""
     joint_states_pub = rospy.Publisher("joint_states", JointState, queue_size=1)
     rospy.init_node("cob_joint_state_publisher")
-    rate = rospy.Rate(20)  # 10hz
+    rate = rospy.Rate(25)  # 10hz
     joint_state_msg = JointState()
     joint_state_msg.header = Header()
     joint_state_msg.header.stamp = rospy.Time.now()

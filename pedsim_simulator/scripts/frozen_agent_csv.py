@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
-import rospy
-from pedsim_msgs.msg import FrozenAgents
 import csv
 from datetime import datetime
+import rospy
+from pedsim_msgs.msg import FrozenAgents
 
 
 def import_csv(csvfilename):
+    """opens and return all content from csv in an array"""
     data = []
     with open(csvfilename, "r", encoding="utf-8", errors="ignore") as scraped:
         reader = csv.reader(scraped, delimiter=",")
@@ -24,7 +25,7 @@ class FrozenAgentCounter:
     """This class manages the state of the agents based on it position and time"""
 
     def save_value_csv(self):
-        # TODO: create or modify csv adding value
+        """saves value of the metrics recorded in a csv"""
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 
@@ -34,9 +35,9 @@ class FrozenAgentCounter:
                 self.csv_dir + self.solution_type + "/" + self.csv_name
             )
             last_data = csv_read_data[-1]
-        except Exception as e:
+        except Exception as _e:
             pass
-            # print(e)
+            # print(_e)
 
         with open(
             self.csv_dir + self.solution_type + "/" + self.csv_name, "a", newline=""
@@ -118,9 +119,9 @@ class FrozenAgentCounter:
                     print("-----------------------")
                     print("Counter de frozen agent aumentado")
                     print("Numero total de congelados: ", self.frozen_agents_counter)
-                    self.agents_register_dict[str(agent.id)] == "stuck"
+                    self.agents_register_dict[str(agent.id)] = "stuck"
                 elif agent.is_frozen == "moving":
-                    self.agents_register_dict[str(agent.id)] == "moving"
+                    self.agents_register_dict[str(agent.id)] = "moving"
             else:
                 self.agents_register_dict[str(agent.id)] = "moving"
 
