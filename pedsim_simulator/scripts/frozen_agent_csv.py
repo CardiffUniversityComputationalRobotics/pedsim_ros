@@ -4,7 +4,7 @@ import csv
 from datetime import datetime
 import rospy
 from pedsim_msgs.msg import FrozenAgents
-from std_msgs.msg import UInt64
+from std_msgs.msg import Float64
 
 
 def import_csv(csvfilename):
@@ -47,7 +47,7 @@ class FrozenAgentCounter:
             "r",
         ) as csvfile_read:
             reader = csv.reader(csvfile_read)
-            fieldnames = ["test_number", "time", "frozen_counter, total_time"]
+            fieldnames = ["test_number", "time", "frozen_counter", "total_time"]
             writer = csv.DictWriter(csvfile_write, fieldnames=fieldnames)
             try:
                 if next(reader) != [
@@ -118,7 +118,7 @@ class FrozenAgentCounter:
         )
         self._agents_total_time_sub = rospy.Subscriber(
             "/frozen_agents_total_time",
-            UInt64,
+            Float64,
             self.agent_total_time_callback,
             queue_size=1,
         )

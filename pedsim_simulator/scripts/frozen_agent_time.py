@@ -6,7 +6,7 @@ import threading
 import rospy
 from pedsim_msgs.msg import AgentStates, FrozenAgent, FrozenAgents
 from dynamic_reconfigure.msg import Config
-from std_msgs.msg import UInt64
+from std_msgs.msg import Float64
 
 
 class FrozenAgentTime:
@@ -18,10 +18,10 @@ class FrozenAgentTime:
 
         # Specific parameters that could be tuned
         self.time_callback_delay = rospy.get_param(
-            "/frozen_agent_time/time_callback_delay", 0.4
+            "/frozen_agent_time/time_callback_delay", 1
         )
         self.time_radius_threshold = rospy.get_param(
-            "/frozen_agent_time/time_radius_threshold", 0.1
+            "/frozen_agent_time/time_radius_threshold", 0.5
         )
         self.time_register_threshold = rospy.get_param(
             "/frozen_agent_time/time_register_threshold", 10.0
@@ -47,7 +47,7 @@ class FrozenAgentTime:
 
         # publishers
         self._frozen_agents_time_pub = rospy.Publisher(
-            "/frozen_agents_total_time", UInt64, queue_size=10
+            "/frozen_agents_total_time", Float64, queue_size=10
         )
 
         # variables
@@ -64,7 +64,8 @@ class FrozenAgentTime:
         self.update_rate = 25
         self.simulation_factor = 1
 
-        self.frozen_agent_total_time_msg = UInt64()
+        self.frozen_agent_total_time_msg = Float64()
+        self.frozen_agent_total_time_msg.data=0
         self.frozen_agent_total_time = 0
 
     def sim_parameters_callback(self, data):
@@ -124,47 +125,6 @@ class FrozenAgentTime:
                     "moving",
                 ]
 
-    def agent_freezing_callback(self, data):
-        """AgentStates subscribe to get agents position"""
-        if self.sim_time - self.last_callback_time > self.time_callback_delay:
-            self.last_callback_time = self.sim_time
-            input_msg = data.agent_states
-            self.agent_callback_inc_msg = input_msg
-            self.process_agents(input_msg)
-
-    def sim_time_process(self):
-        """keeps track of the time as the simulation does"""
-        while True:
-            self.sim_time += self.simulation_factor / self.update_rate
-            sleep(1 / self.update_rate)
-
-    def process_agents(self, agents_data):
-        """Processes the agents data and carries frozen detection procedure."""
-        for agent in agents_data:
-            if str(agent.id) in self.agents_register_dict:
-
-                if (
-                    self.is_frozen(agent.id, agent.pose.position)
-                    and agent.social_state != "Unknown"
-                ):
-                    self.agents_register_dict[str(agent.id)] = [
-                        agent.pose.position,
-                        self.sim_time,
-                        "moving",
-                    ]
-                else:
-                    self.agents_register_dict[str(agent.id)] = [
-                        agent.pose.position,
-                        self.sim_time,
-                        "moving",
-                    ]
-            else:
-                self.agents_register_dict[str(agent.id)] = [
-                    agent.pose.position,
-                    self.sim_time,
-                    "moving",
-                ]
-
     def is_frozen(self, agent_id, actual_position):
         """return if agent is frozen based on its change of position,
         only X and Y position is considered"""
@@ -191,7 +151,7 @@ class FrozenAgentTime:
 if __name__ == "__main__":
     frozen_agent_time = FrozenAgentTime()
     sim_time_processor = threading.Thread(target=frozen_agent_time.sim_time_process)
-    agents_detection_process = threading.Thread(target=frozen_agent_time.start_detector)
+    agents_detection_process = threading.Thread(target=frozen_agent_time.start_time_publish)
     sim_time_processor.setDaemon(False)
     agents_detection_process.setDaemon(False)
     sim_time_processor.start()
