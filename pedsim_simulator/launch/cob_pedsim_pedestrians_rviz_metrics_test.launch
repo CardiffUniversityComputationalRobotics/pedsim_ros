@@ -148,4 +148,7 @@
     <param name="csv_name" value="$(arg csv_name)" type="string"/>
   </node>
 
+  <node type="frozen_agent_time.py" name="frozen_agent_time" pkg="pedsim_simulator" output="screen">
+  </node>
+
 </launch>

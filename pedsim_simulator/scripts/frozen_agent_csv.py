@@ -4,6 +4,7 @@ import csv
 from datetime import datetime
 import rospy
 from pedsim_msgs.msg import FrozenAgents
+from std_msgs.msg import UInt64
 
 
 def import_csv(csvfilename):
@@ -46,10 +47,15 @@ class FrozenAgentCounter:
             "r",
         ) as csvfile_read:
             reader = csv.reader(csvfile_read)
-            fieldnames = ["test_number", "time", "frozen_counter"]
+            fieldnames = ["test_number", "time", "frozen_counter, total_time"]
             writer = csv.DictWriter(csvfile_write, fieldnames=fieldnames)
             try:
-                if next(reader) != ["test_number", "time", "frozen_counter"]:
+                if next(reader) != [
+                    "test_number",
+                    "time",
+                    "frozen_counter",
+                    "total_time",
+                ]:
                     writer.writeheader()
             except:
                 writer.writeheader()
@@ -60,6 +66,7 @@ class FrozenAgentCounter:
                         "test_number": int(last_data[1]) + 1,
                         "time": dt_string,
                         "frozen_counter": self.frozen_agents_counter,
+                        "total_time": self.total_time_frozen,
                     }
                 )
             else:
@@ -68,6 +75,7 @@ class FrozenAgentCounter:
                         "test_number": 1,
                         "time": dt_string,
                         "frozen_counter": self.frozen_agents_counter,
+                        "total_time": self.total_time_frozen,
                     }
                 )
             print("[INFO] [" + str(rospy.get_time()) + "] Frozen Agents Counter saved.")
@@ -85,6 +93,9 @@ class FrozenAgentCounter:
 
         # frozen agents counter
         self.frozen_agents_counter = 0
+
+        # total time frozen agent
+        self.total_time_frozen = 0
 
         # ! directory of csv files
         self.csv_dir = rospy.get_param(
@@ -105,6 +116,17 @@ class FrozenAgentCounter:
             self.agent_freezing_callback,
             queue_size=1,
         )
+        self._agents_total_time_sub = rospy.Subscriber(
+            "/frozen_agents_total_time",
+            UInt64,
+            self.agent_total_time_callback,
+            queue_size=1,
+        )
+
+    def agent_total_time_callback(self, msg):
+        """callback to receive and record total frozen time"""
+        total_frozen_time = msg.data
+        self.total_time_frozen = total_frozen_time
 
     def agent_freezing_callback(self, data):
         """AgentStates subscribe to get agents position"""
