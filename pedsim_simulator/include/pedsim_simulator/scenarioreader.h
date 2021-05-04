@@ -37,24 +37,25 @@
 #include <QPair>
 #include <QXmlStreamReader>
 
-class ScenarioReader {
+class ScenarioReader
+{
   // Constructor and Destructor
- public:
+public:
   ScenarioReader();
 
   // Methods
- public:
-  bool readFromFile(const QString& filename);
+public:
+  bool readFromFile(const QString &filename, double obstacleOffset);
 
- protected:
-  void processData();
+protected:
+  void processData(double obstacleOffset);
 
   // Attributes
- private:
+private:
   QXmlStreamReader xmlReader;
 
-  AgentCluster* currentAgents;
-  SpawnArea* currentSpawnArea;
+  AgentCluster *currentAgents;
+  SpawnArea *currentSpawnArea;
 };
 
 #endif

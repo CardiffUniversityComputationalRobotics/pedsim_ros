@@ -71,7 +71,7 @@ Agent::Agent()
 
   // parameters for tuning
   frozenDiffGradient = 3;
-  frozenDiffTime = 1.5;
+  frozenDiffTime = 2;
 }
 
 Agent::~Agent()
@@ -177,7 +177,7 @@ Ped::Twaypoint *Agent::updateDestination()
       destinations.append(previousDestination);
     }
 
-    if (isRandom == 0)
+    if (isRandom == 0 and frozenStatus != "frozen")
     {
       currentDestination = destinations.first();
       // ROS_INFO_STREAM("Destination [" << currentDestination->getName().toStdString() << "] for agent [" << id << "]");
@@ -187,7 +187,7 @@ Ped::Twaypoint *Agent::updateDestination()
       int iRandomWaypoint = (rand() % static_cast<int>(destinations.size()));
       // ROS_INFO_STREAM("Random destination agent [" << id << "] reached destination.");
       // ROS_INFO_STREAM("Random destination number selected [" << iRandomWaypoint << "] for agent.");
-      currentDestination = destinations.takeAt(iRandomWaypoint);
+      currentDestination = destinations.at(iRandomWaypoint);
     }
     //currentDestination = destinations.first();
   }
@@ -479,4 +479,10 @@ bool Agent::checkIfFrozen()
       }
     }
   }
+}
+
+void Agent::setFrozenStatus(string status)
+{
+  frozenStatus = status;
+  return;
 }

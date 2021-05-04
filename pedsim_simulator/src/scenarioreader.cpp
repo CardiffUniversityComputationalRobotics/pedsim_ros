@@ -42,18 +42,21 @@
 
 #include <ros/ros.h>
 
-ScenarioReader::ScenarioReader() {
+ScenarioReader::ScenarioReader()
+{
   // initialize values
   currentAgents = nullptr;
   currentSpawnArea = nullptr;
 }
 
-bool ScenarioReader::readFromFile(const QString& filename) {
+bool ScenarioReader::readFromFile(const QString &filename, double obstacleOffset)
+{
   ROS_DEBUG("Loading scenario file '%s'.", filename.toStdString().c_str());
 
   // open file
   QFile file(filename);
-  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
     ROS_DEBUG("Couldn't open scenario file!");
     return false;
   }
@@ -61,13 +64,15 @@ bool ScenarioReader::readFromFile(const QString& filename) {
   // read input
   xmlReader.setDevice(&file);
 
-  while (!xmlReader.atEnd()) {
+  while (!xmlReader.atEnd())
+  {
     xmlReader.readNext();
-    processData();
+    processData(obstacleOffset);
   }
 
   // check for errors
-  if (xmlReader.hasError()) {
+  if (xmlReader.hasError())
+  {
     // TODO - fix qstring and std string issues here to show error lines
     ROS_DEBUG("Error while reading scenario file");
     return false;
@@ -77,32 +82,41 @@ bool ScenarioReader::readFromFile(const QString& filename) {
   return true;
 }
 
-void ScenarioReader::processData() {
-  if (xmlReader.isStartElement()) {
+void ScenarioReader::processData(double obstacleOffset)
+{
+  if (xmlReader.isStartElement())
+  {
     const QString elementName = xmlReader.name().toString();
     const QXmlStreamAttributes elementAttributes = xmlReader.attributes();
 
-    if ((elementName == "scenario") || (elementName == "welcome")) {
+    if ((elementName == "scenario") || (elementName == "welcome"))
+    {
       // nothing to do
-    } else if (elementName == "obstacle") {
-      const double x1 = elementAttributes.value("x1").toString().toDouble();
-      const double y1 = elementAttributes.value("y1").toString().toDouble();
-      const double x2 = elementAttributes.value("x2").toString().toDouble();
-      const double y2 = elementAttributes.value("y2").toString().toDouble();
-      Obstacle* obs = new Obstacle(x1, y1, x2, y2);
+    }
+    else if (elementName == "obstacle")
+    {
+      const double x1 = elementAttributes.value("x1").toString().toDouble() + obstacleOffset;
+      const double y1 = elementAttributes.value("y1").toString().toDouble() + obstacleOffset;
+      const double x2 = elementAttributes.value("x2").toString().toDouble() + obstacleOffset;
+      const double y2 = elementAttributes.value("y2").toString().toDouble() + obstacleOffset;
+      Obstacle *obs = new Obstacle(x1, y1, x2, y2);
       SCENE.addObstacle(obs);
-    } else if (elementName == "waypoint") {
+    }
+    else if (elementName == "waypoint")
+    {
       const QString id = elementAttributes.value("id").toString();
       const double x = elementAttributes.value("x").toString().toDouble();
       const double y = elementAttributes.value("y").toString().toDouble();
       const double r = elementAttributes.value("r").toString().toDouble();
-      // TODO - make the setting of waypoint behavior optional, 
+      // TODO - make the setting of waypoint behavior optional,
       // and default to SIMPLE.
       const int b = elementAttributes.value("b").toString().toInt();
-      AreaWaypoint* w = new AreaWaypoint(id, x, y, r);
+      AreaWaypoint *w = new AreaWaypoint(id, x, y, r);
       w->setBehavior(static_cast<Ped::Twaypoint::Behavior>(b));
       SCENE.addWaypoint(w);
-    } else if (elementName == "queue") {
+    }
+    else if (elementName == "queue")
+    {
       const QString id = elementAttributes.value("id").toString();
       const double x = elementAttributes.value("x").toString().toDouble();
       const double y = elementAttributes.value("y").toString().toDouble();
@@ -112,9 +126,11 @@ void ScenarioReader::processData() {
       const Ped::Tvector position(x, y);
       const Ped::Tangle direction = Ped::Tangle::fromDegree(directionValue);
 
-      WaitingQueue* queue = new WaitingQueue(id, position, direction);
+      WaitingQueue *queue = new WaitingQueue(id, position, direction);
       SCENE.addWaitingQueue(queue);
-    } else if (elementName == "attraction") {
+    }
+    else if (elementName == "attraction")
+    {
       const QString id = elementAttributes.value("id").toString();
       const double x = elementAttributes.value("x").toString().toDouble();
       const double y = elementAttributes.value("y").toString().toDouble();
@@ -125,12 +141,14 @@ void ScenarioReader::processData() {
       const double strength =
           elementAttributes.value("strength").toString().toDouble();
 
-      AttractionArea* attraction = new AttractionArea(id);
+      AttractionArea *attraction = new AttractionArea(id);
       attraction->setPosition(x, y);
       attraction->setSize(width, height);
       attraction->setStrength(strength);
       SCENE.addAttraction(attraction);
-    } else if (elementName == "agent") {
+    }
+    else if (elementName == "agent")
+    {
       const double x = elementAttributes.value("x").toString().toDouble();
       const double y = elementAttributes.value("y").toString().toDouble();
       const int n = elementAttributes.value("n").toString().toInt();
@@ -138,7 +156,7 @@ void ScenarioReader::processData() {
       const double dy = elementAttributes.value("dy").toString().toDouble();
       const int type = elementAttributes.value("type").toString().toInt();
       const bool random = elementAttributes.value("random").toString().toInt();
-      AgentCluster* agentCluster = new AgentCluster(x, y, n);
+      AgentCluster *agentCluster = new AgentCluster(x, y, n);
       agentCluster->setDistribution(dx, dy);
 
       /// TODO - change agents Vmax distribution based on agent type
@@ -147,24 +165,29 @@ void ScenarioReader::processData() {
       agentCluster->setRandom(random);
       SCENE.addAgentCluster(agentCluster);
       currentAgents = agentCluster;
-    } else if (elementName == "source") {
+    }
+    else if (elementName == "source")
+    {
       const double x = elementAttributes.value("x").toString().toDouble();
       const double y = elementAttributes.value("y").toString().toDouble();
       const int n = elementAttributes.value("n").toString().toInt();
       const double dx = elementAttributes.value("dx").toString().toDouble();
       const double dy = elementAttributes.value("dy").toString().toDouble();
       const int type = elementAttributes.value("type").toString().toInt();
-      AgentCluster* agentCluster = new AgentCluster(x, y, n);
+      AgentCluster *agentCluster = new AgentCluster(x, y, n);
       agentCluster->setDistribution(dx, dy);
       agentCluster->setType(static_cast<Ped::Tagent::AgentType>(type));
       SCENE.addAgentCluster(agentCluster);
       currentAgents = agentCluster;
 
-      SpawnArea* spawn_area = new SpawnArea(x, y, n, dx, dy);
+      SpawnArea *spawn_area = new SpawnArea(x, y, n, dx, dy);
       SCENE.addSpawnArea(spawn_area);
       currentSpawnArea = spawn_area;
-    } else if (elementName == "addwaypoint") {
-      if (currentAgents == nullptr) {
+    }
+    else if (elementName == "addwaypoint")
+    {
+      if (currentAgents == nullptr)
+      {
         ROS_DEBUG("Invalid <addwaypoint> element outside of agent element!");
         return;
       }
@@ -173,11 +196,15 @@ void ScenarioReader::processData() {
       QString id = elementAttributes.value("id").toString();
       currentAgents->addWaypoint(SCENE.getWaypointByName(id));
 
-      if (currentSpawnArea != nullptr) {
+      if (currentSpawnArea != nullptr)
+      {
         currentSpawnArea->waypoints.emplace_back(id);
       }
-    } else if (elementName == "addqueue") {
-      if (currentAgents == nullptr) {
+    }
+    else if (elementName == "addqueue")
+    {
+      if (currentAgents == nullptr)
+      {
         ROS_DEBUG("Invalid <addqueue> element outside of agent element!");
         return;
       }
@@ -185,14 +212,19 @@ void ScenarioReader::processData() {
       // add waiting queue to current <agent> element
       QString id = elementAttributes.value("id").toString();
       currentAgents->addWaitingQueue(SCENE.getWaitingQueueByName(id));
-    } else {
+    }
+    else
+    {
       // inform the user about invalid elements
       ROS_DEBUG("Unknown element: <%s>", elementName.toStdString().c_str());
     }
-  } else if (xmlReader.isEndElement()) {
+  }
+  else if (xmlReader.isEndElement())
+  {
     const QString elementName = xmlReader.name().toString();
 
-    if (elementName == "agent") {
+    if (elementName == "agent")
+    {
       currentAgents = nullptr;
     }
   }
