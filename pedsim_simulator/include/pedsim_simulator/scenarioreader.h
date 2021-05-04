@@ -45,10 +45,10 @@ public:
 
   // Methods
 public:
-  bool readFromFile(const QString &filename);
+  bool readFromFile(const QString &filename, double obstacleOffset);
 
 protected:
-  void processData();
+  void processData(double obstacleOffset);
 
   // Attributes
 private:

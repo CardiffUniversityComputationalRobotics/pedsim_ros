@@ -59,7 +59,7 @@ AgentStateMachine::AgentStateMachine(Agent *agentIn)
   state = StateNone;
 
   // parameter for tunning
-  diffTimeIteration = 1;
+  diffTimeIteration = CONFIG.getTimeStepSize();
 }
 
 AgentStateMachine::~AgentStateMachine()
@@ -82,7 +82,7 @@ void AgentStateMachine::doStateTransition()
 
   if (CONFIG.frozenAgentsDetection)
   {
-    if ((state != StateShopping) && (state != StateQueueing))
+    if ((state != StateShopping) && (state != StateQueueing) && (agent->getType() != Ped::Tagent::ROBOT))
     {
       if ((SCENE.getTime() - agent->getLastTimeIteration()) > diffTimeIteration)
       {
@@ -91,6 +91,7 @@ void AgentStateMachine::doStateTransition()
           ROS_INFO_STREAM("###################");
           ROS_INFO_STREAM("Agent [" << agent->getId() << "] is frozen");
           activateState(StateFrozen);
+          agent->setFrozenStatus("moving");
           return;
         }
       }
