@@ -107,8 +107,10 @@ bool Simulator::initializeSimulation()
   ROS_INFO_STREAM("Loading scene [" << scene_file_param << "] for simulation");
 
   const QString scenefile = QString::fromStdString(scene_file_param);
+  double obstacleOffset;
+  nh_.param<double>("obstacle_offset", obstacleOffset, 0.0);
   ScenarioReader scenario_reader;
-  if (scenario_reader.readFromFile(scenefile) == false)
+  if (scenario_reader.readFromFile(scenefile, obstacleOffset) == false)
   {
     ROS_ERROR_STREAM(
         "Could not load the scene file, please check the paths and param "

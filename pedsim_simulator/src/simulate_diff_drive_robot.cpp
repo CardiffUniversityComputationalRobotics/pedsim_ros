@@ -12,6 +12,7 @@ geometry_msgs::Twist g_currentTwist;
 tf::Transform g_currentPose;
 boost::shared_ptr<tf::TransformBroadcaster> g_transformBroadcaster;
 boost::mutex mutex;
+bool publishTf;
 
 /// Simulates robot motion of a differential-drive robot with translational and
 /// rotational velocities as input
@@ -19,11 +20,13 @@ boost::mutex mutex;
 /// turtlebot_teleop/turtlebot_teleop_key.
 /// The resulting robot position is published as a TF transform from world -->
 /// base_footprint frame.
-void updateLoop() {
+void updateLoop()
+{
   ros::Rate rate(g_updateRate);
   const double dt = g_simulationFactor / g_updateRate;
 
-  while (true) {
+  while (true)
+  {
     // Get current pose
     double x = g_currentPose.getOrigin().x();
     double y = g_currentPose.getOrigin().y();
@@ -48,22 +51,28 @@ void updateLoop() {
     g_currentPose.setRotation(tf::createQuaternionFromRPY(0, 0, theta));
 
     // Broadcast transform
-    g_transformBroadcaster->sendTransform(tf::StampedTransform(
-        g_currentPose, ros::Time::now(), g_worldFrame, g_robotFrame));
-
+    if (publishTf)
+    {
+      g_transformBroadcaster->sendTransform(tf::StampedTransform(
+          g_currentPose, ros::Time::now(), g_worldFrame, g_robotFrame));
+    }
     rate.sleep();
   }
 }
 
-void onTwistReceived(const geometry_msgs::Twist::ConstPtr& twist) {
+void onTwistReceived(const geometry_msgs::Twist::ConstPtr &twist)
+{
   boost::mutex::scoped_lock lock(mutex);
   g_currentTwist = *twist;
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
   ros::init(argc, argv, "simulate_diff_drive_robot");
   ros::NodeHandle nodeHandle("");
   ros::NodeHandle privateHandle("~");
+
+  privateHandle.param<bool>("publish_tf", publishTf, true);
 
   // Process parameters
   privateHandle.param<std::string>("world_frame", g_worldFrame, "odom");
@@ -71,8 +80,8 @@ int main(int argc, char** argv) {
                                    "base_footprint");
 
   privateHandle.param<double>("/pedsim_simulator/simulation_factor", g_simulationFactor,
-                              1.0);  // set to e.g. 2.0 for 2x speed
-  privateHandle.param<double>("/pedsim_simulator/update_rate", g_updateRate, 25.0);  // in Hz
+                              1.0);                                                 // set to e.g. 2.0 for 2x speed
+  privateHandle.param<double>("/pedsim_simulator/update_rate", g_updateRate, 25.0); // in Hz
 
   double initialX = 0.0, initialY = 0.0, initialTheta = 0.0;
   privateHandle.param<double>("pose_initial_x", initialX, 0.0);
