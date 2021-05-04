@@ -18,13 +18,10 @@ class FrozenAgentTime:
 
         # Specific parameters that could be tuned
         self.time_callback_delay = rospy.get_param(
-            "/frozen_agent_time/time_callback_delay", 1
+            "/frozen_agent_time/time_callback_delay", 0.1
         )
         self.time_radius_threshold = rospy.get_param(
-            "/frozen_agent_time/time_radius_threshold", 0.5
-        )
-        self.time_register_threshold = rospy.get_param(
-            "/frozen_agent_time/time_register_threshold", 10.0
+            "/frozen_agent_time/time_radius_threshold", 0.1
         )
         self.time_publish_frequency = rospy.get_param(
             "/frozen_agent_time/time_publish_frequency", 1.0
