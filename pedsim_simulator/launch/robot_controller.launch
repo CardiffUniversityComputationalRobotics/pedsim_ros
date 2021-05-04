@@ -4,12 +4,21 @@
   <arg name="pose_initial_x" default="5.0"/>
   <arg name="pose_initial_y" default="5.0"/>
   <arg name="pose_initial_theta" default="0.0"/>
-  
+
+  <!--additional parameters fro cob sim-->
+  <arg name="world_frame" default="odom"/>
+  <arg name="robot_frame" default="base_footprint"/>
+  <arg name="publish_tf" default="true"/>
+
   <!-- robot driving controller -->
   <node name="driving_controller" type="simulate_diff_drive_robot" pkg="pedsim_simulator" output="screen">
-    <param name="pose_initial_x" value="$(arg pose_initial_x)"/>
-    <param name="pose_initial_y" value="$(arg pose_initial_y)"/>
-    <param name="pose_initial_theta" value="$(arg pose_initial_theta)"/>
+    <param name="pose_initial_x" value="$(arg pose_initial_x)" type="double"/>
+    <param name="pose_initial_y" value="$(arg pose_initial_y)" type="double"/>
+    <param name="pose_initial_theta" value="$(arg pose_initial_theta)" type="double"/>
+    <param name="world_frame" value="$(arg world_frame)" type="string"/>
+    <param name="robot_frame" value="$(arg robot_frame)" type="string"/>
+    <param name="publish_tf" value="$(arg publish_tf)" type="bool"/>
+
   </node>
 
   <!-- Keyboard robot steering -->

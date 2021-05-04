@@ -26,6 +26,15 @@
   <arg name="force_random" default="0.1"/>
   <arg name="force_wall" default="2.0"/>
 
+  <!--additional parameters for cob simulation-->
+  <arg name="frame_id" default="odom"/>
+  <arg name="robot_base_frame_id" default="base_footprint"/>
+  <arg name="obstacle_offset" default="0.0"/>
+  <arg name="world_frame" default="odom"/>
+  <arg name="robot_frame" default="base_footprint"/>
+  <arg name="publish_tf" default="true"/>
+
+
   <!-- main simulator node -->
   <node name="pedsim_simulator" pkg="pedsim_simulator" type="pedsim_simulator" output="screen">
     <param name="scene_file" value="$(arg scene_file)" type="string"/>
@@ -47,6 +56,11 @@
     <param name="force_group_repulsion" value="$(arg force_group_repulsion)" type="double"/>
     <param name="force_random" value="$(arg force_random)" type="double"/>
     <param name="force_wall" value="$(arg force_wall)" type="double"/>
+
+    <!--additional parameters for cob sim-->
+    <param name="frame_id" value="$(arg frame_id)" type="string" />
+    <param name="robot_base_frame_id" value="$(arg robot_base_frame_id)" type="string"/>
+    <param name="obstacle_offset" value="$(arg obstacle_offset)" type="double" />
   </node>
 
   <!-- Robot controller (optional) -->
@@ -57,6 +71,9 @@
       <arg name="pose_initial_x" value="$(arg pose_initial_x)"/>
       <arg name="pose_initial_y" value="$(arg pose_initial_y)"/>
       <arg name="pose_initial_theta" value="$(arg pose_initial_theta)"/>
+      <arg name="world_frame" value="$(arg world_frame)"/>
+      <arg name="robot_frame" value="$(arg robot_frame)"/>
+      <arg name="publish_tf" value="$(arg publish_tf)"/>
     </include>
   </group>
 
