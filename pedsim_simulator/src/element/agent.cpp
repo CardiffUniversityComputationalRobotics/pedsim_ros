@@ -444,7 +444,7 @@ bool Agent::hasMovement()
   lastModuleTotalForces = currentModuleTotalForces;
 
   if ((abs(forcesGradient) <= frozenDiffGradient) and
-      (currentModuleTotalVelocities <= Ped::Tagent::getVmax() * 0.9))
+      (currentModuleTotalVelocities <= Ped::Tagent::getVmax() * 0.8))
   {
     return false;
   }
