@@ -70,7 +70,7 @@ Agent::Agent()
   lastModuleTotalVelocities = 0;
 
   // parameters for tuning
-  frozenDiffGradient = 3;
+  frozenDiffGradient = 5;
   frozenDiffTime = 2;
 }
 
@@ -434,7 +434,7 @@ bool Agent::hasMovement()
   lastModuleTotalVelocities = currentModuleTotalVelocities;
 
   if ((abs(kinectGradient) <= frozenDiffGradient) and
-      (currentModuleTotalVelocities <= Ped::Tagent::getVmax() * 0.9))
+      (currentModuleTotalVelocities <= Ped::Tagent::getVmax() * 0.8))
   {
     return false;
   }
