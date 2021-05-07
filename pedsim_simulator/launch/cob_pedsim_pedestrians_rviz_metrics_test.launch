@@ -45,7 +45,7 @@
   <arg name="force_wall" default="2.0"/>
 
   <arg name="scenario_file" default="ipa_apartment.xml"/>
-  <arg name="detect_frozen_agents" default="true"/>
+  <arg name="detect_frozen_agents" default="false"/>
   <arg name="walls_scale" default="0.1"/>
 
   <!--additional parameters for cob simulation-->
@@ -76,8 +76,8 @@
 
   <!-- params for agent csv writing -->
   <arg name="csv_dir" default="/home/sasm/people_sim_ws/src/pedsim_ros/pedsim_simulator/metrics/"/>
-  <arg name="solution_type" default="position"/>
-  <arg name="csv_name" default="04_05_metrics1.csv"/>
+  <arg name="solution_type" default="baseline"/>
+  <arg name="csv_name" default="05_05_metrics1.csv"/>
 
   <!--end of args and parameters-->
 
