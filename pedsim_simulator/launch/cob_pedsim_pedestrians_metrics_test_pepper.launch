@@ -1,0 +1,169 @@
+<launch>
+
+  <arg name="robot" default="cob4-8" />
+  <!-- cob4-5, cob4-7, cob4-8, cob4-10, cob4-13, cob4-16, cob4-24 -->
+  <arg name="robot_env" default="empty" />
+  <!-- empty, ipa-apartment, ipa-kitchen, ipa-office -->
+  <arg name="pkg_hardware_config" default="$(find cob_hardware_config)"/>
+  <arg name="pkg_moveit_config" default="$(find cob_moveit_config)"/>
+  <arg name="debug" default="false"/>
+  <arg name="pipeline" default="ompl" />
+  <arg name="scene_objects" default="pick_place" />
+
+  <arg name="moveit" default="false"/>
+  <arg name="mapping" default="false" />
+  <arg name="localization" default="false" />
+  <arg name="navigation" default="false" />
+
+  <arg name="world_name" default="$(find pedsim_simulator)/worlds/empty_default.world" />
+  <!-- test_zone.sdf, test_zone_pick_place.sdf -->
+  <arg name="output" default="log"/>
+  <arg name="allow_active_sensing" default="true"/>
+  <arg name="vicon_bridge_params_file" default="localization_tests.yaml"/>
+  <arg name="prepare_robot_pick_place" default="true" />
+  <arg name="gui" default="false"/>
+
+  <!-- initial position of robot for localization testing -->
+  <arg name="x_pose" default="0.0"/>
+  <arg name="y_pose" default="0.0"/>
+
+  <!--pedsim parameters config-->
+  <arg name="kbd_teleop" default="false"/>
+  <arg name="rqt_teleop" default="false"/>
+  <arg name="visualize" default="true"/>
+  <arg name="with_robot" default="true"/>
+
+
+  <!-- additional parameters configured -->
+  <arg name="force_obstacle" default="10.0"/>
+  <arg name="sigma_obstacle" default="0.2"/>
+  <arg name="force_social" default="5.1"/>
+  <arg name="force_group_gaze" default="3.0"/>
+  <arg name="force_group_coherence" default="2.0"/>
+  <arg name="force_group_repulsion" default="1.0"/>
+  <arg name="force_random" default="0.1"/>
+  <arg name="force_wall" default="2.0"/>
+
+  <arg name="scenario_file" default="ipa_apartment.xml"/>
+  <arg name="detect_frozen_agents" default="false"/>
+  <arg name="walls_scale" default="0.1"/>
+
+  <!--additional parameters for cob simulation-->
+  <arg name="frame_id" default="odom"/>
+  <arg name="robot_base_frame_id" default="base_footprint"/>
+  <arg name="obstacle_offset" default="-19.2"/>
+  <arg name="world_frame" default="odom"/>
+  <arg name="robot_frame" default="base_footprint"/>
+  <arg name="publish_tf" default="false"/>
+
+  <!-- parameters for metrics recording -->
+
+  <arg name="simulation_factor" default="1.0"/>
+  <!-- Speed up -->
+  <arg name="update_rate" default="50.0"/>
+  <!-- Hz -->
+
+  <!-- params for agent counter -->
+  <arg name="callback_delay" default="0.1"/>
+  <arg name="radius_threshold" default="0.5"/>
+  <arg name="time_threshold" default="5.0"/>
+  <arg name="publish_frequency" default="25"/>
+
+  <!-- params for agentfrozen time recording -->
+  <arg name="time_callback_delay" default="0.1"/>
+  <arg name="time_radius_threshold" default="0.05"/>
+  <arg name="time_publish_frequency" default="25"/>
+
+  <!-- params for agent csv writing -->
+  <arg name="csv_dir" default="/home/sasm/people_sim_ws/src/pedsim_ros/pedsim_simulator/metrics/"/>
+  <arg name="solution_type" default="kinect_gradient"/>
+  <arg name="csv_name" default="05_05_metrics1.csv"/>
+
+  <!--end of args and parameters-->
+
+
+  <!--cob urdf description-->
+
+  <include file="$(find pepper_description)/launch/pepper_upload.launch">
+  </include>
+
+  <param name="use_gui" value="$(arg gui)"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <rosparam file="$(find pedsim_simulator)/param/home_state_pepper.yaml"/>
+  </node>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+  <!--end of cob urd description-->
+
+  <!--tf description publisher-->
+  <node name="cob_tf_publisher" pkg="pedsim_simulator" type="cob_tf_publisher.py" output="screen" />
+  <!-- <node name="cob_joint_states_publisher" pkg="pedsim_simulator" type="cob_joint_states_publisher.py" output="screen" /> -->
+
+  <!--pedsim simulator-->
+  <!-- Simulator -->
+  <include file="$(find pedsim_simulator)/launch/simulator.launch">
+    <arg name="kbd_teleop" value="$(arg kbd_teleop)"/>
+    <arg name="rqt_teleop" value="$(arg rqt_teleop)"/>
+    <arg name="scene_file" value="$(find pedsim_simulator)/scenarios/$(arg scenario_file)"/>
+    <arg name="with_robot" value="$(arg with_robot)"/>
+    <arg name="simulation_factor" value="$(arg simulation_factor)"/>
+    <arg name="update_rate" value="$(arg update_rate)"/>
+    <arg name="default_queue_size" value="10"/>
+    <arg name="max_robot_speed" value="1.5"/>
+    <arg name="robot_mode" value="1"/>
+    <arg name="enable_groups" value="true"/>
+    <arg name="pose_initial_x" value="10.0"/>
+    <arg name="pose_initial_y" value="15.0"/>
+    <arg name="pose_initial_theta" value="0.7"/>
+    <arg name="detect_frozen_agents" value="$(arg detect_frozen_agents)" />
+
+    <!-- extra parameters -->
+    <arg name="force_obstacle" value="$(arg force_obstacle)"/>
+    <arg name="sigma_obstacle" value="$(arg sigma_obstacle)"/>
+    <arg name="force_social" value="$(arg force_social)"/>
+    <arg name="force_group_gaze" value="$(arg force_group_gaze)"/>
+    <arg name="force_group_coherence" value="$(arg force_group_coherence)"/>
+    <arg name="force_group_repulsion" value="$(arg force_group_repulsion)"/>
+    <arg name="force_random" value="$(arg force_random)"/>
+    <arg name="force_wall" value="$(arg force_wall)"/>
+
+    <!--additional parameters for cob simulation-->
+    <arg name="frame_id" value="$(arg frame_id)"/>
+    <arg name="robot_base_frame_id" value="$(arg robot_base_frame_id)"/>
+    <arg name="obstacle_offset" value="$(arg obstacle_offset)"/>
+    <arg name="world_frame" value="$(arg world_frame)"/>
+    <arg name="robot_frame" value="$(arg robot_frame)"/>
+    <arg name="publish_tf" value="$(arg publish_tf)"/>
+  </include>
+
+  <!-- Visualizer -->
+  <include file="$(find pedsim_simulator)/launch/visualizer.launch">
+    <arg name="walls_scale" value="$(arg walls_scale)"/>
+  </include>
+
+  <!-- Rviz -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find pedsim_simulator)/rviz/cob_ped_rviz_only.rviz" if="$(arg visualize)"/>
+
+  <node type="frozen_agent_counter.py" name="frozen_agent_counter" pkg="pedsim_simulator" output="screen">
+    <param name="callback_delay" value="$(arg callback_delay)" type="double"/>
+    <param name="radius_threshold" value="$(arg radius_threshold)" type="double"/>
+    <param name="time_threshold" value="$(arg time_threshold)" type="double"/>
+    <param name="publish_frequency" value="$(arg publish_frequency)" type="double"/>
+  </node>
+
+  <node type="frozen_agent_time.py" name="frozen_agent_time" pkg="pedsim_simulator" output="screen">
+    <param name="time_callback_delay" value="$(arg time_callback_delay)" type="double"/>
+    <param name="time_radius_threshold" value="$(arg time_radius_threshold)" type="double"/>
+    <param name="time_publish_frequency" value="$(arg time_publish_frequency)" type="double"/>
+  </node>
+
+  <node type="frozen_agent_csv.py" name="frozen_agent_csv" pkg="pedsim_simulator" output="screen">
+    <param name="csv_dir" value="$(arg csv_dir)" type="string"/>
+    <param name="solution_type" value="$(arg solution_type)" type="string"/>
+    <param name="csv_name" value="$(arg csv_name)" type="string"/>
+  </node>
+
+  <!--static transform publisher-->
+  <node pkg="tf" type="static_transform_publisher" name="pepper_base_link_to_base_footprint" args="0 0 0.8 0 0 0 /base_footprint /base_link 1000"/>
+
+</launch>
