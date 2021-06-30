@@ -1,11 +1,13 @@
 <launch>
   <arg name="kbd_teleop" default="false"/>
-  <arg name="rqt_teleop" default="true"/>
+  <arg name="rqt_teleop" default="false"/>
   <arg name="visualize" default="true"/>
   <arg name="with_robot" default="true"/>
 
-  <arg name="simulation_factor" default="1.0"/> <!-- Speed up -->
-  <arg name="update_rate" default="25.0"/> <!-- Hz -->
+  <arg name="simulation_factor" default="1.0"/>
+  <!-- Speed up -->
+  <arg name="update_rate" default="25.0"/>
+  <!-- Hz -->
 
   <!-- Simulator -->
   <include file="$(find pedsim_simulator)/launch/simulator.launch">
