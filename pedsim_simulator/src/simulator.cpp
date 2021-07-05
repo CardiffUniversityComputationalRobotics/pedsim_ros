@@ -107,10 +107,14 @@ bool Simulator::initializeSimulation()
   ROS_INFO_STREAM("Loading scene [" << scene_file_param << "] for simulation");
 
   const QString scenefile = QString::fromStdString(scene_file_param);
-  double obstacleOffset;
-  nh_.param<double>("obstacle_offset", obstacleOffset, 0.0);
+  double obstacleOffsetX;
+  double obstacleOffsetY;
+
+  nh_.param<double>("obstacle_offset_x", obstacleOffsetX, 0.0);
+  nh_.param<double>("obstacle_offset_y", obstacleOffsetY, 0.0);
+
   ScenarioReader scenario_reader;
-  if (scenario_reader.readFromFile(scenefile, obstacleOffset) == false)
+  if (scenario_reader.readFromFile(scenefile, obstacleOffsetX, obstacleOffsetY) == false)
   {
     ROS_ERROR_STREAM(
         "Could not load the scene file, please check the paths and param "
@@ -332,7 +336,8 @@ void Simulator::publishAgents()
   pedsim_msgs::AgentStates all_status;
   all_status.header = createMsgHeader();
 
-  auto VecToMsg = [](const Ped::Tvector &v) {
+  auto VecToMsg = [](const Ped::Tvector &v)
+  {
     geometry_msgs::Vector3 gv;
     gv.x = v.x;
     gv.y = v.y;

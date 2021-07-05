@@ -49,7 +49,7 @@ ScenarioReader::ScenarioReader()
   currentSpawnArea = nullptr;
 }
 
-bool ScenarioReader::readFromFile(const QString &filename, double obstacleOffset)
+bool ScenarioReader::readFromFile(const QString &filename, double obstacleOffsetX, double obstacleOffsetY)
 {
   ROS_DEBUG("Loading scenario file '%s'.", filename.toStdString().c_str());
 
@@ -67,7 +67,7 @@ bool ScenarioReader::readFromFile(const QString &filename, double obstacleOffset
   while (!xmlReader.atEnd())
   {
     xmlReader.readNext();
-    processData(obstacleOffset);
+    processData(obstacleOffsetX, obstacleOffsetY);
   }
 
   // check for errors
@@ -82,7 +82,7 @@ bool ScenarioReader::readFromFile(const QString &filename, double obstacleOffset
   return true;
 }
 
-void ScenarioReader::processData(double obstacleOffset)
+void ScenarioReader::processData(double obstacleOffsetX, double obstacleOffsetY)
 {
   if (xmlReader.isStartElement())
   {
@@ -95,10 +95,10 @@ void ScenarioReader::processData(double obstacleOffset)
     }
     else if (elementName == "obstacle")
     {
-      const double x1 = elementAttributes.value("x1").toString().toDouble() + obstacleOffset;
-      const double y1 = elementAttributes.value("y1").toString().toDouble() + obstacleOffset;
-      const double x2 = elementAttributes.value("x2").toString().toDouble() + obstacleOffset;
-      const double y2 = elementAttributes.value("y2").toString().toDouble() + obstacleOffset;
+      const double x1 = elementAttributes.value("x1").toString().toDouble() + obstacleOffsetX;
+      const double y1 = elementAttributes.value("y1").toString().toDouble() + obstacleOffsetY;
+      const double x2 = elementAttributes.value("x2").toString().toDouble() + obstacleOffsetX;
+      const double y2 = elementAttributes.value("y2").toString().toDouble() + obstacleOffsetY;
       Obstacle *obs = new Obstacle(x1, y1, x2, y2);
       SCENE.addObstacle(obs);
     }
