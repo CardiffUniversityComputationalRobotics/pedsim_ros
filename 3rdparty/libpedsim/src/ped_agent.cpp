@@ -17,7 +17,8 @@ using namespace std;
 default_random_engine generator;
 
 /// Default Constructor
-Ped::Tagent::Tagent() {
+Ped::Tagent::Tagent()
+{
   static int staticid = 0;
   id = staticid++;
   p.x = 0;
@@ -53,12 +54,14 @@ Ped::Tagent::~Tagent() {}
 /// \warning Bad things will happen if the agent is not assigned to a scene. But
 /// usually, Tscene takes care of that.
 /// \param   *s A valid Tscene initialized earlier.
-void Ped::Tagent::assignScene(Ped::Tscene* sceneIn) { scene = sceneIn; }
+void Ped::Tagent::assignScene(Ped::Tscene *sceneIn) { scene = sceneIn; }
 
-void Ped::Tagent::removeAgentFromNeighbors(const Ped::Tagent* agentIn) {
+void Ped::Tagent::removeAgentFromNeighbors(const Ped::Tagent *agentIn)
+{
   // search agent in neighbors, and remove him
-  set<const Ped::Tagent*>::iterator foundNeighbor = neighbors.find(agentIn);
-  if (foundNeighbor != neighbors.end()) neighbors.erase(foundNeighbor);
+  set<const Ped::Tagent *>::iterator foundNeighbor = neighbors.find(agentIn);
+  if (foundNeighbor != neighbors.end())
+    neighbors.erase(foundNeighbor);
 }
 
 /// Sets the maximum velocity of an agent (vmax). Even if pushed by other
@@ -71,8 +74,10 @@ void Ped::Tagent::setVmax(double pvmax) { vmax = pvmax; }
 /// and a robot is scaled: the bigger the number is, the smaller
 /// the position based force contribution will be.
 /// \param   scalingFactor should be positive.
-void Ped::Tagent::setRobotPosDiffScalingFactor(double scalingFactor) {
-  if (scalingFactor > 0) {
+void Ped::Tagent::setRobotPosDiffScalingFactor(double scalingFactor)
+{
+  if (scalingFactor > 0)
+  {
     robotPosDiffScalingFactor = scalingFactor;
   }
 }
@@ -83,7 +88,8 @@ void Ped::Tagent::setRobotPosDiffScalingFactor(double scalingFactor) {
 /// \param   px Position x
 /// \param   py Position y
 /// \param   pz Position z
-void Ped::Tagent::setPosition(double px, double py, double pz) {
+void Ped::Tagent::setPosition(double px, double py, double pz)
+{
   p.x = px;
   p.y = py;
   p.z = pz;
@@ -108,12 +114,14 @@ void Ped::Tagent::setForceFactorObstacle(double f) { forceFactorObstacle = f; }
 /// If the waypoint has been reached, the next waypoint in the list will be
 /// selected.
 /// \return  Tvector: the calculated force
-Ped::Tvector Ped::Tagent::desiredForce() {
+Ped::Tvector Ped::Tagent::desiredForce()
+{
   // get destination
-  Twaypoint* waypoint = getCurrentWaypoint();
+  Twaypoint *waypoint = getCurrentWaypoint();
 
   // if there is no destination, don't move
-  if (waypoint == NULL) {
+  if (waypoint == NULL)
+  {
     desiredDirection = Ped::Tvector();
     Tvector antiMove = -v / relaxationTime;
     return antiMove;
@@ -133,7 +141,8 @@ Ped::Tvector Ped::Tagent::desiredForce() {
 /// 10000 agents) scenarios, this is just
 /// fine.
 /// \return  Tvector: the calculated force
-Ped::Tvector Ped::Tagent::socialForce() const {
+Ped::Tvector Ped::Tagent::socialForce() const
+{
   // define relative importance of position vs velocity vector
   // (set according to Moussaid-Helbing 2009)
   const double lambdaImportance = 2.0;
@@ -151,14 +160,17 @@ Ped::Tvector Ped::Tagent::socialForce() const {
   const double n_prime = 3;
 
   Tvector force;
-  for (const Ped::Tagent* other : neighbors) {
+  for (const Ped::Tagent *other : neighbors)
+  {
     // don't compute social force to yourself
-    if (other->id == id) continue;
+    if (other->id == id)
+      continue;
 
     // compute difference between both agents' positions
     Tvector diff = other->p - p;
 
-    if(other->getType() == ROBOT) diff /= robotPosDiffScalingFactor;
+    if (other->getType() == ROBOT)
+      diff /= robotPosDiffScalingFactor;
 
     Tvector diffDirection = diff.normalized();
 
@@ -199,18 +211,21 @@ Ped::Tvector Ped::Tagent::socialForce() const {
 /// scene.
 /// Iterates over all obstacles == O(N).
 /// \return  Tvector: the calculated force
-Ped::Tvector Ped::Tagent::obstacleForce() const {
+Ped::Tvector Ped::Tagent::obstacleForce() const
+{
   // obstacle which is closest only
   Ped::Tvector minDiff;
   double minDistanceSquared = INFINITY;
 
-  for (const Tobstacle* obstacle : scene->obstacles) {
+  for (const Tobstacle *obstacle : scene->obstacles)
+  {
     Ped::Tvector closestPoint = obstacle->closestPoint(p);
     Ped::Tvector diff = p - closestPoint;
-    double distanceSquared = diff.lengthSquared();  // use squared distance to
+    double distanceSquared = diff.lengthSquared(); // use squared distance to
     // avoid computing square
     // root
-    if (distanceSquared < minDistanceSquared) {
+    if (distanceSquared < minDistanceSquared)
+    {
       minDistanceSquared = distanceSquared;
       minDiff = diff;
     }
@@ -228,11 +243,13 @@ Ped::Tvector Ped::Tagent::obstacleForce() const {
 /// \return  Tvector: the calculated force
 /// \param   e is a vector defining the direction in which the agent wants to
 /// walk to.
-Ped::Tvector Ped::Tagent::myForce(Ped::Tvector e) const {
+Ped::Tvector Ped::Tagent::myForce(Ped::Tvector e) const
+{
   return Ped::Tvector();
 }
 
-void Ped::Tagent::computeForces() {
+void Ped::Tagent::computeForces()
+{
   // update neighbors
   // NOTE - have a config value for the neighbor range
   const double neighborhoodRange = 10.0;
@@ -240,8 +257,10 @@ void Ped::Tagent::computeForces() {
 
   // update forces
   desiredforce = desiredForce();
-  if (forceFactorSocial > 0) socialforce = socialForce();
-  if (forceFactorObstacle > 0) obstacleforce = obstacleForce();
+  if (forceFactorSocial > 0)
+    socialforce = socialForce();
+  if (forceFactorObstacle > 0)
+    obstacleforce = obstacleForce();
   myforce = myForce(desiredDirection);
 }
 
@@ -252,19 +271,22 @@ void Ped::Tagent::computeForces() {
 /// which is applied to the agents velocity, and then to its position.
 /// \param   stepSizeIn This tells the simulation how far the agent should
 /// proceed
-void Ped::Tagent::move(double stepSizeIn) {
+void Ped::Tagent::move(double stepSizeIn)
+{
   // sum of all forces --> acceleration
   a = forceFactorDesired * desiredforce + forceFactorSocial * socialforce +
       forceFactorObstacle * obstacleforce + myforce;
 
   // calculate the new velocity
-  if (getTeleop() == false) {
+  if (getTeleop() == false)
+  {
     v = v + stepSizeIn * a;
   }
 
   // don't exceed maximal speed
   double speed = v.length();
-  if (speed > vmax) v = v.normalized() * vmax;
+  if (speed > vmax)
+    v = v.normalized() * vmax;
 
   // internal position update = actual move
   p += stepSizeIn * v;
