@@ -35,7 +35,7 @@ launch.start()
 
 init_time = time.time()
 
-while time.time() - init_time < 120:
+while time.time() - init_time < 30:
     rospy.sleep(0.05)
 
 launch.shutdown()
