@@ -4,7 +4,7 @@ import math
 from time import sleep
 import threading
 import rospy
-from pedsim_msgs.msg import AgentStates, FrozenAgent, FrozenAgents
+from pedsim_msgs.msg import AgentStates
 from dynamic_reconfigure.msg import Config
 from std_msgs.msg import Float64
 
@@ -18,13 +18,10 @@ class FrozenAgentTime:
 
         # Specific parameters that could be tuned
         self.time_callback_delay = rospy.get_param(
-            "/frozen_agent_time/time_callback_delay", 1
+            "/frozen_agent_time/time_callback_delay", 0.1
         )
         self.time_radius_threshold = rospy.get_param(
-            "/frozen_agent_time/time_radius_threshold", 0.5
-        )
-        self.time_register_threshold = rospy.get_param(
-            "/frozen_agent_time/time_register_threshold", 10.0
+            "/frozen_agent_time/time_radius_threshold", 0.1
         )
         self.time_publish_frequency = rospy.get_param(
             "/frozen_agent_time/time_publish_frequency", 1.0
@@ -52,8 +49,6 @@ class FrozenAgentTime:
 
         # variables
         self.agents_register_dict = {}
-        self.frozen_agents_list = []
-        self.frozen_agents_msg = FrozenAgents()
 
         self.rate = rospy.Rate(self.time_publish_frequency)
 
@@ -65,7 +60,7 @@ class FrozenAgentTime:
         self.simulation_factor = 1
 
         self.frozen_agent_total_time_msg = Float64()
-        self.frozen_agent_total_time_msg.data=0
+        self.frozen_agent_total_time_msg.data = 0
         self.frozen_agent_total_time = 0
 
     def sim_parameters_callback(self, data):
@@ -151,7 +146,9 @@ class FrozenAgentTime:
 if __name__ == "__main__":
     frozen_agent_time = FrozenAgentTime()
     sim_time_processor = threading.Thread(target=frozen_agent_time.sim_time_process)
-    agents_detection_process = threading.Thread(target=frozen_agent_time.start_time_publish)
+    agents_detection_process = threading.Thread(
+        target=frozen_agent_time.start_time_publish
+    )
     sim_time_processor.setDaemon(False)
     agents_detection_process.setDaemon(False)
     sim_time_processor.start()

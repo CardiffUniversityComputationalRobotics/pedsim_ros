@@ -29,7 +29,8 @@
   <!--additional parameters for cob simulation-->
   <arg name="frame_id" default="odom"/>
   <arg name="robot_base_frame_id" default="base_footprint"/>
-  <arg name="obstacle_offset" default="0.0"/>
+  <arg name="obstacle_offset_x" default="0.0"/>
+  <arg name="obstacle_offset_y" default="0.0"/>
   <arg name="world_frame" default="odom"/>
   <arg name="robot_frame" default="base_footprint"/>
   <arg name="publish_tf" default="true"/>
@@ -60,7 +61,9 @@
     <!--additional parameters for cob sim-->
     <param name="frame_id" value="$(arg frame_id)" type="string" />
     <param name="robot_base_frame_id" value="$(arg robot_base_frame_id)" type="string"/>
-    <param name="obstacle_offset" value="$(arg obstacle_offset)" type="double" />
+    <param name="obstacle_offset_x" value="$(arg obstacle_offset_x)" type="double" />
+    <param name="obstacle_offset_y" value="$(arg obstacle_offset_y)" type="double" />
+
   </node>
 
   <!-- Robot controller (optional) -->

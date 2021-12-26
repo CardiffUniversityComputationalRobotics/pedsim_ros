@@ -2,30 +2,67 @@
 <sdf version="1.5">
 
 
-<model name="actor_model">
-  <pose>0 0 0.75 0 0 0</pose>
-  <link name="link">
-    <collision name="collision">
-      <geometry>
-        <box>
-          <size>.5 .5 1.5</size>
-        </box>
-      </geometry>
-    </collision>
+  <!-- <model name="actor_model">
+    <pose>0 0 0.75 0 0 0</pose>
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>.5 .5 1.5</size>
+          </box>
+        </geometry>
+      </collision>
 
-    <visual name="visual">
-      <geometry>
-        <box>
-          <size>.5 .5 1.5</size>
-        </box>
-      </geometry>
-    </visual>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>.5 .5 1.5</size>
+          </box>
+        </geometry>
+      </visual>
 
-  </link>
-</model>
+    </link>
+  </model> -->
+
+  <model name="actor_model">
+    <pose>0 0 0.75 0 0 0</pose>
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>.5 .5 2.05</size>
+          </box>
+        </geometry>
+      </collision>
+
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://people/meshes/sitting.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+
+    </link>
+  </model>
+
+  <!-- <world name="actor_model">
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <actor name="actor_model">
+      <skin>
+        <filename>walk.dae</filename>
+      </skin>
+      <animation name="animation">
+        <filename>walk.dae</filename>
+      </animation>
+    </actor>
+  </world> -->
 
 
-<!--<model name="actor_model">
+
+  <!--<model name="actor_model">
   <link name="link">
     <collision name="collision">
       <pose>0 0 0 1.5708 0 0</pose>
