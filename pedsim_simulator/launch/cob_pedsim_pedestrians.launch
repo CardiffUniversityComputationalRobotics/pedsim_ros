@@ -55,7 +55,7 @@
   <!--additional parameters for cob simulation-->
   <arg name="frame_id" default="map"/>
   <arg name="robot_base_frame_id" default="base_footprint"/>
-  <arg name="obstacle_offset" default="-19.2"/>
+  <arg name="obstacle_offset_x" default="-19.2"/>
   <arg name="world_frame" default="map"/>
   <arg name="robot_frame" default="base_footprint"/>
   <arg name="publish_tf" default="false"/>
@@ -94,7 +94,7 @@
     <!--additional parameters for cob simulation-->
     <arg name="frame_id" value="$(arg frame_id)"/>
     <arg name="robot_base_frame_id" value="$(arg robot_base_frame_id)"/>
-    <arg name="obstacle_offset" value="$(arg obstacle_offset)"/>
+    <arg name="obstacle_offset_x" value="$(arg obstacle_offset_x)"/>
     <arg name="world_frame" value="$(arg world_frame)"/>
     <arg name="robot_frame" value="$(arg robot_frame)"/>
     <arg name="publish_tf" value="$(arg publish_tf)"/>
