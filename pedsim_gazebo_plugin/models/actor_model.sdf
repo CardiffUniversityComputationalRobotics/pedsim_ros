@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0"?>
 <sdf version="1.5">
 
 
@@ -61,7 +61,6 @@
   </world> -->
 
 
-
   <!--<model name="actor_model">
   <link name="link">
     <collision name="collision">
@@ -83,9 +82,5 @@
     </visual>
   </link>
 </model>-->
-
-
-
-
 
 </sdf>
