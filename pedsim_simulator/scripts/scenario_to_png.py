@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import png, rospkg, numpy
 import xml.etree.ElementTree as xml
 
