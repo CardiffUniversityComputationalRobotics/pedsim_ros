@@ -54,6 +54,9 @@ Agent::Agent()
   // random option
   isRandom = 0;
 
+  // static agents option
+  isStaticAgent = 0;
+
   // frozenStatus to know if agent is frozen
   frozenStatus = "moving";
 
@@ -200,6 +203,16 @@ void Agent::updateState()
 
 void Agent::move(double h)
 {
+
+  if (this->isStaticAgent)
+  {
+    this->disableForce("Social");
+    this->disableForce("Random");
+    this->disableForce("GroupCoherence");
+    this->disableForce("GroupGaze");
+    this->disableForce("GroupRepulsion");
+  }
+
   if (getType() == Ped::Tagent::ROBOT)
   {
     if (CONFIG.robot_mode == RobotMode::TELEOPERATION)
@@ -240,7 +253,14 @@ void Agent::move(double h)
   }
   else
   {
-    Ped::Tagent::move(h);
+    if (this->isStaticAgent)
+    {
+      Ped::Tagent::move(0);
+    }
+    else
+    {
+      Ped::Tagent::move(h);
+    }
   }
 
   if (getType() == Ped::Tagent::ELDER)
@@ -387,6 +407,11 @@ void Agent::setType(Ped::Tagent::AgentType typeIn)
 void Agent::setRandom(bool randomIn)
 {
   isRandom = randomIn;
+}
+
+void Agent::setStaticAgent(bool staticAgentIn)
+{
+  isStaticAgent = staticAgentIn;
 }
 
 Ped::Tvector Agent::getDesiredDirection() const { return desiredforce; }
