@@ -106,7 +106,7 @@ namespace gazebo
         std::thread rosQueueThread;
         physics::WorldPtr world_;
         event::ConnectionPtr updateConnection_;
-        const float MODEL_OFFSET = 1.05;
+        const float MODEL_OFFSET = 0.5;
     };
     GZ_REGISTER_WORLD_PLUGIN(ActorPosesPlugin)
 }
