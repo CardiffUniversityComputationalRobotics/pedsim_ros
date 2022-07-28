@@ -1,66 +1,68 @@
 <launch>
-  <arg name="kbd_teleop" default="false"/>
-  <arg name="rqt_teleop" default="false"/>
-  <arg name="scene_file" default="$(find pedsim_simulator)scenarios/social_contexts.xml"/>
-  <arg name="default_queue_size" default="10"/>
-  <arg name="max_robot_speed" default="1.5"/>
-  <arg name="robot_mode" default="1"/>
-  <arg name="enable_groups" default="true"/>
-  <arg name="with_robot" default="true"/>
-  <arg name="pose_initial_x" default="5.0"/>
-  <arg name="pose_initial_y" default="5.0"/>
-  <arg name="pose_initial_theta" default="0.0"/>
-  <arg name="simulation_factor" default="1"/>
-  <arg name="update_rate" default="25.0"/>
-  <arg name="spawn_period" default="5.0"/>
+  <arg name="kbd_teleop" default="false" />
+  <arg name="rqt_teleop" default="false" />
+  <arg name="scene_file" default="$(find pedsim_simulator)scenarios/social_contexts.xml" />
+  <arg name="default_queue_size" default="10" />
+  <arg name="max_robot_speed" default="1.5" />
+  <arg name="robot_mode" default="1" />
+  <arg name="enable_groups" default="true" />
+  <arg name="with_robot" default="true" />
+  <arg name="pose_initial_x" default="5.0" />
+  <arg name="pose_initial_y" default="5.0" />
+  <arg name="pose_initial_theta" default="0.0" />
+  <arg name="simulation_factor" default="1" />
+  <arg name="update_rate" default="25.0" />
+  <arg name="spawn_period" default="5.0" />
   <arg name="detect_frozen_agents" default="true" />
 
 
   <!-- additional parameters configured -->
-  <arg name="force_obstacle" default="10.0"/>
-  <arg name="sigma_obstacle" default="0.2"/>
-  <arg name="force_social" default="5.1"/>
-  <arg name="force_group_gaze" default="3.0"/>
-  <arg name="force_group_coherence" default="2.0"/>
-  <arg name="force_group_repulsion" default="1.0"/>
-  <arg name="force_random" default="0.1"/>
-  <arg name="force_wall" default="2.0"/>
+  <arg name="force_obstacle" default="10.0" />
+  <arg name="sigma_obstacle" default="0.2" />
+  <arg name="force_social" default="5.1" />
+  <arg name="force_group_gaze" default="3.0" />
+  <arg name="force_group_coherence" default="2.0" />
+  <arg name="force_group_repulsion" default="1.0" />
+  <arg name="force_random" default="0.1" />
+  <arg name="force_wall" default="2.0" />
 
   <!--additional parameters for cob simulation-->
-  <arg name="frame_id" default="odom"/>
-  <arg name="robot_base_frame_id" default="base_footprint"/>
-  <arg name="obstacle_offset_x" default="0.0"/>
-  <arg name="obstacle_offset_y" default="0.0"/>
-  <arg name="world_frame" default="odom"/>
-  <arg name="robot_frame" default="base_footprint"/>
-  <arg name="publish_tf" default="true"/>
+  <arg name="frame_id" default="odom" />
+  <arg name="robot_base_frame_id" default="base_footprint" />
+  <arg name="obstacle_offset_x" default="0.0" />
+  <arg name="obstacle_offset_y" default="0.0" />
+  <arg name="world_frame" default="odom" />
+  <arg name="robot_frame" default="base_footprint" />
+  <arg name="publish_tf" default="true" />
+
+  <arg name="output" default="screen" />
 
 
   <!-- main simulator node -->
-  <node name="pedsim_simulator" pkg="pedsim_simulator" type="pedsim_simulator" output="screen">
-    <param name="scene_file" value="$(arg scene_file)" type="string"/>
-    <param name="default_queue_size" value="$(arg default_queue_size)" type="int"/>
-    <param name="max_robot_speed" value="$(arg max_robot_speed)" type="double"/>
-    <param name="robot_mode" value="$(arg robot_mode)" type="int"/>
-    <param name="enable_groups" value="$(arg enable_groups)" type="bool"/>
-    <param name="simulation_factor" value="$(arg simulation_factor)" type="double"/>
-    <param name="update_rate" value="$(arg update_rate)" type="double"/>
-    <param name="spawn_period" value="$(arg spawn_period)" type="double"/>
+  <node name="pedsim_simulator" pkg="pedsim_simulator" type="pedsim_simulator" output="$(arg output)">
+    <param name="scene_file" value="$(arg scene_file)" type="string" />
+    <param name="default_queue_size" value="$(arg default_queue_size)" type="int" />
+    <param name="max_robot_speed" value="$(arg max_robot_speed)" type="double" />
+    <param name="robot_mode" value="$(arg robot_mode)" type="int" />
+    <param name="enable_groups" value="$(arg enable_groups)" type="bool" />
+    <param name="simulation_factor" value="$(arg simulation_factor)" type="double" />
+    <param name="update_rate" value="$(arg update_rate)" type="double" />
+    <param name="spawn_period" value="$(arg spawn_period)" type="double" />
     <param name="detect_frozen_agents" value="$(arg detect_frozen_agents)" type="bool" />
 
     <!-- extra parameters -->
-    <param name="force_obstacle" value="$(arg force_obstacle)" type="double"/>
-    <param name="sigma_obstacle" value="$(arg sigma_obstacle)" type="double"/>
-    <param name="force_social" value="$(arg force_social)" type="double"/>
-    <param name="force_group_gaze" value="$(arg force_group_gaze)" type="double"/>
-    <param name="force_group_coherence" value="$(arg force_group_coherence)" type="double"/>
-    <param name="force_group_repulsion" value="$(arg force_group_repulsion)" type="double"/>
-    <param name="force_random" value="$(arg force_random)" type="double"/>
-    <param name="force_wall" value="$(arg force_wall)" type="double"/>
+    <param name="force_obstacle" value="$(arg force_obstacle)" type="double" />
+    <param name="sigma_obstacle" value="$(arg sigma_obstacle)" type="double" />
+    <param name="force_social" value="$(arg force_social)" type="double" />
+    <param name="force_group_gaze" value="$(arg force_group_gaze)" type="double" />
+    <param name="force_group_coherence" value="$(arg force_group_coherence)" type="double" />
+    <param name="force_group_repulsion" value="$(arg force_group_repulsion)" type="double" />
+    <param name="force_random" value="$(arg force_random)" type="double" />
+    <param name="force_wall" value="$(arg force_wall)" type="double" />
 
     <!--additional parameters for cob sim-->
     <param name="frame_id" value="$(arg frame_id)" type="string" />
-    <param name="robot_base_frame_id" value="$(arg robot_base_frame_id)" type="string"/>
+    <param name="robot_base_frame_id" value="$(arg robot_base_frame_id)" type="string" />
     <param name="obstacle_offset_x" value="$(arg obstacle_offset_x)" type="double" />
     <param name="obstacle_offset_y" value="$(arg obstacle_offset_y)" type="double" />
 
@@ -69,14 +71,14 @@
   <!-- Robot controller (optional) -->
   <group ns="pedbot/control" if="$(arg with_robot)">
     <include file="$(find pedsim_simulator)/launch/robot_controller.launch">
-      <arg name="kbd_teleop" value="$(arg kbd_teleop)"/>
-      <arg name="rqt_teleop" value="$(arg rqt_teleop)"/>
-      <arg name="pose_initial_x" value="$(arg pose_initial_x)"/>
-      <arg name="pose_initial_y" value="$(arg pose_initial_y)"/>
-      <arg name="pose_initial_theta" value="$(arg pose_initial_theta)"/>
-      <arg name="world_frame" value="$(arg world_frame)"/>
-      <arg name="robot_frame" value="$(arg robot_frame)"/>
-      <arg name="publish_tf" value="$(arg publish_tf)"/>
+      <arg name="kbd_teleop" value="$(arg kbd_teleop)" />
+      <arg name="rqt_teleop" value="$(arg rqt_teleop)" />
+      <arg name="pose_initial_x" value="$(arg pose_initial_x)" />
+      <arg name="pose_initial_y" value="$(arg pose_initial_y)" />
+      <arg name="pose_initial_theta" value="$(arg pose_initial_theta)" />
+      <arg name="world_frame" value="$(arg world_frame)" />
+      <arg name="robot_frame" value="$(arg robot_frame)" />
+      <arg name="publish_tf" value="$(arg publish_tf)" />
     </include>
   </group>
 
