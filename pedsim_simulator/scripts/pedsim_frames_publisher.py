@@ -40,7 +40,8 @@ class AgentStatesTfBroadcaster(object):
 
     def run(self):
         while not rospy.is_shutdown():
-            rospy.sleep(0.05)
+            rospy.sleep(0.005)
+            rospy.spin()
 
 
 if __name__ == "__main__":
