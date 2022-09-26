@@ -46,4 +46,7 @@
   <run_depend>nav_msgs</run_depend>
   <run_depend>dynamic_reconfigure</run_depend>
 
+  <run_depend>pedsim_visualizer</run_depend>
+  <run_depend>spencer_tracking_rviz_plugin</run_depend>
+
 </package>
