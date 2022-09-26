@@ -414,7 +414,15 @@ void Agent::setStaticAgent(bool staticAgentIn)
   isStaticAgent = staticAgentIn;
 }
 
-Ped::Tvector Agent::getDesiredDirection() const { return desiredforce; }
+void Agent::setOrientation(double orientationIn)
+{
+  orientation = orientationIn;
+}
+
+Ped::Tvector Agent::getDesiredDirection() const
+{
+  return desiredforce;
+}
 
 Ped::Tvector Agent::getWalkingDirection() const { return v; }
 
@@ -441,6 +449,16 @@ QString Agent::toString() const
 uint64_t Agent::getLastTimeIteration() const
 {
   return lastTimeIteration;
+}
+
+bool Agent::getIsStatic() const
+{
+  return isStaticAgent;
+}
+
+double Agent::getOrientation() const
+{
+  return orientation;
 }
 
 bool Agent::hasMovement()

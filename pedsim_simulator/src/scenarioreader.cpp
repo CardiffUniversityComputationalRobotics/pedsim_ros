@@ -157,6 +157,7 @@ void ScenarioReader::processData(double obstacleOffsetX, double obstacleOffsetY)
       const int type = elementAttributes.value("type").toString().toInt();
       const bool random = elementAttributes.value("random").toString().toInt();
       const bool staticAgent = elementAttributes.value("staticagent").toString().toInt();
+      const double orientation = elementAttributes.value("orientation").toString().toDouble();
       AgentCluster *agentCluster = new AgentCluster(x, y, n);
       agentCluster->setDistribution(dx, dy);
 
@@ -165,6 +166,7 @@ void ScenarioReader::processData(double obstacleOffsetX, double obstacleOffsetY)
       agentCluster->setType(static_cast<Ped::Tagent::AgentType>(type));
       agentCluster->setRandom(random);
       agentCluster->setStaticAgent(staticAgent);
+      agentCluster->setOrientation(orientation);
       SCENE.addAgentCluster(agentCluster);
       currentAgents = agentCluster;
     }

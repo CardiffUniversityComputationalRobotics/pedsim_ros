@@ -110,6 +110,8 @@ public:
   void disableForce(const QString &forceNameIn);
   void enableAllForces();
   uint64_t getLastTimeIteration() const;
+  bool getIsStatic() const;
+  double getOrientation() const;
 
   // → Ped::Tagent Overrides/Overloads
 public:
@@ -127,6 +129,7 @@ public:
   void setType(Ped::Tagent::AgentType typeIn);
   void setRandom(bool randomIn);
   void setStaticAgent(bool staticAgentIn);
+  void setOrientation(double orientationIn);
   bool checkIfFrozen();
   bool hasMovement();
   void setFrozenStatus(string status);
@@ -161,6 +164,9 @@ protected:
 
   // → static agent
   bool isStaticAgent;
+
+  // → static orientation
+  double orientation;
 
   // → lastPosition for frozen checking
   geometry_msgs::Point lastPosition;

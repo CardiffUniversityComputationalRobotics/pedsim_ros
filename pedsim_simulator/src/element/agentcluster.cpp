@@ -47,6 +47,7 @@ AgentCluster::AgentCluster(double xIn, double yIn, int countIn)
   shallCreateGroups = true;
   isRandom = 0;
   isStaticAgent = 0;
+  orientation = 0;
 };
 
 AgentCluster::~AgentCluster() {}
@@ -76,6 +77,7 @@ QList<Agent *> AgentCluster::dissolve()
     a->setType(agentType);
     a->setRandom(isRandom);
     a->setStaticAgent(isStaticAgent);
+    a->setOrientation(orientation);
 
     // add waypoints to the agent
     foreach (Waypoint *waypoint, waypoints)
@@ -229,4 +231,9 @@ void AgentCluster::setRandom(bool randomIn)
 void AgentCluster::setStaticAgent(bool staticAgentIn)
 {
   isStaticAgent = staticAgentIn;
+}
+
+void AgentCluster::setOrientation(double orientationIn)
+{
+  orientation = orientationIn;
 }

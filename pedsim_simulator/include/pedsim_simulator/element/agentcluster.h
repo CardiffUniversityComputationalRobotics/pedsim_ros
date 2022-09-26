@@ -79,6 +79,7 @@ public:
   void setDistributionHeight(double yIn);
   void setRandom(bool randomIn);
   void setStaticAgent(bool staticAgentIn);
+  void setOrientation(double orientationIn);
 
   // → ScenarioElement Overrides/Overloads
 public:
@@ -97,6 +98,7 @@ protected:
   QList<Waypoint *> waypoints;
   bool isRandom;
   bool isStaticAgent;
+  double orientation;
 };
 
 #endif
