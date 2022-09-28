@@ -190,6 +190,28 @@ To start simulating people, the launch file `simulator.launch` in the package `p
 
   &emsp;Publishes transform of the robot_frame, if set to false, the transform has to be published manually.
 
+#### Publish agents transforms
+
+To have the transforms, these can be obtained running the `pedsim_frames_publisher.py` from package `pedsim_simulator` as follows:
+
+```xml
+<node pkg="pedsim_gazebo_plugin" type="spawn_pedsim_agents.py" name="spawn_pedsim_agents" output="screen" />
+```
+
+### Spawn agents in gazebo
+
+To make social agents appear in gazebo and move around, some other steps are required. First, run the `spawn_pedsim_agents.py` node from package `pedsim_gazebo_plugin` as follows:
+
+```xml
+<node pkg="pedsim_gazebo_plugin" type="spawn_pedsim_agents.py" name="spawn_pedsim_agents" output="screen" />
+```
+
+Second, in the `*.world` file used, the following an Actor Poses plugin must be added as follows (check [empy_world.py](https://github.com/CardiffUniversityComputationalRobotics/pedsim_ros/blob/noetic-devel/pedsim_simulator/worlds/empty_default.world)):
+
+```xml
+<plugin name="ActorPosesPlugin" filename="libActorPosesPlugin.so"></plugin>
+```
+
 ### Visualize pedestrians
 
 For visualization of the social agents in rviz, it is important to run the node `pedsim_visualizer_node` from the package `pedsim_visualizer`.

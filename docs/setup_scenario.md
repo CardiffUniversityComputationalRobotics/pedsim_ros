@@ -1,20 +1,12 @@
-# Social Agents Simulation
+# Scenario Setup
 
-## Packages setup
+A scenario file defines obstacles, waypoints and social agents that will be interacting in the space. Additionally, other interactions such as queues and interesting objects can be added. This is defined in a `.xml` file, example [ipa_apartment.xml](../pedsim_simulator/scenarios/ipa_apartment.xml).
 
-The packages needed in order to create a Social Agents Simulation including a robot are listed below:
+Below all possible tags are explained:
 
-- pedsim_ros (this same package)
-- [ros_maps_to_pedsim](https://github.com/fverdoja/ros_maps_to_pedsim/tree/main)
-- own robot description package (for Gazebo or RViz only)
+## Obstacles
 
-## Scenarios
-
-An scenario is an space where walls that enclose the agents are defined and there are different conigurations that can be defined. This is defined in an `.xml` file. Here is an example o one of them [ipa_apartment.xml](../pedsim_simulator/scenarios/ipa_apartment.xml).
-
-### Obstacles
-
-These are needed so that the agent knows where it can walk and where is it can't, this gives the repulsive forces and is mainly used to represent walls, obstacles are represented as prisms.
+The social agents experience repulsive forces from defined obstacles, these are mainly used to represent walls with prism shapes.
 
 An example:
 
@@ -22,11 +14,11 @@ An example:
 <obstacle x1="17.325" x2="17.275" y1="9.425" y2="9.475"/>
 ```
 
-Definind the tags `x1`, `y1`, `x2` and `y2` corresponds to the dimension of the prism.
+The attributed `x1`, `y1`, `x2` and `y2` define where the obstacle starts and where it ends in the x-axis and y-axis.
 
 ### Waypoints
 
-These are the points in space where agents are declared to go. A series of waypoints are defined and then they are assigned in a certain order to the agents.
+These are the points in space used as goals for the social agents.
 
 A waypoint is defined as:
 
@@ -34,16 +26,16 @@ A waypoint is defined as:
 <waypoint id="entrance_room" x="-2.2" y="-3.7" r="0.5"/>
 ```
 
-The tags correspond to:
+The attributes correspond to:
 
 - `id`: name of the waypoint.
-- `x`: it is the x coordinate where the waypoint is.
-- `y`: is the y coordinate where the waypoint is.
-- `r`: is the radius of the waypoint.
+- `x`: position of the waypoint in the x-axis.
+- `y`: position of the waypoint in the y-axis.
+- `r`: radius tolerance of the waypoint.
 
 ### Queue
 
-A queue makes the agent make a line, one after another to pass through the space it is defined.
+A queue acts as a waypoint, however, when several agents go to a queue, they make a line to pass one after another through the specified point.
 
 Example:
 
@@ -51,11 +43,16 @@ Example:
 <queue id="klm" x="3.8" y="-5.2" direction="0"/>
 ```
 
-`x` and `y` corresponds to the position and `direction` the angle in which the queue is made.
+The attributes correspond to:
+
+- `id`: name of the queue.
+- `x`: position of the queue in the x-axis.
+- `y`: position of the queue in the y-axis.
+- `direction`: angle in which the queue is made (defined in degrees).
 
 ### Attraction
 
-This one attracts the agents arbitrarily and makes them stare at it just like an attraction.
+This element works as an attraction for the agents. Works in a random matter, when an agent passes near an attraction, there is a possibility of staying there staring at it for some time.
 
 Example:
 
@@ -63,90 +60,46 @@ Example:
   <attraction id="robot_marketing" x="-12.2" y="-4.2" width="0.5" height="0.5" strength="2"/>
 ```
 
-`width` and `height` are the dimension of the attraction, and `strength` is like how much attention demanding the attraction is.
+- `id`: name of the attraction.
+- `x`: position of the attraction in the x-axis.
+- `y`: position of the attraction in the y-axis.
+- `width`: width of the attraction.
+- `height`: height of the attraction.
+- `strength`: how much the attraction influence the social agents.
 
 ### Agents
 
-There are different types of agents, they can be defined as single agents or clustered/group agents. Here is an example about how they are defined:
+There are different types of agents, they can be defined as single agents or clustered/group agents. To specify which waypoints and queues the agent has to follow, these are specified inside the agent tag, normally these are followed in a loop and in an ordered manner,. Here is an example about how they are defined:
 
 ```xml
-<agent x="-10.2" y="-1.2" n="1" dx="2" dy="2" type="1">
+<agent x="-10.2" y="-1.2" n="1" dx="2" dy="2" type="1"  random="1" staticagent="1" orientation="30">
     <addwaypoint id="ticket_dispensor"/>
     <addwaypoint id="middle_hall"/>
     <addwaypoint id="end_hall"/>
     <addwaypoint id="middle_hall"/>
+    <addqueue id="kq"/>
 </agent>
 ```
 
-The different tags mean the following:
+The different attributes are defined below:
 
-- `x`: it is the x coordinate in which the agent/s spawn.
-- `y`: is the y coordinate in which the agent/s spawn.
-- `n`: is the number of agents, if it is 1, then it is a single agents otherwise a group or cluster.
-- `dx`: is the error there can be when spawning the agents in the x coordinate.
-- `dy`:is the error there can be when spawning the agents in the y coordinate.
-- `type`: there are the types:
+- `x`: x-axis coordinate in which the agent/s spawn.
+- `y`: y-axis coordinate in which the agent/s spawn.
+- `n`: number of spawned agents, if it is 1, then it is a single agent otherwise a group or cluster.
+- `dx`: tolerance of spawn in the x-axis.
+- `dy`: tolerance of spawn in the y-axis.
+- `type`: there are different types:
   - ADULT/0 or CHILD/1: agent moves continuously.
   - ROBOT/2: agent is considered as a robot.
-  - ELDER/3: agent stands still.
+  - ELDER/3: agent may stand still sometimes.
+- `random` (default: 0): if set to 1, the waypoints and queues are assigned randomly to the agent.
+- `staticagent` (default: 0): if set to 1, the agent is static.
+- `orientation` (default: 0): if the agent is static, the orientation can be defined.
 
-Inside the agents tag waypoints are defined with `addwaypoint` as seen in the example where `id` is the name of the waypoint.
-
-In case a queue is wanted to be added, `addqueue` is used.
+**Note:** even if the agent is defined as static, define at least two dummy waypoints for the agent. Otherwise, currently the program crashes.
 
 ## Creating a scenario
 
-As shown before, the scenario xml can be done by hand, however, the easiest way of creating a scenario depending on its complexity, is using the package ros_maps_to_pedsim. For that a `launch' file must be configured as in [ros_maps_to_pedsim.launch](../pedsim_simulator/launch/ros_maps_to_pedsim.launch).
+As shown before, the scenario `.xml` can be done by hand, however, the easiest way of creating a scenario depending on its complexity, is using the package [ros_maps_to_pedsim](https://github.com/CardiffUniversityComputationalRobotics/ros_maps_to_pedsim). For that a `launch' file must be configured as in [ros_maps_to_pedsim.launch](<[../pedsim_simulator/launch/ros_maps_to_pedsim.launch](https://github.com/CardiffUniversityComputationalRobotics/pedsim_ros/blob/noetic-devel/pedsim_simulator/launch/ros_maps_to_pedsim.launch)>).
 
-There `map_path`, `map_name`, `scenario_path` and `scenario_name` must be configured so that the obstacles in the scenario are defined from a map and saved as an scenario in a defined directory.
-
-Agents can also be added by configuring a `.yaml`.
-
-## Launching scenario with robot (RViz only)
-
-An example of how to do this is in [cob_pedsim_pedestrians_rviz_only.launch](../pedsim_simulator/launch/cob_pedsim_pedestrians_rviz_only.launch)
-
-The more important things to configure are the following:
-
-Whether a robot should be considered in simulation by the agents:
-
-```xml
-<arg name="with_robot" default="true"/>
-```
-
-The name of the scenario file in the package, should be located in a directory called `scenarios`, otherwise a path arg should be configured:
-
-```xml
-<arg name="scenario_file" default="ipa_apartment.xml"/>
-```
-
-If it is wanted to detect frozen agents:
-
-```xml
-<arg name="detect_frozen_agents" default="false"/>
-```
-
-Define the size of the walls which might not be visually correct:
-
-```xml
-<arg name="walls_scale" default="0.1"/>
-```
-
-If RViz is being used and a self publishing of the robot position will be done, it can be desired to publish or not the transform of the robots considered by `pedsim_simulator`:
-
-```xml
-<arg name="publish_tf" default="false"/>
-```
-
-The last thing to configure is the robot URDF description to be published as it is wanted, here the URDF of COB4 is published with the joints in an specific position. Also a TF publisher is launched to move the robot around the space.
-
-```xml
-<param name="robot_description" command="$(find xacro)/xacro --inorder '$(arg pkg_hardware_config)/robots/$(arg robot)/urdf/$(arg robot).urdf.xacro'" />
-<param name="use_gui" value="$(arg gui)"/>
-<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-<rosparam file="$(find pedsim_simulator)/param/home_state_cob.yaml"/>
-</node>
-<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
-
-<node name="cob_tf_publisher" pkg="pedsim_simulator" type="cob_tf_publisher.py" output="screen" />
-```
+There `map_path`, `map_name`, `scenario_path` and `scenario_name` must be configured so that the obstacles in the scenario are defined from a map and saved as an scenario in a defined directory. Agents can also be added by configuring a `.yaml`.
