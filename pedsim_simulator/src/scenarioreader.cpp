@@ -42,6 +42,9 @@
 
 #include <ros/ros.h>
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 ScenarioReader::ScenarioReader()
 {
   // initialize values
@@ -157,7 +160,8 @@ void ScenarioReader::processData(double obstacleOffsetX, double obstacleOffsetY)
       const int type = elementAttributes.value("type").toString().toInt();
       const bool random = elementAttributes.value("random").toString().toInt();
       const bool staticAgent = elementAttributes.value("staticagent").toString().toInt();
-      const double orientation = elementAttributes.value("orientation").toString().toDouble();
+      const double orientation_degree = elementAttributes.value("orientation").toString().toDouble();
+      const double orientation = (orientation_degree / 180) * M_PI;
       AgentCluster *agentCluster = new AgentCluster(x, y, n);
       agentCluster->setDistribution(dx, dy);
 
