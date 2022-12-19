@@ -23,24 +23,38 @@ class AgentStatesTfBroadcaster(object):
 
     def agents_register_callback(self, data):
         self.agents_list = data.agent_states
-        for i in self.agents_list:
-
-            self.br.sendTransform(
-                (i.pose.position.x, i.pose.position.y, 0),
-                (
-                    i.pose.orientation.x,
-                    i.pose.orientation.y,
-                    i.pose.orientation.z,
-                    i.pose.orientation.w,
-                ),
-                rospy.Time.now(),
-                "agent_" + str(i.id),
-                i.header.frame_id,
-            )
 
     def run(self):
         while not rospy.is_shutdown():
-            rospy.spin()
+
+            agents_to_erase = []
+
+            for i in range(0, len(self.agents_list)):
+
+                if rospy.Time.now().secs - self.agents_list[i].header.stamp.secs > 1000:
+                    agents_to_erase.append(i)
+
+                self.br.sendTransform(
+                    (
+                        self.agents_list[i].pose.position.x,
+                        self.agents_list[i].pose.position.y,
+                        0,
+                    ),
+                    (
+                        self.agents_list[i].pose.orientation.x,
+                        self.agents_list[i].pose.orientation.y,
+                        self.agents_list[i].pose.orientation.z,
+                        self.agents_list[i].pose.orientation.w,
+                    ),
+                    rospy.Time.now(),
+                    "agent_" + str(self.agents_list[i].id),
+                    self.agents_list[i].header.frame_id,
+                )
+
+            for i in agents_to_erase:
+                del self.agents_list[i]
+            rospy.sleep(0.005)
+            # rospy.spin()
 
 
 if __name__ == "__main__":
