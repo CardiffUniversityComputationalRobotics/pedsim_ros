@@ -31,7 +31,7 @@ class AgentStatesTfBroadcaster(object):
 
             for i in range(0, len(self.agents_list)):
 
-                if rospy.Time.now() - self.agents_list[i].header.stamp.sec > 100:
+                if rospy.Time.now().secs - self.agents_list[i].header.stamp.secs > 1000:
                     agents_to_erase.append(i)
 
                 self.br.sendTransform(
@@ -48,14 +48,13 @@ class AgentStatesTfBroadcaster(object):
                     ),
                     rospy.Time.now(),
                     "agent_" + str(self.agents_list[i].id),
-                    i.header.frame_id,
+                    self.agents_list[i].header.frame_id,
                 )
 
             for i in agents_to_erase:
                 del self.agents_list[i]
-
             rospy.sleep(0.005)
-            rospy.spin()
+            # rospy.spin()
 
 
 if __name__ == "__main__":
