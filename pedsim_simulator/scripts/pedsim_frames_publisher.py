@@ -31,9 +31,6 @@ class AgentStatesTfBroadcaster(object):
 
             for i in range(0, len(self.agents_list)):
 
-                if rospy.Time.now().secs - self.agents_list[i].header.stamp.secs > 1000:
-                    agents_to_erase.append(i)
-
                 self.br.sendTransform(
                     (
                         self.agents_list[i].pose.position.x,
@@ -51,10 +48,7 @@ class AgentStatesTfBroadcaster(object):
                     self.agents_list[i].header.frame_id,
                 )
 
-            for i in agents_to_erase:
-                del self.agents_list[i]
             rospy.sleep(0.005)
-            # rospy.spin()
 
 
 if __name__ == "__main__":
